@@ -1,9 +1,9 @@
-<!doctype html>
+<!<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ROOFBIDDER</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>RoofBidder V8.2.1</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
@@ -12,33 +12,30 @@
   --bg:#f4f6f9;
   --card:#fff;
   --text:#172033;
-  --muted:#697386;
-  --border:#dfe4ec;
-  --primary:#1769ff;
-  --primary2:#0d55d9;
-  --danger:#dc3545;
-  --success:#198754;
-  --warning:#f59e0b;
-  --shadow:0 5px 22px rgba(20,30,50,.08);
+  --muted:#6b7280;
+  --border:#e1e5eb;
+  --blue:#1769ff;
+  --green:#15945b;
+  --red:#d92d20;
+  --shadow:0 8px 25px rgba(0,0,0,.07);
+}
+
+body.dark{
+  --bg:#0d1117;
+  --card:#151b23;
+  --text:#f3f4f6;
+  --muted:#9ca3af;
+  --border:#29313d;
+  --shadow:0 8px 25px rgba(0,0,0,.25);
 }
 
 *{box-sizing:border-box}
 
-html,body{
+body{
   margin:0;
-  padding:0;
-  font-family:Inter,Arial,sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
   background:var(--bg);
   color:var(--text);
-}
-
-body.dark{
-  --bg:#10141b;
-  --card:#181e27;
-  --text:#f4f7fb;
-  --muted:#a8b0bf;
-  --border:#2b3442;
-  --shadow:0 5px 22px rgba(0,0,0,.25);
 }
 
 button,input,select,textarea{
@@ -53,18 +50,14 @@ button{
   display:none!important;
 }
 
-.app{
-  min-height:100vh;
-}
-
-.topbar{
-  height:68px;
+.appbar{
+  height:64px;
   background:var(--card);
   border-bottom:1px solid var(--border);
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  padding:0 18px;
+  gap:12px;
+  padding:0 15px;
   position:sticky;
   top:0;
   z-index:50;
@@ -72,18 +65,17 @@ button{
 
 .brand{
   font-weight:900;
-  font-size:21px;
   letter-spacing:.5px;
+  white-space:nowrap;
 }
 
 .brand span{
-  color:var(--primary);
+  color:var(--blue);
 }
 
-.top-actions{
-  display:flex;
-  align-items:center;
-  gap:8px;
+.page-title{
+  flex:1;
+  font-weight:800;
 }
 
 .icon-btn{
@@ -93,489 +85,291 @@ button{
   border-radius:10px;
   background:var(--card);
   color:var(--text);
+  font-size:20px;
 }
 
-.user-pill{
-  border:1px solid var(--border);
-  padding:9px 12px;
-  border-radius:10px;
-  font-size:13px;
-  color:var(--muted);
-  max-width:220px;
-  overflow:hidden;
-  white-space:nowrap;
-  text-overflow:ellipsis;
-}
-
-.layout{
-  display:flex;
-  min-height:calc(100vh - 68px);
-}
-
-.sidebar{
-  width:230px;
+.drawer{
+  position:fixed;
+  top:64px;
+  bottom:0;
+  left:0;
+  width:275px;
   background:var(--card);
   border-right:1px solid var(--border);
-  padding:15px;
-  flex-shrink:0;
+  z-index:70;
+  padding:12px;
+  transform:translateX(-110%);
+  transition:.2s ease;
+  overflow:auto;
+}
+
+.drawer.open{
+  transform:translateX(0);
+}
+
+.backdrop{
+  position:fixed;
+  inset:64px 0 0;
+  background:rgba(0,0,0,.45);
+  z-index:60;
 }
 
 .nav-btn{
   width:100%;
-  text-align:left;
   border:0;
   background:transparent;
   color:var(--text);
-  padding:13px 14px;
-  border-radius:10px;
-  margin-bottom:5px;
-  font-weight:700;
+  padding:13px;
+  border-radius:9px;
+  text-align:left;
+  font-weight:750;
+  margin-bottom:4px;
 }
 
 .nav-btn:hover,
 .nav-btn.active{
-  background:rgba(23,105,255,.1);
-  color:var(--primary);
+  background:#1769ff15;
+  color:var(--blue);
 }
 
-.main{
-  flex:1;
-  padding:25px;
-  min-width:0;
+main{
+  max-width:1250px;
+  margin:auto;
+  padding:18px;
 }
 
 .page{
-  max-width:1250px;
-  margin:auto;
+  display:none;
 }
 
-.page-title{
-  font-size:28px;
-  font-weight:900;
-  margin:0 0 5px;
-}
-
-.page-sub{
-  color:var(--muted);
-  margin:0 0 22px;
-}
-
-.grid{
-  display:grid;
-  gap:16px;
-}
-
-.grid-2{
-  grid-template-columns:repeat(2,minmax(0,1fr));
-}
-
-.grid-3{
-  grid-template-columns:repeat(3,minmax(0,1fr));
-}
-
-.grid-4{
-  grid-template-columns:repeat(4,minmax(0,1fr));
+.page.active{
+  display:block;
 }
 
 .card{
   background:var(--card);
   border:1px solid var(--border);
-  border-radius:15px;
-  padding:18px;
+  border-radius:14px;
+  padding:17px;
+  margin-bottom:15px;
   box-shadow:var(--shadow);
 }
 
-.stat-label{
-  color:var(--muted);
-  font-size:13px;
-  font-weight:700;
+.grid{
+  display:grid;
+  gap:13px;
 }
 
-.stat-value{
-  font-size:27px;
-  font-weight:900;
-  margin-top:8px;
+.g2{
+  grid-template-columns:repeat(2,1fr);
 }
 
-.section-title{
-  font-size:18px;
-  font-weight:900;
-  margin:0 0 15px;
+.g3{
+  grid-template-columns:repeat(3,1fr);
+}
+
+.g4{
+  grid-template-columns:repeat(4,1fr);
 }
 
 label{
   display:block;
-  font-weight:700;
-  font-size:13px;
+  font-size:12px;
+  font-weight:800;
+  color:var(--muted);
   margin-bottom:6px;
 }
 
-input,select,textarea{
+input,
+select,
+textarea{
   width:100%;
+  padding:10px;
   border:1px solid var(--border);
+  border-radius:9px;
   background:var(--card);
   color:var(--text);
-  border-radius:9px;
-  padding:11px 12px;
-  outline:none;
-}
-
-input:focus,select:focus,textarea:focus{
-  border-color:var(--primary);
 }
 
 textarea{
-  min-height:100px;
+  min-height:90px;
   resize:vertical;
-}
-
-.field{
-  margin-bottom:14px;
 }
 
 .btn{
   border:0;
   border-radius:9px;
-  padding:11px 15px;
+  padding:10px 14px;
+  background:var(--blue);
+  color:#fff;
   font-weight:800;
 }
 
-.btn-primary{
-  background:var(--primary);
-  color:#fff;
-}
-
-.btn-primary:hover{
-  background:var(--primary2);
-}
-
-.btn-secondary{
-  background:var(--border);
+.btn.secondary{
+  background:var(--card);
   color:var(--text);
+  border:1px solid var(--border);
 }
 
-.btn-danger{
-  background:var(--danger);
-  color:#fff;
+.btn.danger{
+  background:var(--red);
 }
 
-.btn-success{
-  background:var(--success);
-  color:#fff;
-}
-
-.btn-warning{
-  background:var(--warning);
-  color:#111;
-}
-
-.btn-row{
+.actions{
   display:flex;
   gap:8px;
   flex-wrap:wrap;
+}
+
+.search{
+  display:flex;
+  gap:8px;
+}
+
+.search input{
+  flex:1;
+}
+
+.stat .number{
+  font-size:25px;
+  font-weight:900;
+  margin-top:5px;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+.small{
+  font-size:12px;
 }
 
 .table-wrap{
   overflow:auto;
 }
 
-table{
+.table{
   width:100%;
   border-collapse:collapse;
 }
 
-th,td{
-  padding:12px 10px;
+.table th,
+.table td{
+  padding:10px;
   border-bottom:1px solid var(--border);
   text-align:left;
+  font-size:13px;
   white-space:nowrap;
-}
-
-th{
-  font-size:12px;
-  color:var(--muted);
-  text-transform:uppercase;
 }
 
 .badge{
   display:inline-block;
   padding:5px 9px;
   border-radius:999px;
+  background:#1769ff15;
+  color:var(--blue);
   font-size:11px;
-  font-weight:800;
-}
-
-.badge-lead{background:#e8eefc;color:#315ca8}
-.badge-estimated{background:#fff3cd;color:#946c00}
-.badge-sold{background:#d1e7dd;color:#12653d}
-.badge-completed{background:#cff4fc;color:#087990}
-.badge-lost{background:#f8d7da;color:#842029}
-
-.empty{
-  text-align:center;
-  padding:45px 15px;
-  color:var(--muted);
-}
-
-.auth-screen{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  background:var(--bg);
-}
-
-.auth-card{
-  width:min(460px,100%);
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:18px;
-  padding:28px;
-  box-shadow:var(--shadow);
-}
-
-.auth-logo{
-  font-size:31px;
   font-weight:900;
-  margin-bottom:4px;
 }
 
-.auth-logo span{
-  color:var(--primary);
+.badge.green{
+  background:#15945b18;
+  color:var(--green);
 }
 
-.auth-tabs{
+.badge.red{
+  background:#d92d2018;
+  color:var(--red);
+}
+
+.chips{
   display:flex;
-  gap:5px;
-  background:var(--bg);
-  padding:5px;
-  border-radius:10px;
-  margin:20px 0;
+  gap:7px;
+  flex-wrap:wrap;
 }
 
-.auth-tabs button{
-  flex:1;
-  border:0;
-  padding:10px;
-  border-radius:8px;
-  background:transparent;
-  color:var(--muted);
-  font-weight:800;
-}
-
-.auth-tabs button.active{
-  background:var(--card);
-  color:var(--primary);
-  box-shadow:var(--shadow);
-}
-
-.notice{
-  padding:11px 13px;
-  border-radius:9px;
-  background:rgba(23,105,255,.1);
-  color:var(--primary);
-  margin-bottom:15px;
-  font-size:13px;
-}
-
-.error{
-  padding:11px 13px;
-  border-radius:9px;
-  background:#f8d7da;
-  color:#842029;
-  margin-bottom:15px;
-  font-size:13px;
-}
-
-.success{
-  padding:11px 13px;
-  border-radius:9px;
-  background:#d1e7dd;
-  color:#12653d;
-  margin-bottom:15px;
-  font-size:13px;
-}
-
-.calculator-results{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:12px;
-  margin-top:16px;
-}
-
-.result{
-  padding:15px;
+.chip{
   border:1px solid var(--border);
-  border-radius:12px;
-}
-
-.result-label{
+  background:var(--card);
+  color:var(--text);
+  border-radius:999px;
+  padding:8px 11px;
   font-size:12px;
-  color:var(--muted);
+  font-weight:800;
 }
 
-.result-value{
-  font-size:22px;
-  font-weight:900;
-  margin-top:5px;
+.chip.active{
+  background:var(--blue);
+  color:#fff;
+  border-color:var(--blue);
 }
 
-.checkbox-row{
+.toggle{
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  gap:15px;
-  padding:11px 0;
+  align-items:center;
+  padding:13px 0;
   border-bottom:1px solid var(--border);
 }
 
-.checkbox-row:last-child{
-  border-bottom:0;
+.toggle input{
+  width:auto;
 }
 
-.checkbox-row input{
-  width:20px;
-  height:20px;
+.auth{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:18px;
 }
 
-.logo-preview{
-  width:130px;
-  height:80px;
-  border:1px dashed var(--border);
-  border-radius:10px;
-  object-fit:contain;
-  background:#fff;
-  margin-top:8px;
-}
-
-.proposal{
-  max-width:900px;
-  margin:30px auto;
+.auth-box{
+  width:min(430px,100%);
   background:var(--card);
   border:1px solid var(--border);
-  border-radius:18px;
+  border-radius:17px;
+  padding:25px;
   box-shadow:var(--shadow);
-  overflow:hidden;
 }
 
-.proposal-head{
-  padding:30px;
-  border-bottom:1px solid var(--border);
+.auth-modes{
+  display:flex;
+  gap:6px;
+  margin:18px 0;
 }
 
-.proposal-logo{
-  max-width:220px;
-  max-height:90px;
-  object-fit:contain;
+.auth-modes button{
+  flex:1;
+  padding:10px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  border-radius:9px;
+  font-weight:800;
 }
 
-.proposal-company{
-  font-size:28px;
-  font-weight:900;
-  margin-top:10px;
+.auth-modes button.active{
+  background:var(--blue);
+  color:#fff;
 }
 
-.proposal-body{
-  padding:30px;
-}
-
-.proposal-price{
-  font-size:42px;
-  font-weight:900;
-  color:var(--primary);
-}
-
-.proposal-section{
-  margin-top:25px;
-}
-
-.proposal-footer{
-  padding:20px 30px;
-  border-top:1px solid var(--border);
-  color:var(--muted);
-  font-size:13px;
-}
-
-.mobile-menu{
-  display:none;
-}
-
-@media(max-width:900px){
-  .sidebar{
-    display:none;
-  }
-
-  .mobile-menu{
-    display:block;
-  }
-
-  .main{
-    padding:16px;
-  }
-
-  .grid-4,
-  .grid-3,
-  .grid-2,
-  .calculator-results{
-    grid-template-columns:1fr 1fr;
-  }
-}
-
-@media(max-width:600px){
-  .topbar{
-    padding:0 10px;
-  }
-
-  .user-pill{
-    display:none;
-  }
-
-  .main{
-    padding:12px;
-  }
-
-  .grid-4,
-  .grid-3,
-  .grid-2,
-  .calculator-results{
+@media(max-width:800px){
+  .g2,
+  .g3,
+  .g4{
     grid-template-columns:1fr;
   }
 
+  main{
+    padding:12px;
+  }
+
   .page-title{
-    font-size:23px;
+    font-size:14px;
   }
 
-  .proposal-head,
-  .proposal-body{
-    padding:20px;
-  }
-
-  .proposal-price{
-    font-size:34px;
-  }
-}
-
-@media print{
-  body{
-    background:#fff!important;
-  }
-
-  .topbar,
-  .sidebar,
-  .no-print{
-    display:none!important;
-  }
-
-  .main{
-    padding:0;
-  }
-
-  .proposal{
-    box-shadow:none;
-    border:0;
-    margin:0;
-    max-width:none;
+  .user-email{
+    display:none;
   }
 }
 </style>
@@ -583,3036 +377,3068 @@ th{
 
 <body>
 
-<div id="root"></div>
+<!-- ================= AUTH ================= -->
 
-<script>
-/* =========================================================
-   ROOFBIDDER V8.2.1
-   ========================================================= */
+<div id="authScreen" class="auth">
 
-const SUPABASE_URL = "https://ovuirmlmdpbqumriakcm.supabase.co";
+  <div class="auth-box">
 
-const SUPABASE_PUBLISHABLE_KEY =
-  "sb_publishable_79QIWXKGoCtpUwF3t4KTRw_A9lAuao3";
-
-const supabaseClient =
-  window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
-
-/* ---------------------------------------------------------
-   GLOBAL STATE
---------------------------------------------------------- */
-
-let currentUser = null;
-let currentPage = "dashboard";
-let estimates = [];
-let editingEstimateId = null;
-let companyProfile = {};
-let userSettings = {};
-let homeownerProfile = {};
-let publicProposal = null;
-let authMode = "contractor";
-
-const defaultWidgets = {
-  revenue:true,
-  profit:true,
-  soldLost:true,
-  closeRate:true,
-  followups:true,
-  recent:true,
-  pipeline:true
-};
-
-/* ---------------------------------------------------------
-   HELPERS
---------------------------------------------------------- */
-
-const $ = id => document.getElementById(id);
-
-function money(value){
-  return Number(value || 0).toLocaleString("en-US",{
-    style:"currency",
-    currency:"USD",
-    maximumFractionDigits:2
-  });
-}
-
-function num(value){
-  const n = Number(value);
-  return Number.isFinite(n) ? n : 0;
-}
-
-function esc(value){
-  return String(value ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-function notify(message,type="notice"){
-  const old = document.querySelector(".toast");
-  if(old) old.remove();
-
-  const div = document.createElement("div");
-  div.className = "toast";
-  div.textContent = message;
-
-  div.style.position = "fixed";
-  div.style.bottom = "20px";
-  div.style.right = "20px";
-  div.style.zIndex = "9999";
-  div.style.padding = "13px 17px";
-  div.style.borderRadius = "10px";
-  div.style.fontWeight = "700";
-  div.style.background =
-    type === "error" ? "#dc3545" :
-    type === "success" ? "#198754" :
-    "#1769ff";
-  div.style.color = "#fff";
-  div.style.boxShadow = "0 8px 30px rgba(0,0,0,.2)";
-
-  document.body.appendChild(div);
-
-  setTimeout(()=>div.remove(),3000);
-}
-
-function setTheme(theme){
-  const isDark = String(theme).toLowerCase() === "dark";
-
-  document.body.classList.toggle("dark",isDark);
-
-  document.documentElement.setAttribute(
-    "data-theme",
-    isDark ? "dark" : "light"
-  );
-
-  localStorage.setItem(
-    "roofbidder_theme",
-    isDark ? "dark" : "light"
-  );
-}
-
-function getTheme(){
-  return localStorage.getItem("roofbidder_theme") || "light";
-}
-
-function getWidgets(){
-  return {
-    ...defaultWidgets,
-    ...(userSettings.dashboard_widgets || {})
-  };
-}
-
-function todayPlus(days){
-  const d = new Date();
-  d.setDate(d.getDate()+Number(days || 30));
-  return d.toISOString().slice(0,10);
-}
-
-/* ---------------------------------------------------------
-   AUTH
---------------------------------------------------------- */
-
-async function init(){
-
-  setTheme(getTheme());
-
-  const params = new URLSearchParams(location.search);
-  const token = params.get("proposal");
-
-  if(token){
-    await renderPublicProposal(token);
-    return;
-  }
-
-  const {data} = await supabaseClient.auth.getSession();
-
-  currentUser = data.session?.user || null;
-
-  if(currentUser){
-    await bootApp();
-  }else{
-    renderAuth();
-  }
-
-  supabaseClient.auth.onAuthStateChange(async(event,session)=>{
-    currentUser = session?.user || null;
-
-    if(currentUser){
-      await bootApp();
-    }else{
-      renderAuth();
-    }
-  });
-}
-
-function renderAuth(){
-  document.body.classList.remove("dark");
-
-  $("root").innerHTML = `
-    <div class="auth-screen">
-      <div class="auth-card">
-
-        <div class="auth-logo">
-          ROOF<span>BIDDER</span>
-        </div>
-
-        <div style="color:var(--muted)">
-          Roofing estimates. Built for profit.
-        </div>
-
-        <div class="auth-tabs">
-          <button
-            class="${authMode==="contractor"?"active":""}"
-            onclick="setAuthMode('contractor')">
-            Contractor
-          </button>
-
-          <button
-            class="${authMode==="homeowner"?"active":""}"
-            onclick="setAuthMode('homeowner')">
-            Homeowner
-          </button>
-        </div>
-
-        <div id="authBox"></div>
-
-      </div>
+    <div class="brand">
+      ROOF<span>BIDDER</span>
     </div>
-  `;
 
-  renderAuthForm();
-}
-
-function setAuthMode(mode){
-  authMode = mode;
-  renderAuth();
-}
-
-function renderAuthForm(){
-
-  $("authBox").innerHTML = `
-    <h2 style="margin-bottom:5px">
-      ${authMode==="contractor"
-        ? "Contractor Login"
-        : "Homeowner Portal"}
-    </h2>
-
-    <p style="color:var(--muted);margin-top:0">
-      ${authMode==="contractor"
-        ? "Manage estimates, pricing and proposals."
-        : "View and approve your roofing proposal."}
+    <p class="muted">
+      Roofing estimates. Built for profit.
     </p>
 
-    <div id="authMessage"></div>
-
-    <div class="field">
-      <label>Email</label>
-      <input id="authEmail" type="email" placeholder="you@example.com">
-    </div>
-
-    <div class="field">
-      <label>Password</label>
-      <input id="authPassword" type="password" placeholder="Password">
-    </div>
-
-    ${
-      authMode==="homeowner"
-      ? `
-      <div class="field">
-        <label>Your Name</label>
-        <input id="authName" placeholder="John Smith">
-      </div>
-      `
-      :""
-    }
-
-    <button
-      class="btn btn-primary"
-      style="width:100%"
-      onclick="loginOrSignup()">
-      ${authMode==="contractor"
-        ? "Login / Create Account"
-        : "Homeowner Login / Sign Up"}
-    </button>
-
-    ${
-      authMode==="homeowner"
-      ? `
-      <div class="notice" style="margin-top:15px">
-        If a contractor sent you a proposal link,
-        open that link first. You can then connect
-        the proposal to your homeowner account.
-      </div>
-      `
-      :""
-    }
-  `;
-}
-
-async function loginOrSignup(){
-
-  const email = $("authEmail")?.value.trim();
-  const password = $("authPassword")?.value;
-  const name = $("authName")?.value.trim() || "";
-
-  if(!email || !password){
-    showAuthError("Email and password are required.");
-    return;
-  }
-
-  const message = authMode==="homeowner"
-    ? "Homeowner"
-    : "Contractor";
-
-  const signup = await supabaseClient.auth.signUp({
-    email,
-    password,
-    options:{
-      data:{
-        role:authMode==="homeowner" ? "homeowner" : "contractor",
-        full_name:name
-      }
-    }
-  });
-
-  if(!signup.error && signup.data.user){
-
-    if(signup.data.session){
-      notify(`${message} account created.`,"success");
-      return;
-    }
-
-    showAuthSuccess(
-      "Account created. Check your email if email confirmation is enabled in Supabase, then log in."
-    );
-
-    return;
-  }
-
-  const login = await supabaseClient.auth.signInWithPassword({
-    email,
-    password
-  });
-
-  if(login.error){
-    showAuthError(login.error.message);
-    return;
-  }
-
-  currentUser = login.data.user;
-}
-
-function showAuthError(message){
-  const el = $("authMessage");
-  if(el){
-    el.innerHTML =
-      `<div class="error">${esc(message)}</div>`;
-  }
-}
-
-function showAuthSuccess(message){
-  const el = $("authMessage");
-  if(el){
-    el.innerHTML =
-      `<div class="success">${esc(message)}</div>`;
-  }
-}
-
-async function logout(){
-  await supabaseClient.auth.signOut();
-}
-
-/* ---------------------------------------------------------
-   APP BOOT
---------------------------------------------------------- */
-
-async function bootApp(){
-
-  await loadCompanyProfile();
-  await loadSettings();
-  await loadHomeownerProfile();
-
-  const role =
-    currentUser?.user_metadata?.role || "contractor";
-
-  if(role==="homeowner"){
-    currentPage = "homeowner";
-  }else{
-    currentPage = "dashboard";
-  }
-
-  renderApp();
-}
-
-/* ---------------------------------------------------------
-   DATABASE LOADERS
---------------------------------------------------------- */
-
-async function loadCompanyProfile(){
-
-  if(!currentUser) return;
-
-  const {data,error} = await supabaseClient
-    .from("company_profiles")
-    .select("*")
-    .eq("user_id",currentUser.id)
-    .maybeSingle();
-
-  if(error){
-    console.error(error);
-    companyProfile = {};
-    return;
-  }
-
-  companyProfile = data || {};
-}
-
-async function loadSettings(){
-
-  if(!currentUser) return;
-
-  const {data,error} = await supabaseClient
-    .from("user_settings")
-    .select("*")
-    .eq("user_id",currentUser.id)
-    .maybeSingle();
-
-  if(error){
-    console.error(error);
-  }
-
-  userSettings = data || {
-    default_valid_days:30,
-    default_waste:10,
-    default_profit_margin:30,
-    default_overhead:10,
-    default_layers:1,
-    default_pitch:4,
-    default_shingle_cost:110,
-    default_starter_cost:35,
-    default_ridge_cost:35,
-    default_labor_cost:90,
-    default_tear_off_cost:35,
-    default_scope:"",
-    default_important_info:"",
-    show_phone:true,
-    show_email:true,
-    show_address:true,
-    show_website:true,
-    show_logo:true,
-    dashboard_widgets:{...defaultWidgets},
-    theme:"light"
-  };
-
-  if(userSettings.theme){
-    setTheme(userSettings.theme);
-  }
-}
-
-async function loadHomeownerProfile(){
-
-  if(!currentUser) return;
-
-  const {data} = await supabaseClient
-    .from("homeowner_profiles")
-    .select("*")
-    .eq("user_id",currentUser.id)
-    .maybeSingle();
-
-  homeownerProfile = data || {};
-}
-
-async function loadEstimates(){
-
-  if(!currentUser) return;
-
-  const {data,error} = await supabaseClient
-    .from("estimates")
-    .select("*")
-    .eq("user_id",currentUser.id)
-    .order("updated_at",{ascending:false});
-
-  if(error){
-    console.error(error);
-    notify(error.message,"error");
-    estimates = [];
-    return;
-  }
-
-  estimates = data || [];
-}
-
-/* ---------------------------------------------------------
-   APP UI
---------------------------------------------------------- */
-
-function renderApp(){
-
-  const role =
-    currentUser?.user_metadata?.role || "contractor";
-
-  const homeowner = role==="homeowner";
-
-  $("root").innerHTML = `
-    <div class="app">
-
-      <header class="topbar">
-
-        <div class="brand">
-          ROOF<span>BIDDER</span>
-        </div>
-
-        <div class="top-actions">
-
-          <div class="user-pill">
-            ${esc(currentUser?.email || "")}
-          </div>
-
-          <button
-            class="icon-btn mobile-menu"
-            onclick="toggleMobileNav()">
-            ☰
-          </button>
-
-          <button
-            class="icon-btn"
-            title="Dark / Light Mode"
-            onclick="toggleTheme()">
-            ◐
-          </button>
-
-          <button
-            class="icon-btn"
-            title="Settings"
-            onclick="go('${homeowner?"homeowner":"settings"}')">
-            ⚙
-          </button>
-
-        </div>
-
-      </header>
-
-      <div class="layout">
-
-        <aside class="sidebar" id="sidebar">
-
-          ${
-            homeowner
-            ? `
-              <button class="nav-btn ${currentPage==="homeowner"?"active":""}"
-                onclick="go('homeowner')">
-                🏠 Homeowner Portal
-              </button>
-            `
-            : `
-              <button class="nav-btn ${currentPage==="dashboard"?"active":""}"
-                onclick="go('dashboard')">
-                📊 Dashboard
-              </button>
-
-              <button class="nav-btn ${currentPage==="calculator"?"active":""}"
-                onclick="go('calculator')">
-                🧮 Calculator
-              </button>
-
-              <button class="nav-btn ${currentPage==="estimates"?"active":""}"
-                onclick="go('estimates')">
-                📋 Estimates
-              </button>
-
-              <button class="nav-btn ${currentPage==="pipeline"?"active":""}"
-                onclick="go('pipeline')">
-                📈 Pipeline
-              </button>
-
-              <button class="nav-btn ${currentPage==="settings"?"active":""}"
-                onclick="go('settings')">
-                ⚙️ Settings
-              </button>
-
-              <button class="nav-btn"
-                onclick="go('homeowner')">
-                🏠 Homeowner Portal
-              </button>
-            `
-          }
-
-          <div style="height:15px"></div>
-
-          <button class="nav-btn" onclick="logout()">
-            🚪 Logout
-          </button>
-
-        </aside>
-
-        <main class="main">
-          <div class="page" id="page"></div>
-        </main>
-
-      </div>
-    </div>
-  `;
-
-  renderCurrentPage();
-}
-
-async function go(page){
-
-  currentPage = page;
-
-  document.querySelectorAll(".nav-btn")
-    .forEach(x=>{
-      x.classList.toggle(
-        "active",
-        x.textContent.toLowerCase().includes(page)
-      );
-    });
-
-  if(page==="dashboard" ||
-     page==="estimates" ||
-     page==="pipeline"){
-    await loadEstimates();
-  }
-
-  renderCurrentPage();
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-}
-
-function renderCurrentPage(){
-
-  if(currentPage==="dashboard"){
-    renderDashboard();
-  }else if(currentPage==="calculator"){
-    renderCalculator();
-  }else if(currentPage==="estimates"){
-    renderEstimates();
-  }else if(currentPage==="pipeline"){
-    renderPipeline();
-  }else if(currentPage==="settings"){
-    renderSettings();
-  }else if(currentPage==="homeowner"){
-    renderHomeownerPortal();
-  }
-}
-
-function toggleMobileNav(){
-  const sidebar = $("sidebar");
-  if(!sidebar) return;
-
-  sidebar.style.display =
-    sidebar.style.display==="block"
-      ? ""
-      : "block";
-}
-
-function toggleTheme(){
-
-  const next =
-    document.body.classList.contains("dark")
-      ? "light"
-      : "dark";
-
-  setTheme(next);
-
-  if(currentUser){
-    saveTheme(next);
-  }
-}
-
-async function saveTheme(theme){
-
-  if(!currentUser) return;
-
-  await supabaseClient
-    .from("user_settings")
-    .upsert({
-      user_id:currentUser.id,
-      theme,
-      updated_at:new Date().toISOString()
-    },{
-      onConflict:"user_id"
-    });
-}
-
-/* ---------------------------------------------------------
-   DASHBOARD
---------------------------------------------------------- */
-
-function renderDashboard(){
-
-  const page = $("page");
-  if(!page) return;
-
-  try{
-
-    const total = estimates.length;
-
-    const revenue = estimates
-      .filter(x=>["Lead","Estimated","Sold","Completed"].includes(x.status))
-      .reduce((a,x)=>a+num(x.selling_price),0);
-
-    const profit = estimates
-      .filter(x=>["Lead","Estimated","Sold","Completed"].includes(x.status))
-      .reduce((a,x)=>a+num(x.gross_profit),0);
-
-    const sold = estimates
-      .filter(x=>["Sold","Completed"].includes(x.status))
-      .reduce((a,x)=>a+num(x.selling_price),0);
-
-    const lost = estimates
-      .filter(x=>x.status==="Lost")
-      .reduce((a,x)=>a+num(x.selling_price),0);
-
-    const opportunities =
-      estimates.filter(x=>x.status!=="Lost").length;
-
-    const closeRate =
-      opportunities > 0
-        ? (
-          estimates.filter(x=>
-            ["Sold","Completed"].includes(x.status)
-          ).length / opportunities
-        ) * 100
-        : 0;
-
-    const followups = estimates.filter(x=>{
-      if(!x.follow_up_date) return false;
-      return new Date(x.follow_up_date) <= new Date();
-    });
-
-    const widgets = getWidgets();
-
-    page.innerHTML = `
-      <h1 class="page-title">Dashboard</h1>
-      <p class="page-sub">
-        Welcome back${companyProfile.company_name
-          ? ` — ${esc(companyProfile.company_name)}`
-          : ""}.
-      </p>
-
-      <div class="grid grid-4">
-
-        <div class="card">
-          <div class="stat-label">Total Estimates</div>
-          <div class="stat-value">${total}</div>
-        </div>
-
-        ${
-          widgets.revenue
-          ? `
-          <div class="card">
-            <div class="stat-label">Projected Revenue</div>
-            <div class="stat-value">${money(revenue)}</div>
-          </div>
-          `
-          :""
-        }
-
-        ${
-          widgets.profit
-          ? `
-          <div class="card">
-            <div class="stat-label">Projected Profit</div>
-            <div class="stat-value">${money(profit)}</div>
-          </div>
-          `
-          :""
-        }
-
-        ${
-          widgets.soldLost
-          ? `
-          <div class="card">
-            <div class="stat-label">Sold Revenue</div>
-            <div class="stat-value">${money(sold)}</div>
-            <div style="color:var(--muted);font-size:12px">
-              Lost: ${money(lost)}
-            </div>
-          </div>
-          `
-          :""
-        }
-
-        ${
-          widgets.closeRate
-          ? `
-          <div class="card">
-            <div class="stat-label">Close Rate</div>
-            <div class="stat-value">${closeRate.toFixed(1)}%</div>
-          </div>
-          `
-          :""
-        }
-
-      </div>
-
-      <div style="height:16px"></div>
-
-      <div class="grid grid-2">
-
-        ${
-          widgets.followups
-          ? `
-          <div class="card">
-            <h3 class="section-title">
-              Follow-Ups Due
-            </h3>
-
-            ${
-              followups.length
-              ? followups.slice(0,8).map(x=>`
-                <div style="
-                  padding:11px 0;
-                  border-bottom:1px solid var(--border)
-                ">
-                  <strong>${esc(x.customer_name || "Unnamed")}</strong>
-                  <div style="color:var(--muted);font-size:12px">
-                    ${esc(x.follow_up_date || "")}
-                  </div>
-                </div>
-              `).join("")
-              : `<div class="empty">No follow-ups due.</div>`
-            }
-          </div>
-          `
-          :""
-        }
-
-        ${
-          widgets.pipeline
-          ? `
-          <div class="card">
-            <h3 class="section-title">
-              Pipeline
-            </h3>
-
-            ${pipelineRow("Lead")}
-            ${pipelineRow("Estimated")}
-            ${pipelineRow("Sold")}
-            ${pipelineRow("Completed")}
-            ${pipelineRow("Lost")}
-          </div>
-          `
-          :""
-        }
-
-      </div>
-
-      ${
-        widgets.recent
-        ? `
-        <div class="card" style="margin-top:16px">
-          <div style="
-            display:flex;
-            justify-content:space-between;
-            align-items:center;
-            gap:10px;
-            margin-bottom:10px
-          ">
-            <h3 class="section-title" style="margin:0">
-              Recent Estimates
-            </h3>
-
-            <button
-              class="btn btn-secondary"
-              onclick="go('estimates')">
-              View All
-            </button>
-          </div>
-
-          ${
-            estimates.length
-            ? `
-            <div class="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Estimate</th>
-                    <th>Customer</th>
-                    <th>Status</th>
-                    <th>Price</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  ${estimates.slice(0,7).map(estimateRow).join("")}
-                </tbody>
-              </table>
-            </div>
-            `
-            : `<div class="empty">
-                No estimates yet.
-                <br><br>
-                <button class="btn btn-primary"
-                  onclick="go('calculator')">
-                  Create First Estimate
-                </button>
-              </div>`
-          }
-        </div>
-        `
-        :""
-      }
-    `;
-
-  }catch(error){
-
-    console.error(error);
-
-    page.innerHTML = `
-      <div class="card">
-        <h2>Dashboard</h2>
-        <div class="error">
-          Dashboard error: ${esc(error.message)}
-        </div>
-        <button class="btn btn-primary"
-          onclick="renderDashboard()">
-          Reload Dashboard
-        </button>
-      </div>
-    `;
-  }
-}
-
-function pipelineRow(status){
-
-  const count =
-    estimates.filter(x=>x.status===status).length;
-
-  return `
-    <div style="
-      display:flex;
-      justify-content:space-between;
-      padding:10px 0;
-      border-bottom:1px solid var(--border)
-    ">
-      <span>${status}</span>
-      <strong>${count}</strong>
-    </div>
-  `;
-}
-
-function estimateRow(x){
-
-  return `
-    <tr>
-      <td>${esc(x.estimate_number || "")}</td>
-      <td>${esc(x.customer_name || "Unnamed")}</td>
-      <td>${statusBadge(x.status)}</td>
-      <td>${money(x.selling_price)}</td>
-    </tr>
-  `;
-}
-
-function statusBadge(status){
-
-  const s = status || "Lead";
-
-  return `
-    <span class="badge badge-${s.toLowerCase()}">
-      ${esc(s)}
-    </span>
-  `;
-}
-
-/* ---------------------------------------------------------
-   CALCULATOR
---------------------------------------------------------- */
-
-function renderCalculator(){
-
-  const e = editingEstimateId
-    ? estimates.find(x=>x.id===editingEstimateId)
-    : null;
-
-  const v = e || {};
-
-  $("page").innerHTML = `
-
-    <h1 class="page-title">
-      ${e ? "Edit Estimate" : "Roofing Calculator"}
-    </h1>
-
-    <p class="page-sub">
-      Build a profitable roofing estimate.
-      Material quantities are planning estimates only,
-      not an exact roof takeoff.
-    </p>
-
-    <div class="card">
-
-      <h3 class="section-title">Customer</h3>
-
-      <div class="grid grid-3">
-
-        ${field("customer_name","Customer Name",v.customer_name||"","text")}
-
-        ${field("customer_phone","Phone",v.customer_phone||"","tel")}
-
-        ${field("customer_email","Email",v.customer_email||"","email")}
-
-      </div>
-
-      ${field(
-        "project_address",
-        "Project Address",
-        v.project_address||"",
-        "text"
-      )}
-
-    </div>
-
-    <div class="card" style="margin-top:16px">
-
-      <h3 class="section-title">Roof</h3>
-
-      <div class="grid grid-4">
-
-        ${field("squares","Roof Squares",v.squares ?? 0,"number",".1")}
-
-        <div class="field">
-          <label>Pitch</label>
-          <select id="pitch">
-            ${[
-              [1,"1/12"],
-              [2,"2/12"],
-              [3,"3/12"],
-              [4,"4/12"],
-              [5,"5/12"],
-              [6,"6/12"],
-              [7,"7/12"],
-              [8,"8/12"],
-              [9,"9/12"],
-              [10,"10/12"],
-              [11,"11/12"],
-              [12,"12/12"]
-            ].map(p=>`
-              <option value="${p[0]}"
-                ${(v.pitch ?? userSettings.default_pitch ?? 4)==p[0]
-                  ?"selected":""}>
-                ${p[1]}
-              </option>
-            `).join("")}
-          </select>
-        </div>
-
-        ${field("layers","Layers",v.layers ?? userSettings.default_layers ?? 1,"number","1")}
-
-        ${field("waste","Waste %",v.waste ?? userSettings.default_waste ?? 10,"number",".1")}
-
-      </div>
-
-    </div>
-
-    <div class="card" style="margin-top:16px">
-
-      <h3 class="section-title">Costs</h3>
-
-      <div class="grid grid-3">
-
-        ${field(
-          "shingle_cost",
-          "Shingles / Square",
-          v.shingle_cost ?? userSettings.default_shingle_cost ?? 110,
-          "number",
-          ".01"
-        )}
-
-        ${field(
-          "starter_cost",
-          "Starter / Square",
-          v.starter_cost ?? userSettings.default_starter_cost ?? 35,
-          "number",
-          ".01"
-        )}
-
-        ${field(
-          "ridge_cost",
-          "Ridge / Square",
-          v.ridge_cost ?? userSettings.default_ridge_cost ?? 35,
-          "number",
-          ".01"
-        )}
-
-        ${field(
-          "labor_cost",
-          "Install Labor / Square",
-          v.labor_cost ?? userSettings.default_labor_cost ?? 90,
-          "number",
-          ".01"
-        )}
-
-        ${field(
-          "tear_off_cost",
-          "Tear-Off / Square / Layer",
-          v.tear_off_cost ?? userSettings.default_tear_off_cost ?? 35,
-          "number",
-          ".01"
-        )}
-
-        ${field(
-          "other_material",
-          "Other Materials",
-          v.other_material ?? 0,
-          "number",
-          ".01"
-        )}
-
-        ${field(
-          "other_labor",
-          "Other Labor",
-          v.other_labor ?? 0,
-          "number",
-          ".01"
-        )}
-
-        ${field(
-          "overhead",
-          "Overhead %",
-          v.overhead ?? userSettings.default_overhead ?? 10,
-          "number",
-          ".1"
-        )}
-
-        ${field(
-          "profit_margin",
-          "Profit Margin %",
-          v.profit_margin ?? userSettings.default_profit_margin ?? 30,
-          "number",
-          ".1"
-        )}
-
-        ${field(
-          "price_adjustment",
-          "Price Adjustment",
-          v.price_adjustment ?? 0,
-          "number",
-          ".01"
-        )}
-
-      </div>
-
-    </div>
-
-    <div class="card" style="margin-top:16px">
-
-      <h3 class="section-title">Proposal</h3>
-
-      ${field(
-        "scope_of_work",
-        "Scope of Work",
-        v.scope_of_work ?? userSettings.default_scope ?? "",
-        "textarea"
-      )}
-
-      ${field(
-        "important_info",
-        "Important Information",
-        v.important_info ?? userSettings.default_important_info ?? "",
-        "textarea"
-      )}
-
-    </div>
-
-    <div class="card" style="margin-top:16px">
-
-      <h3 class="section-title">Estimate Results</h3>
-
-      <div class="calculator-results">
-
-        <div class="result">
-          <div class="result-label">Material Cost</div>
-          <div class="result-value" id="calcMaterial">$0</div>
-        </div>
-
-        <div class="result">
-          <div class="result-label">Labor Cost</div>
-          <div class="result-value" id="calcLabor">$0</div>
-        </div>
-
-        <div class="result">
-          <div class="result-label">Total Cost</div>
-          <div class="result-value" id="calcTotal">$0</div>
-        </div>
-
-        <div class="result">
-          <div class="result-label">Selling Price</div>
-          <div class="result-value" id="calcSelling">$0</div>
-        </div>
-
-        <div class="result">
-          <div class="result-label">Gross Profit</div>
-          <div class="result-value" id="calcProfit">$0</div>
-        </div>
-
-        <div class="result">
-          <div class="result-label">Gross Margin</div>
-          <div class="result-value" id="calcMargin">0%</div>
-        </div>
-
-        <div class="result">
-          <div class="result-label">Price / Square</div>
-          <div class="result-value" id="calcPerSquare">$0</div>
-        </div>
-
-        <div class="result">
-          <div class="result-label">Material Squares</div>
-          <div class="result-value" id="calcMaterialSquares">0</div>
-        </div>
-
-      </div>
-
-      <div style="margin-top:20px">
-
-        <h3 class="section-title">
-          Planning Quantities
-        </h3>
-
-        <div id="quantities"></div>
-
-      </div>
-
-      <div class="btn-row" style="margin-top:20px">
-
-        <button class="btn btn-primary"
-          onclick="saveEstimate()">
-          ${e ? "Update Estimate" : "Save Estimate"}
-        </button>
-
-        ${
-          e
-          ? `
-          <button class="btn btn-secondary"
-            onclick="cancelEdit()">
-            Cancel
-          </button>
-          `
-          :""
-        }
-
-      </div>
-
-    </div>
-  `;
-
-  bindCalculator();
-  calculateEstimate();
-}
-
-function field(id,label,value="",type="text",step=""){
-
-  if(type==="textarea"){
-    return `
-      <div class="field">
-        <label>${esc(label)}</label>
-        <textarea id="${id}">${esc(value)}</textarea>
-      </div>
-    `;
-  }
-
-  return `
-    <div class="field">
-      <label>${esc(label)}</label>
-      <input
-        id="${id}"
-        type="${type}"
-        value="${esc(value)}"
-        ${step ? `step="${step}"` : ""}
-        ${type==="number" ? 'min="0"' : ""}>
-    </div>
-  `;
-}
-
-function bindCalculator(){
-
-  [
-    "squares",
-    "pitch",
-    "layers",
-    "waste",
-    "shingle_cost",
-    "starter_cost",
-    "ridge_cost",
-    "labor_cost",
-    "tear_off_cost",
-    "other_material",
-    "other_labor",
-    "overhead",
-    "profit_margin",
-    "price_adjustment"
-  ].forEach(id=>{
-    $(id)?.addEventListener("input",calculateEstimate);
-    $(id)?.addEventListener("change",calculateEstimate);
-  });
-}
-
-function calculateEstimate(){
-
-  const squares = Math.max(0,num($("squares")?.value));
-  const pitch = Math.max(1,num($("pitch")?.value)||4);
-  const layers = Math.max(1,num($("layers")?.value)||1);
-  const waste = Math.max(0,num($("waste")?.value));
-
-  const shingle = Math.max(0,num($("shingle_cost")?.value));
-  const starter = Math.max(0,num($("starter_cost")?.value));
-  const ridge = Math.max(0,num($("ridge_cost")?.value));
-  const labor = Math.max(0,num($("labor_cost")?.value));
-  const tear = Math.max(0,num($("tear_off_cost")?.value));
-  const otherMaterial = Math.max(0,num($("other_material")?.value));
-  const otherLabor = Math.max(0,num($("other_labor")?.value));
-  const overheadPct = Math.min(100,Math.max(0,num($("overhead")?.value)));
-  const marginPct = Math.min(95,Math.max(0,num($("profit_margin")?.value)));
-  const adjustment = num($("price_adjustment")?.value);
-
-  const materialSquares =
-    squares * (1 + waste/100);
-
-  const pitchMultiplier =
-    pitch <= 3 ? 1 :
-    pitch <= 6 ? 1.1 :
-    pitch <= 9 ? 1.2 :
-    1.35;
-
-  const material =
-    materialSquares *
-      (shingle + starter + ridge)
-    + otherMaterial;
-
-  const laborTotal =
-    squares * labor * pitchMultiplier
-    +
-    squares * tear * layers * pitchMultiplier
-    +
-    otherLabor;
-
-  const base =
-    material + laborTotal;
-
-  const overhead =
-    base * overheadPct / 100;
-
-  const totalCost =
-    base + overhead;
-
-  const selling =
-    marginPct >= 100
-      ? totalCost + adjustment
-      : totalCost / (1 - marginPct/100) + adjustment;
-
-  const grossProfit =
-    selling - totalCost;
-
-  const grossMargin =
-    selling > 0
-      ? grossProfit / selling * 100
-      : 0;
-
-  $("calcMaterial").textContent = money(material);
-  $("calcLabor").textContent = money(laborTotal);
-  $("calcTotal").textContent = money(totalCost);
-  $("calcSelling").textContent = money(selling);
-  $("calcProfit").textContent = money(grossProfit);
-  $("calcMargin").textContent = grossMargin.toFixed(1)+"%";
-  $("calcPerSquare").textContent =
-    money(squares ? selling/squares : 0);
-  $("calcMaterialSquares").textContent =
-    materialSquares.toFixed(1);
-
-  const quantities = {
-    "Shingles":Math.ceil(materialSquares*3),
-    "Starter":Math.ceil(materialSquares),
-    "Ridge":Math.ceil(materialSquares/1.5),
-    "Underlayment":Math.ceil(materialSquares/2),
-    "Ice & Water Rolls":Math.ceil(materialSquares/2),
-    "Drip Edge Pieces":Math.ceil(squares)
-  };
-
-  $("quantities").innerHTML = `
-    <div class="grid grid-3">
-      ${Object.entries(quantities).map(([name,value])=>`
-        <div class="result">
-          <div class="result-label">${name}</div>
-          <div class="result-value">${value}</div>
-        </div>
-      `).join("")}
-    </div>
-  `;
-
-  window.calculatedEstimate = {
-    squares,
-    pitch,
-    layers,
-    waste,
-    shingle_cost:shingle,
-    starter_cost:starter,
-    ridge_cost:ridge,
-    labor_cost:labor,
-    tear_off_cost:tear,
-    other_material:otherMaterial,
-    other_labor:otherLabor,
-    overhead:overheadPct,
-    profit_margin:marginPct,
-    price_adjustment:adjustment,
-    material_cost:material,
-    labor_total:laborTotal,
-    total_cost:totalCost,
-    selling_price:selling,
-    gross_profit:grossProfit,
-    gross_margin:grossMargin,
-    price_per_square:squares ? selling/squares : 0,
-    material_squares:materialSquares
-  };
-}
-
-async function saveEstimate(){
-
-  calculateEstimate();
-
-  const calc = window.calculatedEstimate;
-
-  const customerName =
-    $("customer_name")?.value.trim() || "";
-
-  if(!customerName){
-    notify("Customer name is required.","error");
-    return;
-  }
-
-  const estimate = {
-    ...calc,
-    user_id:currentUser.id,
-    customer_name:customerName,
-    customer_phone:$("customer_phone")?.value.trim() || "",
-    customer_email:$("customer_email")?.value.trim() || "",
-    project_address:$("project_address")?.value.trim() || "",
-    valid_days:Number(userSettings.default_valid_days || 30),
-    follow_up_date:null,
-    follow_up_status:"Not Scheduled",
-    follow_up_notes:"",
-    scope_of_work:$("scope_of_work")?.value.trim() || "",
-    important_info:$("important_info")?.value.trim() || "",
-    status:"Lead",
-    updated_at:new Date().toISOString()
-  };
-
-  if(editingEstimateId){
-
-    const {error} = await supabaseClient
-      .from("estimates")
-      .update(estimate)
-      .eq("id",editingEstimateId)
-      .eq("user_id",currentUser.id);
-
-    if(error){
-      notify(error.message,"error");
-      return;
-    }
-
-    notify("Estimate updated.","success");
-
-  }else{
-
-    estimate.estimate_number =
-      await nextEstimateNumber();
-
-    const {error} = await supabaseClient
-      .from("estimates")
-      .insert(estimate);
-
-    if(error){
-      notify(error.message,"error");
-      return;
-    }
-
-    notify("Estimate saved.","success");
-  }
-
-  editingEstimateId = null;
-
-  await loadEstimates();
-
-  go("estimates");
-}
-
-async function nextEstimateNumber(){
-
-  const year = new Date().getFullYear();
-
-  const count =
-    estimates.length + 1;
-
-  return `RB-${year}-${String(count).padStart(4,"0")}`;
-}
-
-function editEstimate(id){
-
-  editingEstimateId = id;
-  go("calculator");
-}
-
-function cancelEdit(){
-  editingEstimateId = null;
-  go("estimates");
-}
-
-async function duplicateEstimate(id){
-
-  const e = estimates.find(x=>x.id===id);
-
-  if(!e) return;
-
-  const copy = {...e};
-
-  delete copy.id;
-  delete copy.created_at;
-  delete copy.updated_at;
-
-  copy.estimate_number =
-    await nextEstimateNumber();
-
-  copy.customer_name =
-    (copy.customer_name || "Customer") + " Copy";
-
-  copy.status = "Lead";
-
-  const {error} =
-    await supabaseClient
-      .from("estimates")
-      .insert(copy);
-
-  if(error){
-    notify(error.message,"error");
-    return;
-  }
-
-  await loadEstimates();
-
-  notify("Estimate duplicated.","success");
-
-  renderEstimates();
-}
-
-async function deleteEstimate(id){
-
-  if(!confirm("Delete this estimate permanently?")) return;
-
-  const {error} =
-    await supabaseClient
-      .from("estimates")
-      .delete()
-      .eq("id",id)
-      .eq("user_id",currentUser.id);
-
-  if(error){
-    notify(error.message,"error");
-    return;
-  }
-
-  await loadEstimates();
-
-  notify("Estimate deleted.","success");
-
-  renderEstimates();
-}
-
-/* ---------------------------------------------------------
-   ESTIMATES
---------------------------------------------------------- */
-
-function renderEstimates(){
-
-  $("page").innerHTML = `
-
-    <h1 class="page-title">Estimates</h1>
-
-    <p class="page-sub">
-      Manage your estimates and homeowner proposals.
-    </p>
-
-    <div class="card">
-
-      <div class="btn-row" style="margin-bottom:15px">
-
-        <button class="btn btn-primary"
-          onclick="editingEstimateId=null;go('calculator')">
-          + New Estimate
-        </button>
-
-        <input
-          id="estimateSearch"
-          placeholder="Search customer or estimate #"
-          style="max-width:300px"
-          oninput="filterEstimates()">
-
-      </div>
-
-      <div class="table-wrap">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Estimate</th>
-              <th>Customer</th>
-              <th>Status</th>
-              <th>Price</th>
-              <th>Profit</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-
-          <tbody id="estimateRows">
-            ${estimates.length
-              ? estimates.map(fullEstimateRow).join("")
-              : `
-              <tr>
-                <td colspan="6">
-                  <div class="empty">
-                    No estimates yet.
-                  </div>
-                </td>
-              </tr>
-              `
-            }
-          </tbody>
-
-        </table>
-
-      </div>
-
-    </div>
-  `;
-}
-
-function fullEstimateRow(x){
-
-  return `
-    <tr data-search="${esc(
-      `${x.customer_name||""} ${x.estimate_number||""}`
-    ).toLowerCase()}">
-
-      <td>${esc(x.estimate_number || "")}</td>
-
-      <td>
-        <strong>${esc(x.customer_name || "Unnamed")}</strong>
-        <div style="font-size:11px;color:var(--muted)">
-          ${esc(x.project_address || "")}
-        </div>
-      </td>
-
-      <td>
-        <select
-          onchange="changeStatus('${x.id}',this.value)"
-          style="width:auto">
-          ${["Lead","Estimated","Sold","Completed","Lost"]
-            .map(s=>`
-              <option
-                value="${s}"
-                ${x.status===s?"selected":""}>
-                ${s}
-              </option>
-            `).join("")}
-        </select>
-      </td>
-
-      <td>${money(x.selling_price)}</td>
-
-      <td>${money(x.gross_profit)}</td>
-
-      <td>
-
-        <div class="btn-row">
-
-          <button
-            class="btn btn-secondary"
-            onclick="editEstimate('${x.id}')">
-            Edit
-          </button>
-
-          <button
-            class="btn btn-primary"
-            onclick="createProposal('${x.id}')">
-            Proposal
-          </button>
-
-          <button
-            class="btn btn-secondary"
-            onclick="duplicateEstimate('${x.id}')">
-            Duplicate
-          </button>
-
-          <button
-            class="btn btn-danger"
-            onclick="deleteEstimate('${x.id}')">
-            Delete
-          </button>
-
-        </div>
-
-      </td>
-
-    </tr>
-  `;
-}
-
-function filterEstimates(){
-
-  const q =
-    ($("estimateSearch")?.value || "")
-      .toLowerCase();
-
-  document.querySelectorAll("#estimateRows tr")
-    .forEach(row=>{
-      row.style.display =
-        row.dataset.search?.includes(q)
-          ? ""
-          : "none";
-    });
-}
-
-async function changeStatus(id,status){
-
-  const {error} =
-    await supabaseClient
-      .from("estimates")
-      .update({
-        status,
-        updated_at:new Date().toISOString()
-      })
-      .eq("id",id)
-      .eq("user_id",currentUser.id);
-
-  if(error){
-    notify(error.message,"error");
-    return;
-  }
-
-  await loadEstimates();
-
-  notify("Status updated.","success");
-}
-
-/* ---------------------------------------------------------
-   PIPELINE
---------------------------------------------------------- */
-
-function renderPipeline(){
-
-  const statuses =
-    ["Lead","Estimated","Sold","Completed","Lost"];
-
-  $("page").innerHTML = `
-
-    <h1 class="page-title">Pipeline</h1>
-
-    <p class="page-sub">
-      Track every opportunity from lead to completion.
-    </p>
-
-    <div class="grid grid-3">
-
-      ${statuses.map(status=>{
-
-        const list =
-          estimates.filter(x=>x.status===status);
-
-        return `
-          <div class="card">
-
-            <div style="
-              display:flex;
-              justify-content:space-between;
-              align-items:center;
-              margin-bottom:12px">
-
-              <h3 class="section-title"
-                style="margin:0">
-                ${status}
-              </h3>
-
-              <strong>${list.length}</strong>
-
-            </div>
-
-            ${
-              list.length
-              ? list.map(x=>`
-                <div style="
-                  padding:12px;
-                  border:1px solid var(--border);
-                  border-radius:10px;
-                  margin-bottom:8px">
-
-                  <strong>
-                    ${esc(x.customer_name || "Unnamed")}
-                  </strong>
-
-                  <div style="
-                    color:var(--muted);
-                    font-size:12px">
-                    ${esc(x.estimate_number || "")}
-                  </div>
-
-                  <div style="
-                    font-weight:800;
-                    margin-top:5px">
-                    ${money(x.selling_price)}
-                  </div>
-
-                  <div class="btn-row"
-                    style="margin-top:8px">
-
-                    <button
-                      class="btn btn-secondary"
-                      onclick="editEstimate('${x.id}')">
-                      Edit
-                    </button>
-
-                    <button
-                      class="btn btn-primary"
-                      onclick="createProposal('${x.id}')">
-                      Proposal
-                    </button>
-
-                  </div>
-
-                </div>
-              `).join("")
-              : `
-                <div class="empty">
-                  Nothing here.
-                </div>
-              `
-            }
-
-          </div>
-        `;
-
-      }).join("")}
-
-    </div>
-  `;
-}
-
-/* ---------------------------------------------------------
-   SETTINGS
---------------------------------------------------------- */
-
-function renderSettings(){
-
-  const widgets = getWidgets();
-
-  $("page").innerHTML = `
-
-    <h1 class="page-title">Settings</h1>
-
-    <p class="page-sub">
-      Configure RoofBidder for your business.
-    </p>
-
-    <div class="card">
-
-      <h3 class="section-title">
-        Company Profile
-      </h3>
-
-      <div class="grid grid-2">
-
-        ${field(
-          "setting_company_name",
-          "Company Name",
-          companyProfile.company_name || ""
-        )}
-
-        ${field(
-          "setting_phone",
-          "Phone",
-          companyProfile.phone || "",
-          "tel"
-        )}
-
-        ${field(
-          "setting_email",
-          "Business Email",
-          companyProfile.email || "",
-          "email"
-        )}
-
-        ${field(
-          "setting_website",
-          "Website",
-          companyProfile.website || ""
-        )}
-
-      </div>
-
-      ${field(
-        "setting_address",
-        "Business Address",
-        companyProfile.address || ""
-      )}
-
-      <div class="field">
-
-        <label>Company Logo</label>
-
-        <input
-          id="setting_logo"
-          type="file"
-          accept="image/*"
-          onchange="previewLogo(event)">
-
-        ${
-          companyProfile.logo_data
-          ? `
-            <img
-              id="logoPreview"
-              class="logo-preview"
-              src="${companyProfile.logo_data}">
-          `
-          : `
-            <img
-              id="logoPreview"
-              class="logo-preview hidden">
-          `
-        }
-
-      </div>
-
-    </div>
-
-    <div class="card" style="margin-top:16px">
-
-      <h3 class="section-title">
-        Proposal Settings
-      </h3>
-
-      <div class="grid grid-2">
-
-        ${field(
-          "setting_valid_days",
-          "Default Proposal Valid Days",
-          userSettings.default_valid_days ?? 30,
-          "number",
-          "1"
-        )}
-
-      </div>
-
-      ${field(
-        "setting_scope",
-        "Default Scope of Work",
-        userSettings.default_scope || "",
-        "textarea"
-      )}
-
-      ${field(
-        "setting_important",
-        "Default Important Information",
-        userSettings.default_important_info || "",
-        "textarea"
-      )}
-
-      ${toggleSetting(
-        "setting_show_phone",
-        "Show phone on homeowner proposals",
-        userSettings.show_phone !== false
-      )}
-
-      ${toggleSetting(
-        "setting_show_email",
-        "Show email on homeowner proposals",
-        userSettings.show_email !== false
-      )}
-
-      ${toggleSetting(
-        "setting_show_address",
-        "Show address on homeowner proposals",
-        userSettings.show_address !== false
-      )}
-
-      ${toggleSetting(
-        "setting_show_website",
-        "Show website on homeowner proposals",
-        userSettings.show_website !== false
-      )}
-
-      ${toggleSetting(
-        "setting_show_logo",
-        "Show logo on homeowner proposals",
-        userSettings.show_logo !== false
-      )}
-
-    </div>
-
-    <div class="card" style="margin-top:16px">
-
-      <h3 class="section-title">
-        Estimate Defaults
-      </h3>
-
-      <div class="grid grid-3">
-
-        ${field(
-          "setting_waste",
-          "Waste %",
-          userSettings.default_waste ?? 10,
-          "number",".1"
-        )}
-
-        ${field(
-          "setting_profit",
-          "Profit Margin %",
-          userSettings.default_profit_margin ?? 30,
-          "number",".1"
-        )}
-
-        ${field(
-          "setting_overhead",
-          "Overhead %",
-          userSettings.default_overhead ?? 10,
-          "number",".1"
-        )}
-
-        ${field(
-          "setting_layers",
-          "Layers",
-          userSettings.default_layers ?? 1,
-          "number","1"
-        )}
-
-        ${field(
-          "setting_pitch",
-          "Default Pitch",
-          userSettings.default_pitch ?? 4,
-          "number","1"
-        )}
-
-        ${field(
-          "setting_shingle",
-          "Shingles / Square",
-          userSettings.default_shingle_cost ?? 110,
-          "number",".01"
-        )}
-
-        ${field(
-          "setting_starter",
-          "Starter / Square",
-          userSettings.default_starter_cost ?? 35,
-          "number",".01"
-        )}
-
-        ${field(
-          "setting_ridge",
-          "Ridge / Square",
-          userSettings.default_ridge_cost ?? 35,
-          "number",".01"
-        )}
-
-        ${field(
-          "setting_labor",
-          "Labor / Square",
-          userSettings.default_labor_cost ?? 90,
-          "number",".01"
-        )}
-
-        ${field(
-          "setting_tearoff",
-          "Tear-Off / Square",
-          userSettings.default_tear_off_cost ?? 35,
-          "number",".01"
-        )}
-
-      </div>
-
-    </div>
-
-    <div class="card" style="margin-top:16px">
-
-      <h3 class="section-title">
-        Dashboard Widgets
-      </h3>
-
-      ${toggleSetting(
-        "widget_revenue",
-        "Projected Revenue",
-        widgets.revenue
-      )}
-
-      ${toggleSetting(
-        "widget_profit",
-        "Projected Profit",
-        widgets.profit
-      )}
-
-      ${toggleSetting(
-        "widget_sold",
-        "Sold / Lost Revenue",
-        widgets.soldLost
-      )}
-
-      ${toggleSetting(
-        "widget_close",
-        "Close Rate",
-        widgets.closeRate
-      )}
-
-      ${toggleSetting(
-        "widget_followups",
-        "Follow-Ups",
-        widgets.followups
-      )}
-
-      ${toggleSetting(
-        "widget_recent",
-        "Recent Estimates",
-        widgets.recent
-      )}
-
-      ${toggleSetting(
-        "widget_pipeline",
-        "Pipeline",
-        widgets.pipeline
-      )}
-
-    </div>
-
-    <div class="card" style="margin-top:16px">
-
-      <h3 class="section-title">
-        Appearance
-      </h3>
-
-      <div class="btn-row">
-
-        <button
-          class="btn ${getTheme()==="light"?"btn-primary":"btn-secondary"}"
-          onclick="chooseTheme('light')">
-          ☀️ Light
-        </button>
-
-        <button
-          class="btn ${getTheme()==="dark"?"btn-primary":"btn-secondary"}"
-          onclick="chooseTheme('dark')">
-          🌙 Dark
-        </button>
-
-      </div>
-
-    </div>
-
-    <div class="card" style="margin-top:16px">
-
-      <h3 class="section-title">
-        Account
-      </h3>
-
-      <p style="color:var(--muted)">
-        ${esc(currentUser?.email || "")}
-      </p>
-
-      <div class="btn-row">
-
-        <button class="btn btn-danger"
-          onclick="logout()">
-          Logout
-        </button>
-
-      </div>
-
-    </div>
-
-    <div class="btn-row" style="margin-top:20px">
+    <div class="auth-modes">
 
       <button
-        class="btn btn-primary"
-        onclick="saveAllSettings()">
-        Save All Settings
+        id="contractorMode"
+        class="active"
+        onclick="setAuthMode('contractor')">
+        Contractor
+      </button>
+
+      <button
+        id="homeownerMode"
+        onclick="setAuthMode('homeowner')">
+        Homeowner
       </button>
 
     </div>
-  `;
-}
 
-function toggleSetting(id,label,checked){
+    <h2 id="authTitle">
+      Contractor Login
+    </h2>
 
-  return `
-    <div class="checkbox-row">
+    <div id="nameWrap" class="hidden">
 
-      <span>${esc(label)}</span>
+      <label>Name</label>
 
       <input
-        id="${id}"
-        type="checkbox"
-        ${checked ? "checked":""}>
+        id="authName"
+        type="text"
+        placeholder="Your name">
 
     </div>
-  `;
+
+    <label>Email</label>
+
+    <input
+      id="authEmail"
+      type="email"
+      placeholder="you@example.com">
+
+    <label>Password</label>
+
+    <input
+      id="authPassword"
+      type="password"
+      placeholder="Password">
+
+    <div class="actions" style="margin-top:15px">
+
+      <button
+        class="btn"
+        onclick="loginUser()">
+        Login
+      </button>
+
+      <button
+        class="btn secondary"
+        onclick="signupUser()">
+        Create Account
+      </button>
+
+    </div>
+
+    <p
+      id="authMessage"
+      class="small muted">
+    </p>
+
+  </div>
+
+</div>
+
+
+<!-- ================= APP ================= -->
+
+<div id="app" class="hidden">
+
+<header class="appbar">
+
+  <button
+    class="icon-btn"
+    onclick="toggleMenu()">
+    ☰
+  </button>
+
+  <div class="brand">
+    ROOF<span>BIDDER</span>
+  </div>
+
+  <div
+    id="pageTitle"
+    class="page-title">
+    Dashboard
+  </div>
+
+  <div
+    id="userEmail"
+    class="user-email small muted">
+  </div>
+
+  <!-- ONLY GEAR IN HEADER. NO LIGHT/DARK SWITCH -->
+  <button
+    class="icon-btn"
+    onclick="go('settings')">
+    ⚙️
+  </button>
+
+</header>
+
+
+<div
+  id="backdrop"
+  class="backdrop hidden"
+  onclick="closeMenu()">
+</div>
+
+
+<aside
+  id="drawer"
+  class="drawer">
+
+  <button
+    class="nav-btn active"
+    data-page="dashboard"
+    onclick="go('dashboard')">
+    📊 Dashboard
+  </button>
+
+  <button
+    class="nav-btn"
+    data-page="calculator"
+    onclick="go('calculator')">
+    🧮 Calculator
+  </button>
+
+  <button
+    class="nav-btn"
+    data-page="estimates"
+    onclick="go('estimates')">
+    📋 Estimates
+  </button>
+
+  <button
+    class="nav-btn"
+    data-page="pipeline"
+    onclick="go('pipeline')">
+    📈 Pipeline
+  </button>
+
+  <button
+    class="nav-btn"
+    data-page="purchaseorders"
+    onclick="go('purchaseorders')">
+    🧾 Purchase Orders
+  </button>
+
+  <button
+    class="nav-btn"
+    data-page="settings"
+    onclick="go('settings')">
+    ⚙️ Settings
+  </button>
+
+  <button
+    class="nav-btn"
+    data-page="homeowner"
+    onclick="go('homeowner')">
+    🏠 Homeowner Portal
+  </button>
+
+  <hr>
+
+  <button
+    class="nav-btn"
+    onclick="logout()">
+    🚪 Logout
+  </button>
+
+</aside>
+
+
+<main>
+
+<!-- ================= DASHBOARD ================= -->
+
+<section
+  id="dashboard"
+  class="page active">
+
+  <div class="card">
+
+    <div class="search">
+
+      <input
+        id="jobSearch"
+        placeholder="🔎 Search jobs — customer, address, estimate #, phone or email"
+        oninput="renderDashboard()">
+
+      <button
+        class="btn secondary"
+        onclick="clearJobSearch()">
+        Clear
+      </button>
+
+    </div>
+
+    <div
+      class="chips"
+      style="margin-top:10px">
+
+      <button
+        class="chip active"
+        data-filter="All"
+        onclick="setJobFilter('All')">
+        All
+      </button>
+
+      <button
+        class="chip"
+        data-filter="Lead"
+        onclick="setJobFilter('Lead')">
+        Leads
+      </button>
+
+      <button
+        class="chip"
+        data-filter="Estimated"
+        onclick="setJobFilter('Estimated')">
+        Estimates
+      </button>
+
+      <button
+        class="chip"
+        data-filter="Sold"
+        onclick="setJobFilter('Sold')">
+        Sold
+      </button>
+
+      <button
+        class="chip"
+        data-filter="Completed"
+        onclick="setJobFilter('Completed')">
+        Completed
+      </button>
+
+      <button
+        class="chip"
+        data-filter="Lost"
+        onclick="setJobFilter('Lost')">
+        Lost
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="dashboardStats"
+    class="grid g4">
+  </div>
+
+
+  <div class="card">
+
+    <h3>
+      Jobs
+    </h3>
+
+    <div id="dashboardJobs">
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= CALCULATOR ================= -->
+
+<section
+  id="calculator"
+  class="page">
+
+  <div class="card">
+
+    <h2>
+      Roofing Calculator
+    </h2>
+
+    <div class="grid g3">
+
+      <div>
+        <label>Customer</label>
+        <input id="cCustomer">
+      </div>
+
+      <div>
+        <label>Phone</label>
+        <input id="cPhone">
+      </div>
+
+      <div>
+        <label>Email</label>
+        <input id="cEmail">
+      </div>
+
+      <div style="grid-column:1/-1">
+        <label>Project Address</label>
+        <input id="cAddress">
+      </div>
+
+      <div>
+        <label>Squares</label>
+        <input
+          id="cSquares"
+          type="number"
+          value="20">
+      </div>
+
+      <div>
+        <label>Pitch Multiplier</label>
+        <input
+          id="cPitch"
+          type="number"
+          step=".01"
+          value="1.15">
+      </div>
+
+      <div>
+        <label>Layers</label>
+        <input
+          id="cLayers"
+          type="number"
+          value="1">
+      </div>
+
+      <div>
+        <label>Waste %</label>
+        <input
+          id="cWaste"
+          type="number"
+          value="10">
+      </div>
+
+      <div>
+        <label>Shingle $/sq</label>
+        <input
+          id="cShingle"
+          type="number"
+          value="110">
+      </div>
+
+      <div>
+        <label>Starter $/sq</label>
+        <input
+          id="cStarter"
+          type="number"
+          value="35">
+      </div>
+
+      <div>
+        <label>Ridge $/sq</label>
+        <input
+          id="cRidge"
+          type="number"
+          value="35">
+      </div>
+
+      <div>
+        <label>Labor $/sq</label>
+        <input
+          id="cLabor"
+          type="number"
+          value="90">
+      </div>
+
+      <div>
+        <label>Tear-off $/sq/layer</label>
+        <input
+          id="cTear"
+          type="number"
+          value="35">
+      </div>
+
+      <div>
+        <label>Other Material</label>
+        <input
+          id="cOtherMaterial"
+          type="number"
+          value="0">
+      </div>
+
+      <div>
+        <label>Other Labor</label>
+        <input
+          id="cOtherLabor"
+          type="number"
+          value="0">
+      </div>
+
+      <div>
+        <label>Overhead %</label>
+        <input
+          id="cOverhead"
+          type="number"
+          value="10">
+      </div>
+
+      <div>
+        <label>Profit Margin %</label>
+        <input
+          id="cMargin"
+          type="number"
+          value="30">
+      </div>
+
+      <div>
+        <label>Price Adjustment</label>
+        <input
+          id="cAdjustment"
+          type="number"
+          value="0">
+      </div>
+
+    </div>
+
+    <div
+      class="actions"
+      style="margin-top:15px">
+
+      <button
+        class="btn"
+        onclick="calculateEstimate()">
+        Calculate
+      </button>
+
+      <button
+        class="btn secondary"
+        onclick="saveEstimate()">
+        Save Estimate
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div
+    id="calculatorResult"
+    class="card">
+  </div>
+
+</section>
+
+
+<!-- ================= ESTIMATES ================= -->
+
+<section
+  id="estimates"
+  class="page">
+
+  <div class="card">
+
+    <div class="search">
+
+      <input
+        id="estimateSearch"
+        placeholder="🔎 Search estimates..."
+        oninput="renderEstimates()">
+
+      <select
+        id="estimateStatus"
+        onchange="renderEstimates()">
+
+        <option>All</option>
+        <option>Lead</option>
+        <option>Estimated</option>
+        <option>Sold</option>
+        <option>Completed</option>
+        <option>Lost</option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <div
+      id="estimateTable"
+      class="table-wrap">
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= PIPELINE ================= -->
+
+<section
+  id="pipeline"
+  class="page">
+
+  <div class="card">
+
+    <h2>
+      Pipeline
+    </h2>
+
+    <div
+      id="pipelineGrid"
+      class="grid g3">
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= PURCHASE ORDERS ================= -->
+
+<section
+  id="purchaseorders"
+  class="page">
+
+  <div class="card">
+
+    <div class="actions">
+
+      <h2 style="flex:1">
+        Purchase Orders
+      </h2>
+
+      <button
+        class="btn"
+        onclick="createPO()">
+        + New PO
+      </button>
+
+    </div>
+
+    <div
+      class="search"
+      style="margin-top:12px">
+
+      <input
+        id="poSearch"
+        placeholder="🔎 Search PO #, job, vendor or customer..."
+        oninput="renderPOs()">
+
+      <select
+        id="poStatus"
+        onchange="renderPOs()">
+
+        <option>All</option>
+        <option>Draft</option>
+        <option>Ordered</option>
+        <option>Partially Received</option>
+        <option>Received</option>
+        <option>Cancelled</option>
+
+      </select>
+
+    </div>
+
+  </div>
+
+  <div class="card">
+
+    <div
+      id="poTable"
+      class="table-wrap">
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ================= SETTINGS ================= -->
+
+<section
+  id="settings"
+  class="page">
+
+  <div class="card">
+
+    <h2>
+      Company Profile
+    </h2>
+
+    <div class="grid g2">
+
+      <div>
+        <label>Company Name</label>
+        <input id="sCompany">
+      </div>
+
+      <div>
+        <label>Phone</label>
+        <input id="sPhone">
+      </div>
+
+      <div>
+        <label>Email</label>
+        <input id="sEmail">
+      </div>
+
+      <div>
+        <label>Website</label>
+        <input id="sWebsite">
+      </div>
+
+      <div style="grid-column:1/-1">
+        <label>Address</label>
+        <input id="sAddress">
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>
+      Proposal Settings
+    </h2>
+
+    <div class="grid g2">
+
+      <div>
+        <label>Default Valid Days</label>
+        <input
+          id="sValidDays"
+          type="number">
+      </div>
+
+      <div>
+        <label>Default Scope of Work</label>
+        <textarea id="sScope"></textarea>
+      </div>
+
+      <div>
+        <label>Default Important Information</label>
+        <textarea id="sImportant"></textarea>
+      </div>
+
+    </div>
+
+    <div class="toggle">
+      <span>Show phone</span>
+      <input id="sShowPhone" type="checkbox">
+    </div>
+
+    <div class="toggle">
+      <span>Show email</span>
+      <input id="sShowEmail" type="checkbox">
+    </div>
+
+    <div class="toggle">
+      <span>Show address</span>
+      <input id="sShowAddress" type="checkbox">
+    </div>
+
+    <div class="toggle">
+      <span>Show website</span>
+      <input id="sShowWebsite" type="checkbox">
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>
+      Estimate Defaults
+    </h2>
+
+    <div class="grid g3">
+
+      <div>
+        <label>Waste %</label>
+        <input id="sWaste" type="number">
+      </div>
+
+      <div>
+        <label>Profit Margin %</label>
+        <input id="sMargin" type="number">
+      </div>
+
+      <div>
+        <label>Overhead %</label>
+        <input id="sOverhead" type="number">
+      </div>
+
+      <div>
+        <label>Layers</label>
+        <input id="sLayers" type="number">
+      </div>
+
+      <div>
+        <label>Pitch Multiplier</label>
+        <input id="sPitch" type="number">
+      </div>
+
+      <div>
+        <label>Shingle $/sq</label>
+        <input id="sShingle" type="number">
+      </div>
+
+      <div>
+        <label>Starter $/sq</label>
+        <input id="sStarter" type="number">
+      </div>
+
+      <div>
+        <label>Ridge $/sq</label>
+        <input id="sRidge" type="number">
+      </div>
+
+      <div>
+        <label>Labor $/sq</label>
+        <input id="sLabor" type="number">
+      </div>
+
+      <div>
+        <label>Tear-off $/sq/layer</label>
+        <input id="sTear" type="number">
+      </div>
+
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>
+      Dashboard Widgets
+    </h2>
+
+    <div id="widgetSettings">
+    </div>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>
+      Appearance
+    </h2>
+
+    <p class="muted">
+      Light/Dark mode is now ONLY controlled here.
+      It has been removed from the top bar.
+    </p>
+
+    <select
+      id="themeSelect"
+      onchange="changeTheme(this.value)">
+
+      <option value="light">
+        Light
+      </option>
+
+      <option value="dark">
+        Dark
+      </option>
+
+    </select>
+
+  </div>
+
+
+  <div class="card">
+
+    <h2>
+      Account
+    </h2>
+
+    <p
+      id="settingsEmail"
+      class="muted">
+    </p>
+
+    <div class="actions">
+
+      <button
+        class="btn secondary"
+        onclick="changePassword()">
+        Change Password
+      </button>
+
+      <button
+        class="btn danger"
+        onclick="logout()">
+        Logout
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <button
+    class="btn"
+    onclick="saveSettings()">
+    Save All Settings
+  </button>
+
+</section>
+
+
+<!-- ================= HOMEOWNER ================= -->
+
+<section
+  id="homeowner"
+  class="page">
+
+  <div class="card">
+
+    <h2>
+      Homeowner Portal
+    </h2>
+
+    <p class="muted">
+      Your roofing proposals will appear here.
+    </p>
+
+    <div id="homeownerProposals">
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+"https://ovuirmlmdpbqumriakcm.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+"sb_publishable_79QIWXKGoCtpUwF3t4KTRw_A9lAuao3";
+
+const supabaseClient =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_PUBLISHABLE_KEY
+);
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentUser = null;
+let isHomeowner = false;
+
+let estimates = [];
+let purchaseOrders = [];
+
+let jobFilter = "All";
+
+let lastCalculation = null;
+
+let settings = {
+
+  default_valid_days:30,
+  default_waste:10,
+  default_profit_margin:30,
+  default_overhead:10,
+  default_layers:1,
+  default_pitch:1.15,
+
+  default_shingle_cost:110,
+  default_starter_cost:35,
+  default_ridge_cost:35,
+  default_labor_cost:90,
+  default_tear_off_cost:35,
+
+  default_scope:"",
+  default_important_info:"",
+
+  show_phone:true,
+  show_email:true,
+  show_address:true,
+  show_website:true,
+
+  theme:"light",
+
+  dashboard_widgets:{
+    revenue:true,
+    profit:true,
+    soldLost:true,
+    closeRate:true,
+    followups:true,
+    recent:true,
+    pipeline:true
+  },
+
+  company:{}
+
+};
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+const $ = id => document.getElementById(id);
+
+function escapeHTML(value){
+
+  return String(value ?? "")
+    .replace(/[&<>"']/g, char => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[char]));
+
 }
 
-function chooseTheme(theme){
+function money(value){
 
-  setTheme(theme);
-
-  renderSettings();
-
-  saveTheme(theme);
-}
-
-function previewLogo(event){
-
-  const file =
-    event.target.files?.[0];
-
-  if(!file) return;
-
-  const reader =
-    new FileReader();
-
-  reader.onload = e=>{
-    const img = $("logoPreview");
-
-    if(!img) return;
-
-    img.src = e.target.result;
-    img.classList.remove("hidden");
-
-    window.pendingLogo =
-      e.target.result;
-  };
-
-  reader.readAsDataURL(file);
-}
-
-async function saveAllSettings(){
-
-  if(!currentUser) return;
-
-  const widgets = {
-    revenue:$("widget_revenue")?.checked !== false,
-    profit:$("widget_profit")?.checked !== false,
-    soldLost:$("widget_sold")?.checked !== false,
-    closeRate:$("widget_close")?.checked !== false,
-    followups:$("widget_followups")?.checked !== false,
-    recent:$("widget_recent")?.checked !== false,
-    pipeline:$("widget_pipeline")?.checked !== false
-  };
-
-  const company = {
-    user_id:currentUser.id,
-    company_name:$("setting_company_name")?.value.trim() || "",
-    phone:$("setting_phone")?.value.trim() || "",
-    email:$("setting_email")?.value.trim() || "",
-    address:$("setting_address")?.value.trim() || "",
-    website:$("setting_website")?.value.trim() || "",
-    logo_data:
-      window.pendingLogo !== undefined
-        ? window.pendingLogo
-        : companyProfile.logo_data || "",
-    updated_at:new Date().toISOString()
-  };
-
-  const settings = {
-    user_id:currentUser.id,
-    default_valid_days:num($("setting_valid_days")?.value)||30,
-    default_waste:num($("setting_waste")?.value)||10,
-    default_profit_margin:num($("setting_profit")?.value)||30,
-    default_overhead:num($("setting_overhead")?.value)||10,
-    default_layers:num($("setting_layers")?.value)||1,
-    default_pitch:num($("setting_pitch")?.value)||4,
-    default_shingle_cost:num($("setting_shingle")?.value)||110,
-    default_starter_cost:num($("setting_starter")?.value)||35,
-    default_ridge_cost:num($("setting_ridge")?.value)||35,
-    default_labor_cost:num($("setting_labor")?.value)||90,
-    default_tear_off_cost:num($("setting_tearoff")?.value)||35,
-    default_scope:$("setting_scope")?.value || "",
-    default_important_info:$("setting_important")?.value || "",
-    show_phone:$("setting_show_phone")?.checked !== false,
-    show_email:$("setting_show_email")?.checked !== false,
-    show_address:$("setting_show_address")?.checked !== false,
-    show_website:$("setting_show_website")?.checked !== false,
-    show_logo:$("setting_show_logo")?.checked !== false,
-    dashboard_widgets:widgets,
-    theme:getTheme(),
-    updated_at:new Date().toISOString()
-  };
-
-  const companyResult =
-    await supabaseClient
-      .from("company_profiles")
-      .upsert(company,{onConflict:"user_id"});
-
-  if(companyResult.error){
-    notify(
-      "Company profile: "+companyResult.error.message,
-      "error"
+  return "$" +
+    Number(value || 0).toLocaleString(
+      undefined,
+      {
+        minimumFractionDigits:2,
+        maximumFractionDigits:2
+      }
     );
+
+}
+
+function showAuthMessage(message){
+
+  $("authMessage").textContent = message;
+
+}
+
+
+/* =========================================================
+   AUTH MODE
+========================================================= */
+
+function setAuthMode(mode){
+
+  $("authScreen").dataset.mode = mode;
+
+  $("contractorMode")
+    .classList.toggle(
+      "active",
+      mode === "contractor"
+    );
+
+  $("homeownerMode")
+    .classList.toggle(
+      "active",
+      mode === "homeowner"
+    );
+
+  $("authTitle").textContent =
+    mode === "homeowner"
+      ? "Homeowner Login"
+      : "Contractor Login";
+
+  $("nameWrap")
+    .classList.toggle(
+      "hidden",
+      mode !== "homeowner"
+    );
+
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+async function loginUser(){
+
+  const email =
+    $("authEmail").value.trim();
+
+  const password =
+    $("authPassword").value;
+
+  if(!email || !password){
+
+    showAuthMessage(
+      "Enter your email and password."
+    );
+
     return;
   }
+
+  const {data,error} =
+    await supabaseClient.auth.signInWithPassword({
+
+      email,
+      password
+
+    });
+
+  if(error){
+
+    showAuthMessage(error.message);
+
+    return;
+  }
+
+  currentUser = data.user;
+
+  isHomeowner =
+    currentUser.user_metadata?.role ===
+    "homeowner";
+
+  await startApplication();
+
+}
+
+
+/* =========================================================
+   CREATE ACCOUNT
+========================================================= */
+
+async function signupUser(){
+
+  const email =
+    $("authEmail").value.trim();
+
+  const password =
+    $("authPassword").value;
+
+  const mode =
+    $("authScreen").dataset.mode ||
+    "contractor";
+
+  const name =
+    $("authName").value.trim();
+
+  if(!email || !password){
+
+    showAuthMessage(
+      "Enter an email and password."
+    );
+
+    return;
+  }
+
+  if(password.length < 6){
+
+    showAuthMessage(
+      "Password must be at least 6 characters."
+    );
+
+    return;
+  }
+
+  const role =
+    mode === "homeowner"
+      ? "homeowner"
+      : "contractor";
+
+  const {data,error} =
+    await supabaseClient.auth.signUp({
+
+      email,
+      password,
+
+      options:{
+        data:{
+          role:role
+        }
+      }
+
+    });
+
+  if(error){
+
+    showAuthMessage(error.message);
+
+    return;
+  }
+
+  if(data.user && !data.session){
+
+    showAuthMessage(
+      "Account created. Check your email, confirm it, then use Login."
+    );
+
+    return;
+  }
+
+  if(data.session){
+
+    currentUser = data.user;
+
+    isHomeowner =
+      role === "homeowner";
+
+    if(isHomeowner){
+
+      await supabaseClient
+        .from("homeowner_profiles")
+        .upsert({
+
+          user_id:currentUser.id,
+          full_name:name
+
+        },{
+          onConflict:"user_id"
+        });
+
+    }
+
+    await startApplication();
+
+  }
+
+}
+
+
+/* =========================================================
+   START APP
+========================================================= */
+
+async function startApplication(){
+
+  $("authScreen")
+    .classList.add("hidden");
+
+  $("app")
+    .classList.remove("hidden");
+
+  $("userEmail").textContent =
+    currentUser.email || "";
+
+  if(isHomeowner){
+
+    go("homeowner");
+
+    await loadHomeownerProposals();
+
+  }else{
+
+    await loadSettings();
+
+    await loadEstimates();
+
+    await loadPurchaseOrders();
+
+    go("dashboard");
+
+  }
+
+}
+
+
+/* =========================================================
+   MENU
+========================================================= */
+
+function toggleMenu(){
+
+  $("drawer")
+    .classList.toggle("open");
+
+  $("backdrop")
+    .classList.toggle("hidden");
+
+}
+
+function closeMenu(){
+
+  $("drawer")
+    .classList.remove("open");
+
+  $("backdrop")
+    .classList.add("hidden");
+
+}
+
+
+/* =========================================================
+   PAGE NAVIGATION
+   IMPORTANT FIX:
+   Clicking Dashboard repeatedly NEVER hides it.
+========================================================= */
+
+function go(page){
+
+  const target =
+    $(page);
+
+  if(!target){
+
+    return;
+  }
+
+  document
+    .querySelectorAll(".page")
+    .forEach(section => {
+
+      section.classList.remove("active");
+
+    });
+
+  target.classList.add("active");
+
+
+  document
+    .querySelectorAll(".nav-btn[data-page]")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.page === page
+      );
+
+    });
+
+
+  const titles = {
+
+    dashboard:"Dashboard",
+    calculator:"Calculator",
+    estimates:"Estimates",
+    pipeline:"Pipeline",
+    purchaseorders:"Purchase Orders",
+    settings:"Settings",
+    homeowner:"Homeowner Portal"
+
+  };
+
+  $("pageTitle").textContent =
+    titles[page] || "RoofBidder";
+
+  closeMenu();
+
+
+  if(page === "dashboard")
+    renderDashboard();
+
+  if(page === "estimates")
+    renderEstimates();
+
+  if(page === "pipeline")
+    renderPipeline();
+
+  if(page === "purchaseorders")
+    renderPOs();
+
+  if(page === "settings")
+    renderSettings();
+
+  if(page === "homeowner")
+    loadHomeownerProposals();
+
+}
+
+
+/* =========================================================
+   LOAD ESTIMATES
+========================================================= */
+
+async function loadEstimates(){
+
+  const {data,error} =
+    await supabaseClient
+      .from("estimates")
+      .select("*")
+      .order(
+        "updated_at",
+        {ascending:false}
+      );
+
+  if(error){
+
+    console.error(error);
+
+    estimates = [];
+
+    return;
+  }
+
+  estimates =
+    data || [];
+
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function matchesSearch(estimate,query){
+
+  if(!query)
+    return true;
+
+  const text = [
+
+    estimate.customer_name,
+    estimate.project_address,
+    estimate.estimate_number,
+    estimate.customer_phone,
+    estimate.customer_email
+
+  ]
+    .join(" ")
+    .toLowerCase();
+
+  return text.includes(
+    query.toLowerCase()
+  );
+
+}
+
+
+/* =========================================================
+   DASHBOARD FILTER
+========================================================= */
+
+function setJobFilter(filter){
+
+  jobFilter = filter;
+
+  document
+    .querySelectorAll(".chip")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.filter === filter
+      );
+
+    });
+
+  renderDashboard();
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function renderDashboard(){
+
+  const search =
+    $("jobSearch")?.value
+      ?.trim()
+      .toLowerCase() || "";
+
+  const filtered =
+    estimates.filter(estimate => {
+
+      const statusMatch =
+        jobFilter === "All" ||
+        estimate.status === jobFilter;
+
+      return (
+        statusMatch &&
+        matchesSearch(
+          estimate,
+          search
+        )
+      );
+
+    });
+
+
+  const totalRevenue =
+    estimates.reduce(
+      (sum,e) =>
+        sum + Number(e.selling_price || 0),
+      0
+    );
+
+
+  const totalProfit =
+    estimates.reduce(
+      (sum,e) =>
+        sum + Number(e.gross_profit || 0),
+      0
+    );
+
+
+  const sold =
+    estimates.filter(
+      e =>
+        e.status === "Sold" ||
+        e.status === "Completed"
+    );
+
+
+  const lost =
+    estimates.filter(
+      e =>
+        e.status === "Lost"
+    );
+
+
+  const soldRevenue =
+    sold.reduce(
+      (sum,e) =>
+        sum + Number(e.selling_price || 0),
+      0
+    );
+
+
+  const lostRevenue =
+    lost.reduce(
+      (sum,e) =>
+        sum + Number(e.selling_price || 0),
+      0
+    );
+
+
+  const decided =
+    sold.length +
+    lost.length;
+
+
+  const closeRate =
+    decided
+      ? sold.length / decided * 100
+      : 0;
+
+
+  $("dashboardStats").innerHTML = `
+
+    <div class="card stat">
+      <div class="small muted">
+        Total Jobs
+      </div>
+      <div class="number">
+        ${estimates.length}
+      </div>
+    </div>
+
+    <div class="card stat">
+      <div class="small muted">
+        Projected Revenue
+      </div>
+      <div class="number">
+        ${money(totalRevenue)}
+      </div>
+    </div>
+
+    <div class="card stat">
+      <div class="small muted">
+        Projected Profit
+      </div>
+      <div class="number">
+        ${money(totalProfit)}
+      </div>
+    </div>
+
+    <div class="card stat">
+      <div class="small muted">
+        Sold Revenue
+      </div>
+      <div class="number">
+        ${money(soldRevenue)}
+      </div>
+    </div>
+
+    <div class="card stat">
+      <div class="small muted">
+        Lost Revenue
+      </div>
+      <div class="number">
+        ${money(lostRevenue)}
+      </div>
+    </div>
+
+    <div class="card stat">
+      <div class="small muted">
+        Close Rate
+      </div>
+      <div class="number">
+        ${closeRate.toFixed(1)}%
+      </div>
+    </div>
+
+  `;
+
+
+  if(!filtered.length){
+
+    $("dashboardJobs").innerHTML =
+      `<p class="muted">
+        No jobs found.
+      </p>`;
+
+    return;
+  }
+
+
+  $("dashboardJobs").innerHTML = `
+
+    <div class="table-wrap">
+
+      <table class="table">
+
+        <tr>
+          <th>Estimate</th>
+          <th>Customer</th>
+          <th>Address</th>
+          <th>Status</th>
+          <th>Price</th>
+          <th></th>
+        </tr>
+
+        ${filtered.map(e => `
+
+          <tr>
+
+            <td>
+              ${escapeHTML(e.estimate_number)}
+            </td>
+
+            <td>
+              ${escapeHTML(e.customer_name)}
+            </td>
+
+            <td>
+              ${escapeHTML(e.project_address)}
+            </td>
+
+            <td>
+              ${statusBadge(e.status)}
+            </td>
+
+            <td>
+              ${money(e.selling_price)}
+            </td>
+
+            <td>
+              <button
+                class="btn secondary"
+                onclick="openEstimate('${e.id}')">
+                Open
+              </button>
+            </td>
+
+          </tr>
+
+        `).join("")}
+
+      </table>
+
+    </div>
+
+  `;
+
+}
+
+
+function clearJobSearch(){
+
+  $("jobSearch").value = "";
+
+  jobFilter = "All";
+
+  document
+    .querySelectorAll(".chip")
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.filter === "All"
+      );
+
+    });
+
+  renderDashboard();
+
+}
+
+
+/* =========================================================
+   STATUS BADGE
+========================================================= */
+
+function statusBadge(status){
+
+  const s =
+    status || "Lead";
+
+  let cls = "";
+
+  if(
+    s === "Sold" ||
+    s === "Completed"
+  ){
+    cls = "green";
+  }
+
+  if(s === "Lost"){
+    cls = "red";
+  }
+
+  return `
+    <span class="badge ${cls}">
+      ${escapeHTML(s)}
+    </span>
+  `;
+
+}
+
+
+/* =========================================================
+   CALCULATOR
+========================================================= */
+
+function calculateEstimate(){
+
+  const n = id =>
+    Number(
+      $(id).value || 0
+    );
+
+
+  const squares =
+    n("cSquares");
+
+  const waste =
+    n("cWaste") / 100;
+
+  const pitch =
+    n("cPitch");
+
+  const layers =
+    n("cLayers");
+
+
+  const materialSquares =
+    squares *
+    (1 + waste);
+
+
+  const material =
+    materialSquares *
+    (
+      n("cShingle") +
+      n("cStarter") +
+      n("cRidge")
+    ) +
+    n("cOtherMaterial");
+
+
+  const labor =
+    squares *
+    n("cLabor") *
+    pitch
+
+    +
+
+    squares *
+    n("cTear") *
+    layers *
+    pitch
+
+    +
+
+    n("cOtherLabor");
+
+
+  const baseCost =
+    material + labor;
+
+
+  const overhead =
+    baseCost *
+    n("cOverhead") /
+    100;
+
+
+  const totalCost =
+    baseCost +
+    overhead;
+
+
+  const margin =
+    n("cMargin") /
+    100;
+
+
+  const sellingPrice =
+    margin < 1
+      ? totalCost /
+        (1 - margin) +
+        n("cAdjustment")
+      : totalCost;
+
+
+  const grossProfit =
+    sellingPrice -
+    totalCost;
+
+
+  const grossMargin =
+    sellingPrice
+      ? grossProfit /
+        sellingPrice *
+        100
+      : 0;
+
+
+  const pricePerSquare =
+    squares
+      ? sellingPrice / squares
+      : 0;
+
+
+  lastCalculation = {
+
+    customer_name:
+      $("cCustomer").value,
+
+    customer_phone:
+      $("cPhone").value,
+
+    customer_email:
+      $("cEmail").value,
+
+    project_address:
+      $("cAddress").value,
+
+    squares,
+    pitch,
+    layers,
+    waste:n("cWaste"),
+
+    shingle_cost:
+      n("cShingle"),
+
+    starter_cost:
+      n("cStarter"),
+
+    ridge_cost:
+      n("cRidge"),
+
+    labor_cost:
+      n("cLabor"),
+
+    tear_off_cost:
+      n("cTear"),
+
+    other_material:
+      n("cOtherMaterial"),
+
+    other_labor:
+      n("cOtherLabor"),
+
+    overhead:
+      n("cOverhead"),
+
+    profit_margin:
+      n("cMargin"),
+
+    price_adjustment:
+      n("cAdjustment"),
+
+    material_cost:
+      material,
+
+    labor_total:
+      labor,
+
+    total_cost:
+      totalCost,
+
+    selling_price:
+      sellingPrice,
+
+    gross_profit:
+      grossProfit,
+
+    gross_margin:
+      grossMargin,
+
+    price_per_square:
+      pricePerSquare,
+
+    material_squares:
+      materialSquares
+
+  };
+
+
+  $("calculatorResult").innerHTML = `
+
+    <div class="grid g4">
+
+      <div class="card stat">
+        <div class="small muted">
+          Material
+        </div>
+        <div class="number">
+          ${money(material)}
+        </div>
+      </div>
+
+      <div class="card stat">
+        <div class="small muted">
+          Labor
+        </div>
+        <div class="number">
+          ${money(labor)}
+        </div>
+      </div>
+
+      <div class="card stat">
+        <div class="small muted">
+          Total Cost
+        </div>
+        <div class="number">
+          ${money(totalCost)}
+        </div>
+      </div>
+
+      <div class="card stat">
+        <div class="small muted">
+          Selling Price
+        </div>
+        <div class="number">
+          ${money(sellingPrice)}
+        </div>
+      </div>
+
+      <div class="card stat">
+        <div class="small muted">
+          Gross Profit
+        </div>
+        <div class="number">
+          ${money(grossProfit)}
+        </div>
+      </div>
+
+      <div class="card stat">
+        <div class="small muted">
+          Margin
+        </div>
+        <div class="number">
+          ${grossMargin.toFixed(1)}%
+        </div>
+      </div>
+
+      <div class="card stat">
+        <div class="small muted">
+          Price / Square
+        </div>
+        <div class="number">
+          ${money(pricePerSquare)}
+        </div>
+      </div>
+
+      <div class="card stat">
+        <div class="small muted">
+          Material Squares
+        </div>
+        <div class="number">
+          ${materialSquares.toFixed(1)}
+        </div>
+      </div>
+
+    </div>
+
+    <p class="small muted">
+      Planning quantities only. Verify actual takeoff before ordering materials.
+    </p>
+
+  `;
+
+}
+
+
+/* =========================================================
+   SAVE ESTIMATE
+========================================================= */
+
+async function saveEstimate(){
+
+  if(!lastCalculation){
+
+    calculateEstimate();
+
+  }
+
+  const payload = {
+
+    ...lastCalculation,
+
+    user_id:
+      currentUser.id,
+
+    estimate_number:
+      "RB-" +
+      Date.now()
+        .toString()
+        .slice(-8),
+
+    valid_days:
+      settings.default_valid_days,
+
+    scope_of_work:
+      settings.default_scope,
+
+    important_info:
+      settings.default_important_info,
+
+    status:"Lead",
+
+    updated_at:
+      new Date().toISOString()
+
+  };
+
+
+  const {error} =
+    await supabaseClient
+      .from("estimates")
+      .insert(payload);
+
+
+  if(error){
+
+    alert(error.message);
+
+    return;
+  }
+
+
+  await loadEstimates();
+
+  alert(
+    "Estimate saved."
+  );
+
+  go("estimates");
+
+}
+
+
+/* =========================================================
+   ESTIMATES
+========================================================= */
+
+function renderEstimates(){
+
+  const query =
+    $("estimateSearch")
+      .value
+      .trim()
+      .toLowerCase();
+
+  const status =
+    $("estimateStatus").value;
+
+
+  const list =
+    estimates.filter(e => {
+
+      return (
+
+        (
+          status === "All" ||
+          e.status === status
+        )
+
+        &&
+
+        matchesSearch(
+          e,
+          query
+        )
+
+      );
+
+    });
+
+
+  if(!list.length){
+
+    $("estimateTable").innerHTML =
+      `<p class="muted">
+        No estimates found.
+      </p>`;
+
+    return;
+  }
+
+
+  $("estimateTable").innerHTML = `
+
+    <table class="table">
+
+      <tr>
+        <th>Estimate</th>
+        <th>Customer</th>
+        <th>Address</th>
+        <th>Status</th>
+        <th>Price</th>
+        <th>Updated</th>
+        <th></th>
+      </tr>
+
+      ${list.map(e => `
+
+        <tr>
+
+          <td>
+            ${escapeHTML(e.estimate_number)}
+          </td>
+
+          <td>
+            ${escapeHTML(e.customer_name)}
+          </td>
+
+          <td>
+            ${escapeHTML(e.project_address)}
+          </td>
+
+          <td>
+            ${statusBadge(e.status)}
+          </td>
+
+          <td>
+            ${money(e.selling_price)}
+          </td>
+
+          <td>
+            ${new Date(
+              e.updated_at ||
+              e.saved_at
+            ).toLocaleDateString()}
+          </td>
+
+          <td>
+
+            <button
+              class="btn secondary"
+              onclick="openEstimate('${e.id}')">
+              Open
+            </button>
+
+          </td>
+
+        </tr>
+
+      `).join("")}
+
+    </table>
+
+  `;
+
+}
+
+
+/* =========================================================
+   OPEN ESTIMATE
+========================================================= */
+
+function openEstimate(id){
+
+  const e =
+    estimates.find(
+      x => x.id === id
+    );
+
+  if(!e)
+    return;
+
+
+  const fields = {
+
+    cCustomer:e.customer_name,
+    cPhone:e.customer_phone,
+    cEmail:e.customer_email,
+    cAddress:e.project_address,
+
+    cSquares:e.squares,
+    cPitch:e.pitch,
+    cLayers:e.layers,
+    cWaste:e.waste,
+
+    cShingle:e.shingle_cost,
+    cStarter:e.starter_cost,
+    cRidge:e.ridge_cost,
+    cLabor:e.labor_cost,
+    cTear:e.tear_off_cost,
+
+    cOtherMaterial:e.other_material,
+    cOtherLabor:e.other_labor,
+
+    cOverhead:e.overhead,
+    cMargin:e.profit_margin,
+    cAdjustment:e.price_adjustment
+
+  };
+
+
+  Object.entries(fields)
+    .forEach(([id,value]) => {
+
+      if($(id))
+        $(id).value =
+          value ?? 0;
+
+    });
+
+
+  go("calculator");
+
+  calculateEstimate();
+
+}
+
+
+/* =========================================================
+   PIPELINE
+========================================================= */
+
+function renderPipeline(){
+
+  const statuses = [
+    "Lead",
+    "Estimated",
+    "Sold",
+    "Completed",
+    "Lost"
+  ];
+
+
+  $("pipelineGrid").innerHTML =
+    statuses.map(status => {
+
+      const jobs =
+        estimates.filter(
+          e => e.status === status
+        );
+
+
+      return `
+
+        <div class="card">
+
+          <h3>
+            ${status}
+            <span class="badge">
+              ${jobs.length}
+            </span>
+          </h3>
+
+          ${
+            jobs.length
+
+              ?
+
+              jobs.map(e => `
+
+                <div
+                  style="
+                    padding:10px 0;
+                    border-bottom:1px solid var(--border)
+                  ">
+
+                  <b>
+                    ${escapeHTML(
+                      e.customer_name ||
+                      "Unnamed"
+                    )}
+                  </b>
+
+                  <div class="small muted">
+                    ${escapeHTML(
+                      e.estimate_number
+                    )}
+                    ·
+                    ${money(
+                      e.selling_price
+                    )}
+                  </div>
+
+                </div>
+
+              `).join("")
+
+              :
+
+              `<p class="muted">
+                Empty
+              </p>`
+
+          }
+
+        </div>
+
+      `;
+
+    }).join("");
+
+}
+
+
+/* =========================================================
+   SETTINGS LOAD
+========================================================= */
+
+async function loadSettings(){
 
   const settingsResult =
     await supabaseClient
       .from("user_settings")
-      .upsert(settings,{onConflict:"user_id"});
+      .select("*")
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .maybeSingle();
 
-  if(settingsResult.error){
-    notify(
-      "Settings: "+settingsResult.error.message,
-      "error"
-    );
-    return;
+
+  if(settingsResult.data){
+
+    settings = {
+
+      ...settings,
+      ...settingsResult.data
+
+    };
+
   }
 
-  await loadCompanyProfile();
-  await loadSettings();
 
-  window.pendingLogo = undefined;
+  const companyResult =
+    await supabaseClient
+      .from("company_profiles")
+      .select("*")
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .maybeSingle();
 
-  notify("Settings saved successfully.","success");
 
-  renderSettings();
+  settings.company =
+    companyResult.data ||
+    {};
+
+
+  applyTheme(
+    settings.theme ||
+    "light"
+  );
+
 }
 
-/* ---------------------------------------------------------
-   PROPOSALS
---------------------------------------------------------- */
 
-function randomToken(){
+/* =========================================================
+   SETTINGS RENDER
+========================================================= */
 
-  const bytes =
-    new Uint8Array(24);
+function renderSettings(){
 
-  crypto.getRandomValues(bytes);
+  const company =
+    settings.company ||
+    {};
 
-  return Array.from(bytes)
-    .map(b=>b.toString(16).padStart(2,"0"))
-    .join("");
-}
 
-async function createProposal(estimateId){
+  const values = {
 
-  const e =
-    estimates.find(x=>x.id===estimateId);
+    sCompany:
+      company.company_name || "",
 
-  if(!e){
-    notify("Estimate not found.","error");
-    return;
-  }
+    sPhone:
+      company.phone || "",
 
-  const token = randomToken();
+    sEmail:
+      company.email ||
+      currentUser.email ||
+      "",
 
-  const validDays =
-    Number(e.valid_days || userSettings.default_valid_days || 30);
+    sWebsite:
+      company.website || "",
 
-  const validUntil =
-    new Date(
-      Date.now()+validDays*86400000
-    ).toISOString().slice(0,10);
+    sAddress:
+      company.address || "",
 
-  const row = {
-    estimate_id:e.id,
-    user_id:currentUser.id,
-    public_token:token,
+    sValidDays:
+      settings.default_valid_days,
 
-    company_name:companyProfile.company_name || "",
-    company_phone:
-      userSettings.show_phone !== false
-        ? companyProfile.phone || ""
-        : "",
-    company_email:
-      userSettings.show_email !== false
-        ? companyProfile.email || ""
-        : "",
-    company_address:
-      userSettings.show_address !== false
-        ? companyProfile.address || ""
-        : "",
-    company_website:
-      userSettings.show_website !== false
-        ? companyProfile.website || ""
-        : "",
-    company_logo:
-      userSettings.show_logo !== false
-        ? companyProfile.logo_data || ""
-        : "",
+    sScope:
+      settings.default_scope,
 
-    customer_name:e.customer_name || "",
-    customer_email:e.customer_email || "",
-    customer_phone:e.customer_phone || "",
-    project_address:e.project_address || "",
+    sImportant:
+      settings.default_important_info,
 
-    estimate_number:e.estimate_number,
-    scope_of_work:e.scope_of_work || "",
-    important_info:e.important_info || "",
-    selling_price:e.selling_price || 0,
-    valid_until:validUntil,
-    status:"Sent",
+    sWaste:
+      settings.default_waste,
 
-    homeowner_email:e.customer_email || "",
+    sMargin:
+      settings.default_profit_margin,
 
-    updated_at:new Date().toISOString()
+    sOverhead:
+      settings.default_overhead,
+
+    sLayers:
+      settings.default_layers,
+
+    sPitch:
+      settings.default_pitch,
+
+    sShingle:
+      settings.default_shingle_cost,
+
+    sStarter:
+      settings.default_starter_cost,
+
+    sRidge:
+      settings.default_ridge_cost,
+
+    sLabor:
+      settings.default_labor_cost,
+
+    sTear:
+      settings.default_tear_off_cost
+
   };
+
+
+  Object.entries(values)
+    .forEach(([id,value]) => {
+
+      if($(id))
+        $(id).value =
+          value ?? "";
+
+    });
+
+
+  $("sShowPhone").checked =
+    settings.show_phone !== false;
+
+  $("sShowEmail").checked =
+    settings.show_email !== false;
+
+  $("sShowAddress").checked =
+    settings.show_address !== false;
+
+  $("sShowWebsite").checked =
+    settings.show_website !== false;
+
+
+  $("themeSelect").value =
+    settings.theme ||
+    "light";
+
+
+  $("settingsEmail").textContent =
+    currentUser.email;
+
+
+  const widgets = {
+
+    revenue:"Projected Revenue",
+    profit:"Projected Profit",
+    soldLost:"Sold / Lost",
+    closeRate:"Close Rate",
+    followups:"Follow-Ups",
+    recent:"Recent Estimates",
+    pipeline:"Pipeline"
+
+  };
+
+
+  $("widgetSettings").innerHTML =
+    Object.entries(widgets)
+      .map(([key,label]) => `
+
+        <div class="toggle">
+
+          <span>
+            ${label}
+          </span>
+
+          <input
+            type="checkbox"
+            data-widget="${key}"
+            ${
+              settings.dashboard_widgets?.[key] !== false
+                ? "checked"
+                : ""
+            }>
+
+        </div>
+
+      `)
+      .join("");
+
+}
+
+
+/* =========================================================
+   SAVE SETTINGS
+========================================================= */
+
+async function saveSettings(){
+
+  const company = {
+
+    user_id:
+      currentUser.id,
+
+    company_name:
+      $("sCompany").value,
+
+    phone:
+      $("sPhone").value,
+
+    email:
+      $("sEmail").value,
+
+    address:
+      $("sAddress").value,
+
+    website:
+      $("sWebsite").value
+
+  };
+
+
+  let result =
+    await supabaseClient
+      .from("company_profiles")
+      .upsert(
+        company,
+        {
+          onConflict:"user_id"
+        }
+      );
+
+
+  if(result.error){
+
+    alert(
+      result.error.message
+    );
+
+    return;
+  }
+
+
+  const dashboardWidgets = {};
+
+
+  document
+    .querySelectorAll(
+      "[data-widget]"
+    )
+    .forEach(input => {
+
+      dashboardWidgets[
+        input.dataset.widget
+      ] =
+        input.checked;
+
+    });
+
+
+  const newSettings = {
+
+    user_id:
+      currentUser.id,
+
+    default_valid_days:
+      Number(
+        $("sValidDays").value
+      ),
+
+    default_waste:
+      Number(
+        $("sWaste").value
+      ),
+
+    default_profit_margin:
+      Number(
+        $("sMargin").value
+      ),
+
+    default_overhead:
+      Number(
+        $("sOverhead").value
+      ),
+
+    default_layers:
+      Number(
+        $("sLayers").value
+      ),
+
+    default_pitch:
+      Number(
+        $("sPitch").value
+      ),
+
+    default_shingle_cost:
+      Number(
+        $("sShingle").value
+      ),
+
+    default_starter_cost:
+      Number(
+        $("sStarter").value
+      ),
+
+    default_ridge_cost:
+      Number(
+        $("sRidge").value
+      ),
+
+    default_labor_cost:
+      Number(
+        $("sLabor").value
+      ),
+
+    default_tear_off_cost:
+      Number(
+        $("sTear").value
+      ),
+
+    default_scope:
+      $("sScope").value,
+
+    default_important_info:
+      $("sImportant").value,
+
+    show_phone:
+      $("sShowPhone").checked,
+
+    show_email:
+      $("sShowEmail").checked,
+
+    show_address:
+      $("sShowAddress").checked,
+
+    show_website:
+      $("sShowWebsite").checked,
+
+    theme:
+      $("themeSelect").value,
+
+    dashboard_widgets:
+      dashboardWidgets
+
+  };
+
+
+  result =
+    await supabaseClient
+      .from("user_settings")
+      .upsert(
+        newSettings,
+        {
+          onConflict:"user_id"
+        }
+      );
+
+
+  if(result.error){
+
+    alert(
+      result.error.message
+    );
+
+    return;
+  }
+
+
+  settings = {
+
+    ...settings,
+    ...newSettings,
+    company
+
+  };
+
+
+  applyTheme(
+    newSettings.theme
+  );
+
+
+  alert(
+    "Settings saved."
+  );
+
+}
+
+
+/* =========================================================
+   THEME
+========================================================= */
+
+function changeTheme(theme){
+
+  settings.theme =
+    theme;
+
+  applyTheme(theme);
+
+}
+
+
+function applyTheme(theme){
+
+  document.body
+    .classList.toggle(
+      "dark",
+      theme === "dark"
+    );
+
+}
+
+
+/* =========================================================
+   PASSWORD
+========================================================= */
+
+async function changePassword(){
+
+  const password =
+    prompt(
+      "Enter your new password:"
+    );
+
+  if(!password)
+    return;
+
+  if(password.length < 6){
+
+    alert(
+      "Password must be at least 6 characters."
+    );
+
+    return;
+  }
+
+
+  const {error} =
+    await supabaseClient.auth.updateUser({
+
+      password
+
+    });
+
+
+  alert(
+    error
+      ? error.message
+      : "Password changed."
+  );
+
+}
+
+
+/* =========================================================
+   PURCHASE ORDERS
+========================================================= */
+
+async function loadPurchaseOrders(){
+
+  const {data,error} =
+    await supabaseClient
+      .from("purchase_orders")
+      .select("*")
+      .eq(
+        "user_id",
+        currentUser.id
+      )
+      .order(
+        "created_at",
+        {ascending:false}
+      );
+
+
+  if(error){
+
+    console.log(
+      "Purchase orders table not installed yet."
+    );
+
+    purchaseOrders = [];
+
+    renderPOs();
+
+    return;
+  }
+
+
+  purchaseOrders =
+    data || [];
+
+
+  renderPOs();
+
+}
+
+
+function renderPOs(){
+
+  if(!$("poTable"))
+    return;
+
+
+  const query =
+    $("poSearch")
+      .value
+      .trim()
+      .toLowerCase();
+
+
+  const status =
+    $("poStatus").value;
+
+
+  const list =
+    purchaseOrders.filter(po => {
+
+      const text = [
+
+        po.po_number,
+        po.vendor,
+        po.customer_name,
+        po.estimate_number
+
+      ]
+        .join(" ")
+        .toLowerCase();
+
+
+      return (
+
+        (status === "All" ||
+          po.status === status)
+
+        &&
+
+        text.includes(query)
+
+      );
+
+    });
+
+
+  if(!list.length){
+
+    $("poTable").innerHTML =
+      `<p class="muted">
+        No purchase orders yet.
+      </p>`;
+
+    return;
+  }
+
+
+  $("poTable").innerHTML = `
+
+    <table class="table">
+
+      <tr>
+        <th>PO #</th>
+        <th>Job</th>
+        <th>Vendor</th>
+        <th>Total</th>
+        <th>Status</th>
+        <th>Delivery</th>
+      </tr>
+
+      ${list.map(po => `
+
+        <tr>
+
+          <td>
+            ${escapeHTML(po.po_number)}
+          </td>
+
+          <td>
+            ${escapeHTML(
+              po.customer_name ||
+              po.estimate_number ||
+              ""
+            )}
+          </td>
+
+          <td>
+            ${escapeHTML(po.vendor)}
+          </td>
+
+          <td>
+            ${money(po.total)}
+          </td>
+
+          <td>
+            ${statusBadge(po.status)}
+          </td>
+
+          <td>
+            ${escapeHTML(
+              po.expected_delivery ||
+              ""
+            )}
+          </td>
+
+        </tr>
+
+      `).join("")}
+
+    </table>
+
+  `;
+
+}
+
+
+async function createPO(){
+
+  const vendor =
+    prompt(
+      "Vendor / supplier:"
+    );
+
+  if(!vendor)
+    return;
+
+
+  const customer =
+    prompt(
+      "Customer / job:"
+    );
+
+
+  const total =
+    prompt(
+      "PO total:"
+    );
+
+
+  const po = {
+
+    user_id:
+      currentUser.id,
+
+    po_number:
+      "PO-" +
+      Date.now()
+        .toString()
+        .slice(-7),
+
+    vendor,
+
+    customer_name:
+      customer || "",
+
+    total:
+      Number(total || 0),
+
+    status:"Draft",
+
+    created_at:
+      new Date().toISOString()
+
+  };
+
 
   const {error} =
     await supabaseClient
-      .from("public_proposals")
-      .insert(row);
+      .from("purchase_orders")
+      .insert(po);
+
 
   if(error){
-    notify(error.message,"error");
-    return;
-  }
 
-  const url =
-    location.origin +
-    location.pathname +
-    "?proposal=" +
-    token;
-
-  try{
-    await navigator.clipboard.writeText(url);
-    notify(
-      "Proposal created. Link copied!",
-      "success"
+    alert(
+      "Purchase Orders need the SQL table installed. Run the SQL code below."
     );
-  }catch{
-    prompt(
-      "Copy this homeowner proposal link:",
-      url
-    );
-  }
-}
-
-async function renderPublicProposal(token){
-
-  $("root").innerHTML = `
-    <div class="auth-screen">
-      <div style="width:min(900px,100%)">
-        <div class="card">
-          Loading proposal...
-        </div>
-      </div>
-    </div>
-  `;
-
-  const {data,error} =
-    await supabaseClient
-      .rpc("get_public_proposal",{p_token:token});
-
-  if(error || !data){
-
-    $("root").innerHTML = `
-      <div class="auth-screen">
-        <div class="auth-card">
-          <h2>Proposal Not Found</h2>
-          <p style="color:var(--muted)">
-            This proposal link is invalid or no longer available.
-          </p>
-        </div>
-      </div>
-    `;
 
     return;
   }
 
-  publicProposal = data;
 
-  const expired =
-    data.valid_until &&
-    new Date(data.valid_until) <
-    new Date(
-      new Date().toISOString().slice(0,10)
-    );
+  await loadPurchaseOrders();
 
-  $("root").innerHTML = `
-
-    <div class="no-print" style="
-      padding:12px 18px;
-      background:var(--card);
-      border-bottom:1px solid var(--border);
-      display:flex;
-      justify-content:space-between;
-      align-items:center">
-
-      <strong>
-        ROOF<span style="color:var(--primary)">BIDDER</span>
-      </strong>
-
-      <div class="btn-row">
-
-        ${
-          !expired
-          ? `
-          <button class="btn btn-primary"
-            onclick="proposalLogin()">
-            Homeowner Login
-          </button>
-          `
-          :""
-        }
-
-        <button
-          class="btn btn-secondary"
-          onclick="window.print()">
-          Print / Save PDF
-        </button>
-
-      </div>
-
-    </div>
-
-    <div class="proposal">
-
-      <div class="proposal-head">
-
-        ${
-          data.company_logo
-          ? `
-            <img
-              class="proposal-logo"
-              src="${data.company_logo}">
-          `
-          :""
-        }
-
-        <div class="proposal-company">
-          ${esc(data.company_name || "Roofing Proposal")}
-        </div>
-
-        ${
-          data.company_phone
-          ? `<div>${esc(data.company_phone)}</div>`
-          :""
-        }
-
-        ${
-          data.company_email
-          ? `<div>${esc(data.company_email)}</div>`
-          :""
-        }
-
-        ${
-          data.company_address
-          ? `<div>${esc(data.company_address)}</div>`
-          :""
-        }
-
-        ${
-          data.company_website
-          ? `
-          <div>
-            <a
-              href="${safeUrl(data.company_website)}"
-              target="_blank">
-              ${esc(data.company_website)}
-            </a>
-          </div>
-          `
-          :""
-        }
-
-      </div>
-
-      <div class="proposal-body">
-
-        <div style="color:var(--muted)">
-          Estimate ${esc(data.estimate_number || "")}
-        </div>
-
-        <h1>
-          Roofing Proposal
-        </h1>
-
-        <div style="margin-top:20px">
-
-          <strong>Prepared For</strong>
-
-          <div>
-            ${esc(data.customer_name || "")}
-          </div>
-
-          ${
-            data.project_address
-            ? `
-              <div style="color:var(--muted)">
-                ${esc(data.project_address)}
-              </div>
-            `
-            :""
-          }
-
-        </div>
-
-        <div class="proposal-section">
-
-          <div style="color:var(--muted)">
-            Proposed Investment
-          </div>
-
-          <div class="proposal-price">
-            ${money(data.selling_price)}
-          </div>
-
-        </div>
-
-        ${
-          data.scope_of_work
-          ? `
-          <div class="proposal-section">
-
-            <h3>Scope of Work</h3>
-
-            <div style="white-space:pre-wrap">
-              ${esc(data.scope_of_work)}
-            </div>
-
-          </div>
-          `
-          :""
-        }
-
-        ${
-          data.important_info
-          ? `
-          <div class="proposal-section">
-
-            <h3>Important Information</h3>
-
-            <div style="white-space:pre-wrap">
-              ${esc(data.important_info)}
-            </div>
-
-          </div>
-          `
-          :""
-        }
-
-        <div class="proposal-section">
-
-          <strong>
-            Valid Through:
-          </strong>
-
-          ${esc(data.valid_until || "No expiration")}
-
-        </div>
-
-        ${
-          data.status==="Approved"
-          ? `
-          <div class="success" style="margin-top:25px">
-            ✓ This proposal has been approved.
-            ${
-              data.approved_at
-              ? ` Approved ${new Date(data.approved_at).toLocaleString()}.`
-              :""
-            }
-          </div>
-          `
-          :
-          expired
-          ? `
-          <div class="error" style="margin-top:25px">
-            This proposal has expired and can no longer be approved.
-          </div>
-          `
-          : `
-          <div class="card no-print"
-            style="margin-top:30px">
-
-            <h3>
-              Ready to move forward?
-            </h3>
-
-            <p style="color:var(--muted)">
-              Log in as the homeowner to claim
-              and approve this proposal.
-            </p>
-
-            <button
-              class="btn btn-success"
-              onclick="proposalLogin()">
-              Login & Approve Proposal
-            </button>
-
-          </div>
-          `
-        }
-
-      </div>
-
-      <div class="proposal-footer">
-
-        ${
-          data.company_name
-          ? esc(data.company_name)
-          :"RoofBidder"
-        }
-
-        ${
-          data.company_website
-          ? ` • ${esc(data.company_website)}`
-          :""
-        }
-
-      </div>
-
-    </div>
-  `;
 }
 
-function safeUrl(url){
 
-  const value =
-    String(url || "").trim();
-
-  if(/^https?:\/\//i.test(value)){
-    return value;
-  }
-
-  return "https://"+value;
-}
-
-function proposalLogin(){
-
-  const token =
-    new URLSearchParams(location.search)
-      .get("proposal");
-
-  sessionStorage.setItem(
-    "roofbidder_proposal_token",
-    token || ""
-  );
-
-  authMode = "homeowner";
-
-  renderAuth();
-}
-
-async function claimProposal(token){
-
-  const {data,error} =
-    await supabaseClient
-      .rpc("claim_public_proposal",{
-        p_token:token
-      });
-
-  if(error){
-    notify(error.message,"error");
-    return false;
-  }
-
-  if(!data?.ok){
-    notify(data?.error || "Could not claim proposal.","error");
-    return false;
-  }
-
-  return true;
-}
-
-async function approveProposal(){
-
-  const token =
-    sessionStorage.getItem(
-      "roofbidder_proposal_token"
-    );
-
-  if(!token){
-    notify("Proposal token missing.","error");
-    return;
-  }
-
-  const name =
-    prompt(
-      "Enter your full name to approve this proposal:",
-      homeownerProfile.full_name ||
-      currentUser?.user_metadata?.full_name ||
-      ""
-    );
-
-  if(!name) return;
-
-  const message =
-    prompt(
-      "Optional message to the contractor:",
-      ""
-    ) || "";
-
-  const result =
-    await supabaseClient
-      .rpc("approve_public_proposal",{
-        p_token:token,
-        p_homeowner_name:name,
-        p_homeowner_message:message
-      });
-
-  if(result.error){
-    notify(result.error.message,"error");
-    return;
-  }
-
-  if(!result.data?.ok){
-    notify(
-      result.data?.error ||
-      "Could not approve proposal.",
-      "error"
-    );
-    return;
-  }
-
-  await renderPublicProposal(token);
-}
-
-/* ---------------------------------------------------------
+/* =========================================================
    HOMEOWNER PORTAL
---------------------------------------------------------- */
+========================================================= */
 
-async function renderHomeownerPortal(){
+async function loadHomeownerProposals(){
 
-  if(!currentUser) return;
+  if(!currentUser)
+    return;
+
 
   const {data,error} =
     await supabaseClient
       .from("public_proposals")
       .select("*")
-      .eq("homeowner_user_id",currentUser.id)
-      .order("updated_at",{ascending:false});
+      .eq(
+        "homeowner_user_id",
+        currentUser.id
+      )
+      .order(
+        "created_at",
+        {ascending:false}
+      );
+
 
   if(error){
-    console.error(error);
-  }
 
-  const proposals = data || [];
+    $("homeownerProposals").innerHTML =
+      `<p class="muted">
+        ${escapeHTML(error.message)}
+      </p>`;
 
-  $("page").innerHTML = `
-
-    <h1 class="page-title">
-      Homeowner Portal
-    </h1>
-
-    <p class="page-sub">
-      View your connected roofing proposals.
-    </p>
-
-    <div class="card">
-
-      <h3 class="section-title">
-        My Proposals
-      </h3>
-
-      ${
-        proposals.length
-        ? `
-        <div class="grid grid-2">
-
-          ${proposals.map(p=>`
-
-            <div class="card"
-              style="box-shadow:none">
-
-              <div style="color:var(--muted);font-size:12px">
-                ${esc(p.estimate_number || "")}
-              </div>
-
-              <h3>
-                ${esc(
-                  p.company_name ||
-                  "Roofing Contractor"
-                )}
-              </h3>
-
-              <div style="
-                font-size:26px;
-                font-weight:900;
-                color:var(--primary)">
-                ${money(p.selling_price)}
-              </div>
-
-              <div style="margin:10px 0">
-                ${statusBadge(
-                  p.status || "Sent"
-                )}
-              </div>
-
-              <div style="color:var(--muted)">
-                ${esc(p.project_address || "")}
-              </div>
-
-              <div class="btn-row"
-                style="margin-top:15px">
-
-                <button
-                  class="btn btn-primary"
-                  onclick="openProposal('${p.public_token}')">
-                  View Proposal
-                </button>
-
-                ${
-                  p.status!=="Approved"
-                  ? `
-                  <button
-                    class="btn btn-success"
-                    onclick="approvePortalProposal('${p.public_token}')">
-                    Approve
-                  </button>
-                  `
-                  :""
-                }
-
-              </div>
-
-            </div>
-
-          `).join("")}
-
-        </div>
-        `
-        : `
-        <div class="empty">
-          No proposals are connected to this account yet.
-          <br><br>
-          Open the proposal link sent by your contractor
-          and log in with this email address.
-        </div>
-        `
-      }
-
-    </div>
-
-    <div class="card" style="margin-top:16px">
-
-      <h3 class="section-title">
-        Homeowner Profile
-      </h3>
-
-      ${field(
-        "homeowner_name",
-        "Full Name",
-        homeownerProfile.full_name ||
-        currentUser.user_metadata?.full_name ||
-        ""
-      )}
-
-      ${field(
-        "homeowner_phone",
-        "Phone",
-        homeownerProfile.phone || "",
-        "tel"
-      )}
-
-      <button
-        class="btn btn-primary"
-        onclick="saveHomeownerProfile()">
-        Save Profile
-      </button>
-
-    </div>
-  `;
-}
-
-function openProposal(token){
-
-  const url =
-    location.origin +
-    location.pathname +
-    "?proposal=" +
-    encodeURIComponent(token);
-
-  location.href = url;
-}
-
-async function approvePortalProposal(token){
-
-  sessionStorage.setItem(
-    "roofbidder_proposal_token",
-    token
-  );
-
-  await approveProposal();
-}
-
-async function saveHomeownerProfile(){
-
-  const row = {
-    user_id:currentUser.id,
-    full_name:$("homeowner_name")?.value.trim() || "",
-    phone:$("homeowner_phone")?.value.trim() || "",
-    updated_at:new Date().toISOString()
-  };
-
-  const {error} =
-    await supabaseClient
-      .from("homeowner_profiles")
-      .upsert(row,{onConflict:"user_id"});
-
-  if(error){
-    notify(error.message,"error");
     return;
   }
 
-  await loadHomeownerProfile();
 
-  notify("Profile saved.","success");
+  if(!data?.length){
+
+    $("homeownerProposals").innerHTML =
+      `<p class="muted">
+        No connected proposals yet.
+      </p>`;
+
+    return;
+  }
+
+
+  $("homeownerProposals").innerHTML =
+    data.map(p => `
+
+      <div class="card">
+
+        <h3>
+          ${escapeHTML(
+            p.estimate_number
+          )}
+        </h3>
+
+        <p>
+          ${escapeHTML(
+            p.company_name
+          )}
+        </p>
+
+        <p>
+          ${escapeHTML(
+            p.project_address
+          )}
+        </p>
+
+        <h2>
+          ${money(
+            p.selling_price
+          )}
+        </h2>
+
+        ${statusBadge(p.status)}
+
+      </div>
+
+    `).join("");
+
 }
 
-/* ---------------------------------------------------------
-   PUBLIC PROPOSAL HOMEOWNER LOGIN HANDLING
---------------------------------------------------------- */
 
-const originalBootApp = bootApp;
+/* =========================================================
+   LOGOUT
+========================================================= */
 
-bootApp = async function(){
+async function logout(){
 
-  await loadCompanyProfile();
-  await loadSettings();
-  await loadHomeownerProfile();
+  await supabaseClient
+    .auth
+    .signOut();
 
-  const role =
-    currentUser?.user_metadata?.role ||
-    "contractor";
+  location.reload();
 
-  const proposalToken =
-    sessionStorage.getItem(
-      "roofbidder_proposal_token"
-    );
+}
 
-  if(role==="homeowner"){
 
-    if(proposalToken){
+/* =========================================================
+   INITIAL SESSION
+========================================================= */
 
-      const claimed =
-        await claimProposal(proposalToken);
+(async function(){
 
-      if(claimed){
-        await renderPublicProposal(proposalToken);
-        return;
-      }
-    }
+  const {data} =
+    await supabaseClient
+      .auth
+      .getSession();
 
-    currentPage = "homeowner";
+
+  if(data.session){
+
+    currentUser =
+      data.session.user;
+
+    isHomeowner =
+      currentUser
+        .user_metadata
+        ?.role === "homeowner";
+
+
+    await startApplication();
 
   }else{
 
-    currentPage = "dashboard";
+    setAuthMode(
+      "contractor"
+    );
+
   }
 
-  renderApp();
-};
-
-/* ---------------------------------------------------------
-   START
---------------------------------------------------------- */
-
-init();
+})();
 
 </script>
+
 </body>
 </html>
