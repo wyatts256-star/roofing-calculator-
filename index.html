@@ -10,20 +10,55 @@
 <style>
 *{box-sizing:border-box}
 
+:root{
+  --bg:#f3f4f6;
+  --card:#ffffff;
+  --text:#111827;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --input:#ffffff;
+  --input-border:#d1d5db;
+  --header:#111827;
+  --blue:#2563eb;
+  --blue-hover:#1d4ed8;
+  --secondary:#e5e7eb;
+  --secondary-text:#111827;
+  --result:#f8fafc;
+  --highlight:#eff6ff;
+  --highlight-border:#bfdbfe;
+}
+
+body.dark{
+  --bg:#0f172a;
+  --card:#1e293b;
+  --text:#f8fafc;
+  --muted:#94a3b8;
+  --border:#334155;
+  --input:#0f172a;
+  --input-border:#475569;
+  --header:#020617;
+  --secondary:#334155;
+  --secondary-text:#f8fafc;
+  --result:#172033;
+  --highlight:#172554;
+  --highlight-border:#1e40af;
+}
+
 body{
   margin:0;
   font-family:Arial,Helvetica,sans-serif;
-  background:#f3f4f6;
-  color:#111827;
+  background:var(--bg);
+  color:var(--text);
+  transition:background .2s,color .2s;
 }
 
 header{
-  background:#111827;
+  background:var(--header);
   color:white;
-  padding:18px 16px;
+  padding:14px 16px;
   position:sticky;
   top:0;
-  z-index:20;
+  z-index:50;
 }
 
 .header-inner{
@@ -78,20 +113,20 @@ header{
 }
 
 .tab{
-  border:0;
-  background:white;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
   padding:12px 16px;
   border-radius:9px;
   font-weight:700;
   cursor:pointer;
   white-space:nowrap;
-  border:1px solid #e5e7eb;
 }
 
 .tab.active{
-  background:#2563eb;
+  background:var(--blue);
   color:white;
-  border-color:#2563eb;
+  border-color:var(--blue);
 }
 
 .page{
@@ -103,11 +138,11 @@ header{
 }
 
 .card{
-  background:white;
+  background:var(--card);
   border-radius:12px;
   padding:18px;
   margin-bottom:16px;
-  border:1px solid #e5e7eb;
+  border:1px solid var(--border);
 }
 
 h1,h2,h3{
@@ -140,10 +175,11 @@ label{
 input,select,textarea{
   width:100%;
   padding:11px;
-  border:1px solid #d1d5db;
+  border:1px solid var(--input-border);
   border-radius:8px;
   font-size:16px;
-  background:white;
+  background:var(--input);
+  color:var(--text);
 }
 
 textarea{
@@ -160,17 +196,17 @@ button{
 }
 
 .btn{
-  background:#2563eb;
+  background:var(--blue);
   color:white;
 }
 
 .btn:hover{
-  background:#1d4ed8;
+  background:var(--blue-hover);
 }
 
 .btn-secondary{
-  background:#e5e7eb;
-  color:#111827;
+  background:var(--secondary);
+  color:var(--secondary-text);
 }
 
 .btn-success{
@@ -196,15 +232,15 @@ button{
 }
 
 .stat{
-  background:white;
-  border:1px solid #e5e7eb;
+  background:var(--card);
+  border:1px solid var(--border);
   border-radius:12px;
   padding:16px;
 }
 
 .stat-label{
   font-size:12px;
-  color:#6b7280;
+  color:var(--muted);
   font-weight:700;
 }
 
@@ -221,14 +257,14 @@ button{
 }
 
 .result{
-  background:#f8fafc;
-  border:1px solid #e5e7eb;
+  background:var(--result);
+  border:1px solid var(--border);
   border-radius:10px;
   padding:14px;
 }
 
 .result-label{
-  color:#6b7280;
+  color:var(--muted);
   font-size:12px;
   font-weight:700;
 }
@@ -240,8 +276,8 @@ button{
 }
 
 .highlight{
-  background:#eff6ff;
-  border-color:#bfdbfe;
+  background:var(--highlight);
+  border-color:var(--highlight-border);
 }
 
 .notice{
@@ -250,6 +286,7 @@ button{
   margin-bottom:12px;
   background:#eff6ff;
   border:1px solid #bfdbfe;
+  color:#1e3a8a;
 }
 
 .error{
@@ -264,6 +301,24 @@ button{
   color:#166534;
 }
 
+body.dark .notice{
+  background:#172554;
+  border-color:#1e40af;
+  color:#dbeafe;
+}
+
+body.dark .error{
+  background:#450a0a;
+  border-color:#7f1d1d;
+  color:#fecaca;
+}
+
+body.dark .success{
+  background:#052e16;
+  border-color:#166534;
+  color:#bbf7d0;
+}
+
 table{
   width:100%;
   border-collapse:collapse;
@@ -271,14 +326,14 @@ table{
 
 th,td{
   padding:10px;
-  border-bottom:1px solid #e5e7eb;
+  border-bottom:1px solid var(--border);
   text-align:left;
   vertical-align:top;
 }
 
 th{
   font-size:12px;
-  color:#6b7280;
+  color:var(--muted);
 }
 
 .status{
@@ -297,7 +352,7 @@ th{
 
 .small{
   font-size:12px;
-  color:#6b7280;
+  color:var(--muted);
 }
 
 .auth-wrap{
@@ -317,6 +372,7 @@ th{
 
 .proposal{
   background:white;
+  color:#111827;
   max-width:850px;
   margin:auto;
   padding:40px;
@@ -339,8 +395,184 @@ th{
   pointer-events:none;
 }
 
+/* =========================================================
+   DASHBOARD DROPDOWN
+   ========================================================= */
+
+.dashboard-menu{
+  position:fixed;
+  top:72px;
+  right:16px;
+  width:360px;
+  max-width:calc(100vw - 32px);
+  background:var(--card);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:0 15px 40px rgba(0,0,0,.25);
+  z-index:80;
+  display:none;
+  overflow:hidden;
+}
+
+.dashboard-menu.open{
+  display:block;
+}
+
+.dashboard-menu-header{
+  padding:14px 16px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.dashboard-mini-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:8px;
+  padding:12px;
+}
+
+.mini-stat{
+  border:1px solid var(--border);
+  background:var(--result);
+  border-radius:9px;
+  padding:10px;
+}
+
+.mini-label{
+  font-size:10px;
+  font-weight:800;
+  color:var(--muted);
+}
+
+.mini-value{
+  font-size:18px;
+  font-weight:900;
+  margin-top:3px;
+}
+
+.dashboard-menu-footer{
+  padding:12px;
+  border-top:1px solid var(--border);
+}
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+.setting-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.setting-row:last-child{
+  border-bottom:0;
+}
+
+.setting-title{
+  font-weight:800;
+}
+
+.setting-description{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:3px;
+}
+
+.toggle{
+  position:relative;
+  width:48px;
+  height:26px;
+  flex:none;
+}
+
+.toggle input{
+  opacity:0;
+  width:0;
+  height:0;
+}
+
+.slider{
+  position:absolute;
+  inset:0;
+  background:#64748b;
+  border-radius:999px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.slider:before{
+  content:"";
+  position:absolute;
+  width:20px;
+  height:20px;
+  left:3px;
+  top:3px;
+  background:white;
+  border-radius:50%;
+  transition:.2s;
+}
+
+.toggle input:checked + .slider{
+  background:#2563eb;
+}
+
+.toggle input:checked + .slider:before{
+  transform:translateX(22px);
+}
+
+.dashboard-widget-list{
+  display:grid;
+  gap:8px;
+}
+
+.widget-option{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+  border:1px solid var(--border);
+  border-radius:9px;
+  background:var(--result);
+}
+
+.widget-option input{
+  width:auto;
+}
+
+.settings-actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:15px;
+}
+
+.dashboard-edit-badge{
+  display:inline-block;
+  background:#dbeafe;
+  color:#1d4ed8;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:800;
+}
+
+body.dark .dashboard-edit-badge{
+  background:#172554;
+  color:#93c5fd;
+}
+
 @media(max-width:800px){
-  .grid,.grid-3,.result-grid{
+
+  .grid,
+  .grid-3,
+  .result-grid{
     grid-template-columns:1fr;
   }
 
@@ -372,9 +604,15 @@ th{
   .proposal{
     padding:22px;
   }
+
+  .dashboard-menu{
+    top:105px;
+    right:10px;
+  }
 }
 
 @media print{
+
   body *{
     visibility:hidden;
   }
@@ -407,121 +645,247 @@ th{
 <body>
 
 <header>
+
   <div class="header-inner">
+
     <div>
       <div class="logo">ROOFBIDDER</div>
       <div class="tagline">Roofing estimates. Built for profit.</div>
     </div>
 
     <div class="user-area">
-      <span id="userEmail" class="user-email">Not logged in</span>
-      <button id="logoutBtn" class="btn-secondary" style="display:none">Log Out</button>
+
+      <button
+        id="dashboardToggle"
+        class="btn-secondary"
+        style="display:none">
+        📊 Dashboard ▾
+      </button>
+
+      <span id="userEmail" class="user-email">
+        Not logged in
+      </span>
+
+      <button
+        id="logoutBtn"
+        class="btn-secondary"
+        style="display:none">
+        Log Out
+      </button>
+
     </div>
+
   </div>
+
 </header>
+
+<!-- =========================================================
+     QUICK DASHBOARD DROPDOWN
+     ========================================================= -->
+
+<div id="dashboardMenu" class="dashboard-menu">
+
+  <div class="dashboard-menu-header">
+
+    <strong>Dashboard</strong>
+
+    <button
+      id="closeDashboardMenu"
+      class="btn-secondary"
+      style="padding:6px 9px">
+      ×
+    </button>
+
+  </div>
+
+  <div
+    id="miniDashboardGrid"
+    class="dashboard-mini-grid">
+  </div>
+
+  <div
+    id="miniDashboardFollowups"
+    style="padding:0 12px 12px">
+  </div>
+
+  <div class="dashboard-menu-footer">
+
+    <button
+      class="btn"
+      style="width:100%"
+      onclick="openDashboardFromMenu()">
+      Open Full Dashboard
+    </button>
+
+  </div>
+
+</div>
 
 <div class="container">
 
-  <!-- AUTH -->
+  <!-- =======================================================
+       AUTH
+       ======================================================= -->
+
   <div id="authPage">
 
     <div class="auth-wrap">
 
       <div class="card">
+
         <h2>RoofBidder Login</h2>
+
         <p class="small">
           Log in to access your cloud estimates and customer pipeline.
         </p>
 
-        <div id="authMessage" class="notice" style="display:none"></div>
+        <div
+          id="authMessage"
+          class="notice"
+          style="display:none">
+        </div>
 
         <div class="field">
           <label>Email</label>
-          <input id="authEmail" type="email" placeholder="you@company.com">
+          <input
+            id="authEmail"
+            type="email"
+            placeholder="you@company.com">
         </div>
 
         <div class="field">
           <label>Password</label>
-          <input id="authPassword" type="password" placeholder="Password">
+          <input
+            id="authPassword"
+            type="password"
+            placeholder="Password">
         </div>
 
         <div class="actions">
-          <button id="loginBtn" class="btn">Log In</button>
-          <button id="signupBtn" class="btn-secondary">Create Account</button>
+
+          <button id="loginBtn" class="btn">
+            Log In
+          </button>
+
+          <button id="signupBtn" class="btn-secondary">
+            Create Account
+          </button>
+
         </div>
+
       </div>
 
     </div>
 
   </div>
 
-  <!-- APP -->
+  <!-- =======================================================
+       APP
+       ======================================================= -->
+
   <div id="appPage" style="display:none">
 
     <div class="tabs">
-      <button class="tab active" data-page="dashboardPage">Dashboard</button>
-      <button class="tab" data-page="calculatorPage">🧮 Calculator</button>
-      <button class="tab" data-page="estimatesPage">Estimates</button>
-      <button class="tab" data-page="pipelinePage">Pipeline</button>
+
+      <button
+        class="tab active"
+        data-page="dashboardPage">
+        Dashboard
+      </button>
+
+      <button
+        class="tab"
+        data-page="calculatorPage">
+        🧮 Calculator
+      </button>
+
+      <button
+        class="tab"
+        data-page="estimatesPage">
+        Estimates
+      </button>
+
+      <button
+        class="tab"
+        data-page="pipelinePage">
+        Pipeline
+      </button>
+
+      <button
+        class="tab"
+        data-page="settingsPage">
+        ⚙️ Settings
+      </button>
+
     </div>
 
-    <!-- DASHBOARD -->
+    <!-- =====================================================
+         DASHBOARD
+         ===================================================== -->
+
     <section id="dashboardPage" class="page active">
 
       <div class="card">
-        <h2>Dashboard</h2>
-        <p class="small">Your RoofBidder business snapshot.</p>
-      </div>
 
-      <div class="grid-3">
+        <div style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:10px;
+          flex-wrap:wrap;
+        ">
 
-        <div class="stat">
-          <div class="stat-label">TOTAL ESTIMATES</div>
-          <div id="dashEstimates" class="stat-value">0</div>
-        </div>
+          <div>
 
-        <div class="stat">
-          <div class="stat-label">PROJECTED REVENUE</div>
-          <div id="dashRevenue" class="stat-value">$0.00</div>
-        </div>
+            <h2>Dashboard</h2>
 
-        <div class="stat">
-          <div class="stat-label">PROJECTED PROFIT</div>
-          <div id="dashProfit" class="stat-value">$0.00</div>
-        </div>
+            <p class="small">
+              Your RoofBidder business snapshot.
+            </p>
 
-        <div class="stat">
-          <div class="stat-label">SOLD REVENUE</div>
-          <div id="dashSold" class="stat-value">$0.00</div>
-        </div>
+          </div>
 
-        <div class="stat">
-          <div class="stat-label">LOST REVENUE</div>
-          <div id="dashLost" class="stat-value">$0.00</div>
-        </div>
+          <button
+            class="btn-secondary"
+            onclick="switchPage('settingsPage')">
+            ⚙️ Customize Dashboard
+          </button>
 
-        <div class="stat">
-          <div class="stat-label">CLOSE RATE</div>
-          <div id="dashClose" class="stat-value">0%</div>
         </div>
 
       </div>
 
-      <div class="card">
+      <div
+        id="dashboardStats"
+        class="grid-3">
+      </div>
+
+      <div
+        id="dashboardFollowupCard"
+        class="card">
+
         <h3>Follow-Ups</h3>
+
         <div id="dashboardFollowups"></div>
+
       </div>
 
     </section>
 
-    <!-- CALCULATOR -->
+    <!-- =====================================================
+         CALCULATOR
+         ===================================================== -->
+
     <section id="calculatorPage" class="page">
 
       <div class="card">
+
         <h2>Roofing Calculator</h2>
+
         <p class="small">
           Build a bid, check your costs, and make sure the job actually makes money.
         </p>
+
       </div>
 
       <div class="card">
@@ -572,32 +936,80 @@ th{
 
           <div class="field">
             <label>Roof Squares</label>
-            <input id="squares" type="number" step="0.1" value="20">
+            <input
+              id="squares"
+              type="number"
+              step="0.1"
+              value="20">
           </div>
 
           <div class="field">
+
             <label>Pitch</label>
+
             <select id="pitch">
-              <option value="1">Flat / 1-3</option>
-              <option value="1.05">4/12</option>
-              <option value="1.10" selected>6/12</option>
-              <option value="1.15">7/12</option>
-              <option value="1.20">8/12</option>
-              <option value="1.25">9/12</option>
-              <option value="1.30">10/12</option>
-              <option value="1.40">11/12</option>
-              <option value="1.50">12/12+</option>
+
+              <option value="1">
+                Flat / 1-3
+              </option>
+
+              <option value="1.05">
+                4/12
+              </option>
+
+              <option value="1.10" selected>
+                6/12
+              </option>
+
+              <option value="1.15">
+                7/12
+              </option>
+
+              <option value="1.20">
+                8/12
+              </option>
+
+              <option value="1.25">
+                9/12
+              </option>
+
+              <option value="1.30">
+                10/12
+              </option>
+
+              <option value="1.40">
+                11/12
+              </option>
+
+              <option value="1.50">
+                12/12+
+              </option>
+
             </select>
+
           </div>
 
           <div class="field">
+
             <label>Layers To Tear Off</label>
-            <input id="layers" type="number" min="0" value="1">
+
+            <input
+              id="layers"
+              type="number"
+              min="0"
+              value="1">
+
           </div>
 
           <div class="field">
+
             <label>Waste %</label>
-            <input id="waste" type="number" value="10">
+
+            <input
+              id="waste"
+              type="number"
+              value="10">
+
           </div>
 
         </div>
@@ -612,22 +1024,38 @@ th{
 
           <div class="field">
             <label>Shingles / Square</label>
-            <input id="shingleCost" type="number" step="0.01" value="110">
+            <input
+              id="shingleCost"
+              type="number"
+              step="0.01"
+              value="110">
           </div>
 
           <div class="field">
             <label>Starter / Square</label>
-            <input id="starterCost" type="number" step="0.01" value="12">
+            <input
+              id="starterCost"
+              type="number"
+              step="0.01"
+              value="12">
           </div>
 
           <div class="field">
             <label>Ridge / Square</label>
-            <input id="ridgeCost" type="number" step="0.01" value="15">
+            <input
+              id="ridgeCost"
+              type="number"
+              step="0.01"
+              value="15">
           </div>
 
           <div class="field">
             <label>Other Materials</label>
-            <input id="otherMaterial" type="number" step="0.01" value="0">
+            <input
+              id="otherMaterial"
+              type="number"
+              step="0.01"
+              value="0">
           </div>
 
         </div>
@@ -642,17 +1070,29 @@ th{
 
           <div class="field">
             <label>Install Labor / Square</label>
-            <input id="laborCost" type="number" step="0.01" value="90">
+            <input
+              id="laborCost"
+              type="number"
+              step="0.01"
+              value="90">
           </div>
 
           <div class="field">
             <label>Tear-Off / Square / Layer</label>
-            <input id="tearOffCost" type="number" step="0.01" value="35">
+            <input
+              id="tearOffCost"
+              type="number"
+              step="0.01"
+              value="35">
           </div>
 
           <div class="field">
             <label>Other Labor</label>
-            <input id="otherLabor" type="number" step="0.01" value="0">
+            <input
+              id="otherLabor"
+              type="number"
+              step="0.01"
+              value="0">
           </div>
 
         </div>
@@ -667,79 +1107,161 @@ th{
 
           <div class="field">
             <label>Overhead %</label>
-            <input id="overhead" type="number" value="10">
+            <input
+              id="overhead"
+              type="number"
+              value="10">
           </div>
 
           <div class="field">
             <label>Target Profit Margin %</label>
-            <input id="profitMargin" type="number" value="30">
+            <input
+              id="profitMargin"
+              type="number"
+              value="30">
           </div>
 
           <div class="field">
             <label>Price Adjustment</label>
-            <input id="priceAdjustment" type="number" value="0">
+            <input
+              id="priceAdjustment"
+              type="number"
+              value="0">
           </div>
 
         </div>
 
         <div class="actions">
-          <button id="calculateBtn" class="btn">Calculate Bid</button>
-          <button id="saveEstimateBtn" class="btn-success">Save Estimate</button>
-          <button id="newEstimateBtn" class="btn-secondary">New Estimate</button>
+
+          <button
+            id="calculateBtn"
+            class="btn">
+            Calculate Bid
+          </button>
+
+          <button
+            id="saveEstimateBtn"
+            class="btn-success">
+            Save Estimate
+          </button>
+
+          <button
+            id="newEstimateBtn"
+            class="btn-secondary">
+            New Estimate
+          </button>
+
         </div>
 
       </div>
 
-      <div id="calculatorResults" class="card" style="display:none">
+      <div
+        id="calculatorResults"
+        class="card"
+        style="display:none">
 
         <h3>Bid Results</h3>
 
         <div class="result-grid">
 
           <div class="result">
-            <div class="result-label">MATERIAL COST</div>
-            <div id="resultMaterial" class="result-value">$0.00</div>
+            <div class="result-label">
+              MATERIAL COST
+            </div>
+            <div
+              id="resultMaterial"
+              class="result-value">
+              $0.00
+            </div>
           </div>
 
           <div class="result">
-            <div class="result-label">LABOR COST</div>
-            <div id="resultLabor" class="result-value">$0.00</div>
+            <div class="result-label">
+              LABOR COST
+            </div>
+            <div
+              id="resultLabor"
+              class="result-value">
+              $0.00
+            </div>
           </div>
 
           <div class="result">
-            <div class="result-label">TOTAL COST + OVERHEAD</div>
-            <div id="resultTotal" class="result-value">$0.00</div>
+            <div class="result-label">
+              TOTAL COST + OVERHEAD
+            </div>
+            <div
+              id="resultTotal"
+              class="result-value">
+              $0.00
+            </div>
           </div>
 
           <div class="result highlight">
-            <div class="result-label">SELLING PRICE</div>
-            <div id="resultPrice" class="result-value">$0.00</div>
+            <div class="result-label">
+              SELLING PRICE
+            </div>
+            <div
+              id="resultPrice"
+              class="result-value">
+              $0.00
+            </div>
           </div>
 
           <div class="result highlight">
-            <div class="result-label">GROSS PROFIT</div>
-            <div id="resultProfit" class="result-value">$0.00</div>
+            <div class="result-label">
+              GROSS PROFIT
+            </div>
+            <div
+              id="resultProfit"
+              class="result-value">
+              $0.00
+            </div>
           </div>
 
           <div class="result highlight">
-            <div class="result-label">GROSS MARGIN</div>
-            <div id="resultMargin" class="result-value">0%</div>
+            <div class="result-label">
+              GROSS MARGIN
+            </div>
+            <div
+              id="resultMargin"
+              class="result-value">
+              0%
+            </div>
           </div>
 
           <div class="result">
-            <div class="result-label">PRICE / SQUARE</div>
-            <div id="resultPerSquare" class="result-value">$0.00</div>
+            <div class="result-label">
+              PRICE / SQUARE
+            </div>
+            <div
+              id="resultPerSquare"
+              class="result-value">
+              $0.00
+            </div>
           </div>
 
           <div class="result">
-            <div class="result-label">MATERIAL SQUARES</div>
-            <div id="resultMaterialSquares" class="result-value">0</div>
+            <div class="result-label">
+              MATERIAL SQUARES
+            </div>
+            <div
+              id="resultMaterialSquares"
+              class="result-value">
+              0
+            </div>
           </div>
 
         </div>
 
-        <div class="notice" style="margin-top:15px">
-          Material quantities are planning estimates only. Verify actual takeoffs, manufacturer requirements, local code, and job conditions before ordering materials.
+        <div
+          class="notice"
+          style="margin-top:15px">
+
+          Material quantities are planning estimates only.
+          Verify actual takeoffs, manufacturer requirements,
+          local code, and job conditions before ordering materials.
+
         </div>
 
         <h3>Material Planning</h3>
@@ -747,33 +1269,69 @@ th{
         <div class="grid-3">
 
           <div class="result">
-            <div class="result-label">SHINGLE BUNDLES</div>
-            <div id="qtyShingles" class="result-value">0</div>
+            <div class="result-label">
+              SHINGLE BUNDLES
+            </div>
+            <div
+              id="qtyShingles"
+              class="result-value">
+              0
+            </div>
           </div>
 
           <div class="result">
-            <div class="result-label">STARTER BUNDLES</div>
-            <div id="qtyStarter" class="result-value">0</div>
+            <div class="result-label">
+              STARTER BUNDLES
+            </div>
+            <div
+              id="qtyStarter"
+              class="result-value">
+              0
+            </div>
           </div>
 
           <div class="result">
-            <div class="result-label">RIDGE BUNDLES</div>
-            <div id="qtyRidge" class="result-value">0</div>
+            <div class="result-label">
+              RIDGE BUNDLES
+            </div>
+            <div
+              id="qtyRidge"
+              class="result-value">
+              0
+            </div>
           </div>
 
           <div class="result">
-            <div class="result-label">UNDERLAYMENT ROLLS</div>
-            <div id="qtyUnderlayment" class="result-value">0</div>
+            <div class="result-label">
+              UNDERLAYMENT ROLLS
+            </div>
+            <div
+              id="qtyUnderlayment"
+              class="result-value">
+              0
+            </div>
           </div>
 
           <div class="result">
-            <div class="result-label">ICE/WATER ROLLS</div>
-            <div id="qtyIce" class="result-value">0</div>
+            <div class="result-label">
+              ICE/WATER ROLLS
+            </div>
+            <div
+              id="qtyIce"
+              class="result-value">
+              0
+            </div>
           </div>
 
           <div class="result">
-            <div class="result-label">DRIP EDGE PIECES</div>
-            <div id="qtyDrip" class="result-value">0</div>
+            <div class="result-label">
+              DRIP EDGE PIECES
+            </div>
+            <div
+              id="qtyDrip"
+              class="result-value">
+              0
+            </div>
           </div>
 
         </div>
@@ -785,43 +1343,77 @@ th{
         <h3>Scope & Notes</h3>
 
         <div class="field">
+
           <label>Scope of Work</label>
-          <textarea id="scopeOfWork" placeholder="Example: Tear off existing shingles, install synthetic underlayment, ice & water shield, architectural shingles, starter, ridge cap and drip edge."></textarea>
+
+          <textarea
+            id="scopeOfWork"
+            placeholder="Example: Tear off existing shingles, install synthetic underlayment, ice & water shield, architectural shingles, starter, ridge cap and drip edge."></textarea>
+
         </div>
 
         <div class="field">
+
           <label>Important Information</label>
-          <textarea id="importantInfo" placeholder="Insurance details, homeowner requests, access issues, special conditions, etc."></textarea>
+
+          <textarea
+            id="importantInfo"
+            placeholder="Insurance details, homeowner requests, access issues, special conditions, etc."></textarea>
+
         </div>
 
         <div class="grid">
 
           <div class="field">
+
             <label>Follow-Up Date</label>
-            <input id="followUpDate" type="date">
+
+            <input
+              id="followUpDate"
+              type="date">
+
           </div>
 
           <div class="field">
+
             <label>Follow-Up Status</label>
+
             <select id="followUpStatus">
-              <option>Not Scheduled</option>
-              <option>Scheduled</option>
-              <option>Completed</option>
+
+              <option>
+                Not Scheduled
+              </option>
+
+              <option>
+                Scheduled
+              </option>
+
+              <option>
+                Completed
+              </option>
+
             </select>
+
           </div>
 
         </div>
 
         <div class="field">
+
           <label>Follow-Up Notes</label>
+
           <textarea id="followUpNotes"></textarea>
+
         </div>
 
       </div>
 
     </section>
 
-    <!-- ESTIMATES -->
+    <!-- =====================================================
+         ESTIMATES
+         ===================================================== -->
+
     <section id="estimatesPage" class="page">
 
       <div class="card">
@@ -831,20 +1423,47 @@ th{
         <div class="grid">
 
           <div class="field">
+
             <label>Search</label>
-            <input id="estimateSearch" placeholder="Search customer, address, estimate #">
+
+            <input
+              id="estimateSearch"
+              placeholder="Search customer, address, estimate #">
+
           </div>
 
           <div class="field">
+
             <label>Status</label>
+
             <select id="estimateFilter">
-              <option value="All">All</option>
-              <option>Lead</option>
-              <option>Estimated</option>
-              <option>Sold</option>
-              <option>Completed</option>
-              <option>Lost</option>
+
+              <option value="All">
+                All
+              </option>
+
+              <option>
+                Lead
+              </option>
+
+              <option>
+                Estimated
+              </option>
+
+              <option>
+                Sold
+              </option>
+
+              <option>
+                Completed
+              </option>
+
+              <option>
+                Lost
+              </option>
+
             </select>
+
           </div>
 
         </div>
@@ -852,36 +1471,192 @@ th{
       </div>
 
       <div class="card">
-        <div id="estimateTable" class="table-wrap"></div>
+
+        <div
+          id="estimateTable"
+          class="table-wrap">
+        </div>
+
       </div>
 
     </section>
 
-    <!-- PIPELINE -->
+    <!-- =====================================================
+         PIPELINE
+         ===================================================== -->
+
     <section id="pipelinePage" class="page">
 
       <div class="card">
+
         <h2>Job Pipeline</h2>
+
         <p class="small">
           Move each opportunity from lead to completed job.
         </p>
+
       </div>
 
       <div id="pipelineContainer"></div>
 
     </section>
 
+    <!-- =====================================================
+         SETTINGS
+         ===================================================== -->
+
+    <section id="settingsPage" class="page">
+
+      <div class="card">
+
+        <h2>⚙️ Settings</h2>
+
+        <p class="small">
+          Customize how RoofBidder looks and what information
+          appears on your dashboard.
+        </p>
+
+      </div>
+
+      <!-- APPEARANCE -->
+
+      <div class="card">
+
+        <h3>Appearance</h3>
+
+        <div class="setting-row">
+
+          <div>
+
+            <div class="setting-title">
+              Dark Mode
+            </div>
+
+            <div class="setting-description">
+              Switch RoofBidder between light and dark mode.
+            </div>
+
+          </div>
+
+          <label class="toggle">
+
+            <input
+              id="darkModeToggle"
+              type="checkbox">
+
+            <span class="slider"></span>
+
+          </label>
+
+        </div>
+
+      </div>
+
+      <!-- DASHBOARD -->
+
+      <div class="card">
+
+        <div style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          gap:10px;
+          flex-wrap:wrap;
+        ">
+
+          <div>
+
+            <h3>Dashboard</h3>
+
+            <p class="small">
+              Choose which information you want to see.
+            </p>
+
+          </div>
+
+          <span class="dashboard-edit-badge">
+            CUSTOMIZABLE
+          </span>
+
+        </div>
+
+        <div
+          id="dashboardWidgetSettings"
+          class="dashboard-widget-list">
+        </div>
+
+        <div class="settings-actions">
+
+          <button
+            id="showAllDashboardBtn"
+            class="btn-secondary">
+            Show All
+          </button>
+
+          <button
+            id="resetDashboardBtn"
+            class="btn-secondary">
+            Reset Dashboard
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <h3>RoofBidder Account</h3>
+
+        <div class="notice">
+
+          <strong>Logged in as:</strong><br>
+
+          <span id="settingsEmail">
+            —
+          </span>
+
+        </div>
+
+        <p class="small">
+          Your estimates are stored in your RoofBidder
+          Supabase account. Dashboard appearance settings
+          are currently saved on this device.
+        </p>
+
+      </div>
+
+    </section>
+
   </div>
+
 </div>
 
-<!-- PROPOSAL -->
-<div id="proposalOverlay" class="proposal-overlay">
+<!-- =========================================================
+     PROPOSAL
+     ========================================================= -->
+
+<div
+  id="proposalOverlay"
+  class="proposal-overlay">
 
   <div class="proposal">
 
-    <div class="no-print actions" style="justify-content:flex-end">
-      <button class="btn" onclick="window.print()">Print / Save PDF</button>
-      <button class="btn-secondary" onclick="closeProposal()">Close</button>
+    <div
+      class="no-print actions"
+      style="justify-content:flex-end">
+
+      <button
+        class="btn"
+        onclick="window.print()">
+        Print / Save PDF
+      </button>
+
+      <button
+        class="btn-secondary"
+        onclick="closeProposal()">
+        Close
+      </button>
+
     </div>
 
     <div id="proposalContent"></div>
@@ -891,11 +1666,13 @@ th{
 </div>
 
 <script>
+
 /* =========================================================
-   ROOFBIDDER V7
+   ROOFBIDDER V8.1
    ========================================================= */
 
-const SUPABASE_URL = "https://ovuirmlmdpbqumriakcm.supabase.co";
+const SUPABASE_URL =
+  "https://ovuirmlmdpbqumriakcm.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
   "sb_publishable_79QIWXKGoCtpUwF3t4KTRw_A9lAuao3";
@@ -911,35 +1688,176 @@ let estimates = [];
 let currentResult = null;
 let editingId = null;
 
+
+/* =========================================================
+   V8.1 SETTINGS
+   ========================================================= */
+
+const SETTINGS_KEY =
+  "roofbidder_v81_settings";
+
+const DEFAULT_SETTINGS = {
+
+  darkMode:false,
+
+  dashboardWidgets:{
+    estimates:true,
+    revenue:true,
+    profit:true,
+    sold:true,
+    lost:true,
+    close:true,
+    followups:true
+  }
+
+};
+
+let appSettings = loadAppSettings();
+
+
+function loadAppSettings(){
+
+  try{
+
+    const saved =
+      JSON.parse(
+        localStorage.getItem(SETTINGS_KEY)
+      );
+
+    return {
+
+      ...DEFAULT_SETTINGS,
+
+      ...saved,
+
+      dashboardWidgets:{
+        ...DEFAULT_SETTINGS.dashboardWidgets,
+        ...(saved?.dashboardWidgets || {})
+      }
+
+    };
+
+  }catch(error){
+
+    return {
+      ...DEFAULT_SETTINGS,
+      dashboardWidgets:{
+        ...DEFAULT_SETTINGS.dashboardWidgets
+      }
+    };
+
+  }
+
+}
+
+
+function saveAppSettings(){
+
+  localStorage.setItem(
+    SETTINGS_KEY,
+    JSON.stringify(appSettings)
+  );
+
+}
+
+
+function applyTheme(){
+
+  document.body.classList.toggle(
+    "dark",
+    !!appSettings.darkMode
+  );
+
+  const toggle =
+    document.getElementById("darkModeToggle");
+
+  if(toggle){
+    toggle.checked =
+      !!appSettings.darkMode;
+  }
+
+}
+
+
+function resetDashboardSettings(){
+
+  appSettings.dashboardWidgets = {
+    ...DEFAULT_SETTINGS.dashboardWidgets
+  };
+
+  saveAppSettings();
+
+  renderDashboardSettings();
+  updateDashboard();
+  renderMiniDashboard();
+
+}
+
+
+function showAllDashboardWidgets(){
+
+  Object.keys(
+    appSettings.dashboardWidgets
+  ).forEach(key=>{
+    appSettings.dashboardWidgets[key] = true;
+  });
+
+  saveAppSettings();
+
+  renderDashboardSettings();
+  updateDashboard();
+  renderMiniDashboard();
+
+}
+
+
 /* =========================================================
    BASIC HELPERS
    ========================================================= */
 
 function money(value){
-  return Number(value || 0).toLocaleString("en-US",{
-    style:"currency",
-    currency:"USD"
-  });
+
+  return Number(value || 0).toLocaleString(
+    "en-US",
+    {
+      style:"currency",
+      currency:"USD"
+    }
+  );
+
 }
+
 
 function num(id){
-  return Number(document.getElementById(id).value || 0);
+
+  return Number(
+    document.getElementById(id).value || 0
+  );
+
 }
+
 
 function text(id){
+
   return document.getElementById(id).value || "";
+
 }
 
+
 function escapeHtml(value){
+
   return String(value ?? "")
     .replaceAll("&","&amp;")
     .replaceAll("<","&lt;")
     .replaceAll(">","&gt;")
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
+
 }
 
+
 function generateEstimateNumber(){
+
   const now = new Date();
 
   return "RB-" +
@@ -948,15 +1866,25 @@ function generateEstimateNumber(){
     String(now.getDate()).padStart(2,"0") +
     "-" +
     String(Date.now()).slice(-5);
+
 }
+
 
 function showAuthMessage(message,error=false){
-  const box = document.getElementById("authMessage");
+
+  const box =
+    document.getElementById("authMessage");
 
   box.textContent = message;
-  box.className = "notice " + (error ? "error" : "success");
+
+  box.className =
+    "notice " +
+    (error ? "error" : "success");
+
   box.style.display = "block";
+
 }
+
 
 /* =========================================================
    AUTH
@@ -964,15 +1892,27 @@ function showAuthMessage(message,error=false){
 
 async function login(){
 
-  const email = document.getElementById("authEmail").value.trim();
-  const password = document.getElementById("authPassword").value;
+  const email =
+    document.getElementById("authEmail")
+      .value
+      .trim();
+
+  const password =
+    document.getElementById("authPassword")
+      .value;
 
   if(!email || !password){
-    showAuthMessage("Enter your email and password.",true);
+
+    showAuthMessage(
+      "Enter your email and password.",
+      true
+    );
+
     return;
   }
 
-  document.getElementById("loginBtn").disabled = true;
+  document.getElementById("loginBtn").disabled =
+    true;
 
   const {error} =
     await supabaseClient.auth.signInWithPassword({
@@ -980,29 +1920,54 @@ async function login(){
       password
     });
 
-  document.getElementById("loginBtn").disabled = false;
+  document.getElementById("loginBtn").disabled =
+    false;
 
   if(error){
-    showAuthMessage(error.message,true);
+
+    showAuthMessage(
+      error.message,
+      true
+    );
+
   }
+
 }
+
 
 async function signup(){
 
-  const email = document.getElementById("authEmail").value.trim();
-  const password = document.getElementById("authPassword").value;
+  const email =
+    document.getElementById("authEmail")
+      .value
+      .trim();
+
+  const password =
+    document.getElementById("authPassword")
+      .value;
 
   if(!email || !password){
-    showAuthMessage("Enter an email and password.",true);
+
+    showAuthMessage(
+      "Enter an email and password.",
+      true
+    );
+
     return;
   }
 
   if(password.length < 6){
-    showAuthMessage("Password must be at least 6 characters.",true);
+
+    showAuthMessage(
+      "Password must be at least 6 characters.",
+      true
+    );
+
     return;
   }
 
-  document.getElementById("signupBtn").disabled = true;
+  document.getElementById("signupBtn").disabled =
+    true;
 
   const {data,error} =
     await supabaseClient.auth.signUp({
@@ -1010,21 +1975,35 @@ async function signup(){
       password
     });
 
-  document.getElementById("signupBtn").disabled = false;
+  document.getElementById("signupBtn").disabled =
+    false;
 
   if(error){
-    showAuthMessage(error.message,true);
+
+    showAuthMessage(
+      error.message,
+      true
+    );
+
     return;
   }
 
   if(data.session){
-    showAuthMessage("Account created. You're logged in.");
+
+    showAuthMessage(
+      "Account created. You're logged in."
+    );
+
   }else{
+
     showAuthMessage(
       "Account created. Check your email if Supabase requires email confirmation."
     );
+
   }
+
 }
+
 
 async function logout(){
 
@@ -1035,68 +2014,121 @@ async function logout(){
   currentResult = null;
   editingId = null;
 
-  document.getElementById("appPage").style.display = "none";
-  document.getElementById("authPage").style.display = "block";
-  document.getElementById("userEmail").textContent = "Not logged in";
-  document.getElementById("logoutBtn").style.display = "none";
+  document.getElementById("appPage")
+    .style.display = "none";
+
+  document.getElementById("authPage")
+    .style.display = "block";
+
+  document.getElementById("userEmail")
+    .textContent = "Not logged in";
+
+  document.getElementById("logoutBtn")
+    .style.display = "none";
+
+  document.getElementById("dashboardToggle")
+    .style.display = "none";
+
+  closeDashboardMenu();
 
   renderEstimates();
   updateDashboard();
   renderPipeline();
+
 }
+
 
 async function handleAuth(){
 
   const {
     data:{session}
-  } = await supabaseClient.auth.getSession();
+  } =
+    await supabaseClient.auth.getSession();
 
   if(session){
+
     currentUser = session.user;
+
     await enterApp();
+
   }else{
+
     showAuthScreen();
+
   }
 
   supabaseClient.auth.onAuthStateChange(
-    async (_event,session) => {
+    async (_event,session)=>{
 
       if(session){
+
         currentUser = session.user;
+
         await enterApp();
+
       }else{
+
         currentUser = null;
+
       }
 
     }
   );
+
 }
+
 
 function showAuthScreen(){
 
-  document.getElementById("authPage").style.display = "block";
-  document.getElementById("appPage").style.display = "none";
+  document.getElementById("authPage")
+    .style.display = "block";
 
-  document.getElementById("userEmail").textContent =
-    "Not logged in";
+  document.getElementById("appPage")
+    .style.display = "none";
 
-  document.getElementById("logoutBtn").style.display = "none";
+  document.getElementById("userEmail")
+    .textContent = "Not logged in";
+
+  document.getElementById("logoutBtn")
+    .style.display = "none";
+
+  document.getElementById("dashboardToggle")
+    .style.display = "none";
+
 }
+
 
 async function enterApp(){
 
-  document.getElementById("authPage").style.display = "none";
-  document.getElementById("appPage").style.display = "block";
+  document.getElementById("authPage")
+    .style.display = "none";
 
-  document.getElementById("userEmail").textContent =
+  document.getElementById("appPage")
+    .style.display = "block";
+
+  document.getElementById("userEmail")
+    .textContent =
     currentUser.email;
 
-  document.getElementById("logoutBtn").style.display = "block";
+  document.getElementById("settingsEmail")
+    .textContent =
+    currentUser.email;
+
+  document.getElementById("logoutBtn")
+    .style.display = "block";
+
+  document.getElementById("dashboardToggle")
+    .style.display = "block";
+
+  applyTheme();
+  renderDashboardSettings();
 
   await loadEstimates();
 
   resetCalculator();
+
 }
+
 
 /* =========================================================
    DATABASE
@@ -1105,58 +2137,64 @@ async function enterApp(){
 function dbObjectFromEstimate(e){
 
   return {
-    user_id: currentUser.id,
 
-    customer_name: e.customerName,
-    customer_phone: e.customerPhone,
-    customer_email: e.customerEmail,
-    project_address: e.projectAddress,
+    user_id:currentUser.id,
 
-    estimate_number: e.estimateNumber,
-    valid_days: e.validDays,
+    customer_name:e.customerName,
+    customer_phone:e.customerPhone,
+    customer_email:e.customerEmail,
+    project_address:e.projectAddress,
 
-    follow_up_date: e.followUpDate || null,
-    follow_up_status: e.followUpStatus,
-    follow_up_notes: e.followUpNotes,
+    estimate_number:e.estimateNumber,
+    valid_days:e.validDays,
 
-    squares: e.squares,
-    pitch: e.pitch,
-    layers: e.layers,
-    waste: e.waste,
+    follow_up_date:e.followUpDate || null,
+    follow_up_status:e.followUpStatus,
+    follow_up_notes:e.followUpNotes,
 
-    shingle_cost: e.shingleCost,
-    starter_cost: e.starterCost,
-    ridge_cost: e.ridgeCost,
-    labor_cost: e.laborCost,
-    tear_off_cost: e.tearOffCost,
-    other_material: e.otherMaterial,
-    other_labor: e.otherLabor,
+    squares:e.squares,
+    pitch:e.pitch,
+    layers:e.layers,
+    waste:e.waste,
 
-    overhead: e.overhead,
-    profit_margin: e.profitMargin,
-    price_adjustment: e.priceAdjustment,
+    shingle_cost:e.shingleCost,
+    starter_cost:e.starterCost,
+    ridge_cost:e.ridgeCost,
+    labor_cost:e.laborCost,
+    tear_off_cost:e.tearOffCost,
+    other_material:e.otherMaterial,
+    other_labor:e.otherLabor,
 
-    scope_of_work: e.scopeOfWork,
-    important_info: e.importantInfo,
+    overhead:e.overhead,
+    profit_margin:e.profitMargin,
+    price_adjustment:e.priceAdjustment,
 
-    material_cost: e.materialCost,
-    labor_total: e.laborTotal,
-    total_cost: e.totalCost,
-    selling_price: e.sellingPrice,
-    gross_profit: e.grossProfit,
-    gross_margin: e.grossMargin,
-    price_per_square: e.pricePerSquare,
-    material_squares: e.materialSquares,
+    scope_of_work:e.scopeOfWork,
+    important_info:e.importantInfo,
 
-    status: e.status || "Lead",
+    material_cost:e.materialCost,
+    labor_total:e.laborTotal,
+    total_cost:e.totalCost,
+    selling_price:e.sellingPrice,
+    gross_profit:e.grossProfit,
+    gross_margin:e.grossMargin,
+    price_per_square:e.pricePerSquare,
+    material_squares:e.materialSquares,
 
-    updated_at: new Date().toISOString()
+    status:e.status || "Lead",
+
+    updated_at:
+      new Date().toISOString()
+
   };
+
 }
+
 
 function localObjectFromDb(r){
 
   return {
+
     id:r.id,
 
     customerName:r.customer_name || "",
@@ -1168,41 +2206,85 @@ function localObjectFromDb(r){
     validDays:r.valid_days ?? 30,
 
     followUpDate:r.follow_up_date || "",
-    followUpStatus:r.follow_up_status || "Not Scheduled",
-    followUpNotes:r.follow_up_notes || "",
+    followUpStatus:
+      r.follow_up_status ||
+      "Not Scheduled",
+
+    followUpNotes:
+      r.follow_up_notes || "",
 
     squares:Number(r.squares || 0),
     pitch:Number(r.pitch || 1),
     layers:Number(r.layers || 1),
     waste:Number(r.waste || 10),
 
-    shingleCost:Number(r.shingle_cost || 0),
-    starterCost:Number(r.starter_cost || 0),
-    ridgeCost:Number(r.ridge_cost || 0),
-    laborCost:Number(r.labor_cost || 0),
-    tearOffCost:Number(r.tear_off_cost || 0),
-    otherMaterial:Number(r.other_material || 0),
-    otherLabor:Number(r.other_labor || 0),
+    shingleCost:
+      Number(r.shingle_cost || 0),
 
-    overhead:Number(r.overhead || 0),
-    profitMargin:Number(r.profit_margin || 30),
-    priceAdjustment:Number(r.price_adjustment || 0),
+    starterCost:
+      Number(r.starter_cost || 0),
 
-    scopeOfWork:r.scope_of_work || "",
-    importantInfo:r.important_info || "",
+    ridgeCost:
+      Number(r.ridge_cost || 0),
 
-    materialCost:Number(r.material_cost || 0),
-    laborTotal:Number(r.labor_total || 0),
-    totalCost:Number(r.total_cost || 0),
-    sellingPrice:Number(r.selling_price || 0),
-    grossProfit:Number(r.gross_profit || 0),
-    grossMargin:Number(r.gross_margin || 0),
-    pricePerSquare:Number(r.price_per_square || 0),
-    materialSquares:Number(r.material_squares || 0),
+    laborCost:
+      Number(r.labor_cost || 0),
 
-    status:r.status || "Lead"
+    tearOffCost:
+      Number(r.tear_off_cost || 0),
+
+    otherMaterial:
+      Number(r.other_material || 0),
+
+    otherLabor:
+      Number(r.other_labor || 0),
+
+    overhead:
+      Number(r.overhead || 0),
+
+    profitMargin:
+      Number(r.profit_margin || 30),
+
+    priceAdjustment:
+      Number(r.price_adjustment || 0),
+
+    scopeOfWork:
+      r.scope_of_work || "",
+
+    importantInfo:
+      r.important_info || "",
+
+    materialCost:
+      Number(r.material_cost || 0),
+
+    laborTotal:
+      Number(r.labor_total || 0),
+
+    totalCost:
+      Number(r.total_cost || 0),
+
+    sellingPrice:
+      Number(r.selling_price || 0),
+
+    grossProfit:
+      Number(r.gross_profit || 0),
+
+    grossMargin:
+      Number(r.gross_margin || 0),
+
+    pricePerSquare:
+      Number(r.price_per_square || 0),
+
+    materialSquares:
+      Number(r.material_squares || 0),
+
+    status:
+      r.status || "Lead"
+
   };
+
 }
+
 
 async function loadEstimates(){
 
@@ -1216,25 +2298,39 @@ async function loadEstimates(){
       .order("updated_at",{ascending:false});
 
   if(error){
-    alert("Could not load estimates: " + error.message);
+
+    alert(
+      "Could not load estimates: " +
+      error.message
+    );
+
     return;
   }
 
-  estimates = (data || []).map(localObjectFromDb);
+  estimates =
+    (data || [])
+      .map(localObjectFromDb);
 
   renderEstimates();
   renderPipeline();
   updateDashboard();
+  renderMiniDashboard();
+
 }
+
 
 async function saveEstimateToCloud(e){
 
   if(!currentUser){
+
     alert("Please log in first.");
+
     return false;
+
   }
 
-  const payload = dbObjectFromEstimate(e);
+  const payload =
+    dbObjectFromEstimate(e);
 
   let response;
 
@@ -1263,25 +2359,42 @@ async function saveEstimateToCloud(e){
   if(response.error){
 
     if(response.error.code === "23505"){
+
       alert(
         "That estimate number already exists. Generate a new estimate number."
       );
+
     }else{
-      alert("Save failed: " + response.error.message);
+
+      alert(
+        "Save failed: " +
+        response.error.message
+      );
+
     }
 
     return false;
+
   }
 
-  const saved = localObjectFromDb(response.data);
+  const saved =
+    localObjectFromDb(
+      response.data
+    );
 
   const index =
-    estimates.findIndex(x => x.id === saved.id);
+    estimates.findIndex(
+      x=>x.id===saved.id
+    );
 
   if(index >= 0){
+
     estimates[index] = saved;
+
   }else{
+
     estimates.unshift(saved);
+
   }
 
   editingId = saved.id;
@@ -1289,14 +2402,21 @@ async function saveEstimateToCloud(e){
   renderEstimates();
   renderPipeline();
   updateDashboard();
+  renderMiniDashboard();
 
   return true;
+
 }
+
 
 async function deleteEstimate(id){
 
-  if(!confirm("Delete this estimate permanently?")){
+  if(!confirm(
+    "Delete this estimate permanently?"
+  )){
+
     return;
+
   }
 
   const {error} =
@@ -1307,37 +2427,60 @@ async function deleteEstimate(id){
       .eq("user_id",currentUser.id);
 
   if(error){
-    alert("Delete failed: " + error.message);
+
+    alert(
+      "Delete failed: " +
+      error.message
+    );
+
     return;
+
   }
 
   estimates =
-    estimates.filter(e => e.id !== id);
+    estimates.filter(
+      e=>e.id!==id
+    );
 
   renderEstimates();
   renderPipeline();
   updateDashboard();
+  renderMiniDashboard();
+
 }
 
-async function updateEstimateStatus(id,status){
+
+async function updateEstimateStatus(
+  id,
+  status
+){
 
   const {error} =
     await supabaseClient
       .from("estimates")
       .update({
         status,
-        updated_at:new Date().toISOString()
+        updated_at:
+          new Date().toISOString()
       })
       .eq("id",id)
       .eq("user_id",currentUser.id);
 
   if(error){
-    alert("Status update failed: " + error.message);
+
+    alert(
+      "Status update failed: " +
+      error.message
+    );
+
     return;
+
   }
 
   const e =
-    estimates.find(x => x.id === id);
+    estimates.find(
+      x=>x.id===id
+    );
 
   if(e){
     e.status = status;
@@ -1346,7 +2489,10 @@ async function updateEstimateStatus(id,status){
   renderEstimates();
   renderPipeline();
   updateDashboard();
+  renderMiniDashboard();
+
 }
+
 
 /* =========================================================
    CALCULATOR
@@ -1354,36 +2500,101 @@ async function updateEstimateStatus(id,status){
 
 function calculate(){
 
-  const squares = Math.max(0,num("squares"));
-  const pitchMultiplier = Math.max(.5,num("pitch"));
-  const layers = Math.max(0,num("layers"));
-  const waste = Math.max(0,num("waste")) / 100;
+  const squares =
+    Math.max(
+      0,
+      num("squares")
+    );
 
-  const shingleCost = Math.max(0,num("shingleCost"));
-  const starterCost = Math.max(0,num("starterCost"));
-  const ridgeCost = Math.max(0,num("ridgeCost"));
+  const pitchMultiplier =
+    Math.max(
+      .5,
+      num("pitch")
+    );
 
-  const laborCost = Math.max(0,num("laborCost"));
-  const tearOffCost = Math.max(0,num("tearOffCost"));
+  const layers =
+    Math.max(
+      0,
+      num("layers")
+    );
 
-  const otherMaterial = Math.max(0,num("otherMaterial"));
-  const otherLabor = Math.max(0,num("otherLabor"));
+  const waste =
+    Math.max(
+      0,
+      num("waste")
+    ) / 100;
+
+  const shingleCost =
+    Math.max(
+      0,
+      num("shingleCost")
+    );
+
+  const starterCost =
+    Math.max(
+      0,
+      num("starterCost")
+    );
+
+  const ridgeCost =
+    Math.max(
+      0,
+      num("ridgeCost")
+    );
+
+  const laborCost =
+    Math.max(
+      0,
+      num("laborCost")
+    );
+
+  const tearOffCost =
+    Math.max(
+      0,
+      num("tearOffCost")
+    );
+
+  const otherMaterial =
+    Math.max(
+      0,
+      num("otherMaterial")
+    );
+
+  const otherLabor =
+    Math.max(
+      0,
+      num("otherLabor")
+    );
 
   const overheadPercent =
-    Math.max(0,num("overhead")) / 100;
+    Math.max(
+      0,
+      num("overhead")
+    ) / 100;
 
   const profitMargin =
-    Math.min(99,Math.max(0,num("profitMargin"))) / 100;
+    Math.min(
+      99,
+      Math.max(
+        0,
+        num("profitMargin")
+      )
+    ) / 100;
 
   const priceAdjustment =
     num("priceAdjustment");
 
   const materialSquares =
-    squares * (1 + waste);
+    squares *
+    (1 + waste);
 
   const materialCost =
     materialSquares *
-    (shingleCost + starterCost + ridgeCost) +
+      (
+        shingleCost +
+        starterCost +
+        ridgeCost
+      ) +
     otherMaterial;
 
   const installLabor =
@@ -1417,31 +2628,44 @@ function calculate(){
   let sellingPrice;
 
   if(profitMargin >= .99){
+
     sellingPrice =
-      totalCost + priceAdjustment;
-  }else{
-    sellingPrice =
-      totalCost / (1 - profitMargin) +
+      totalCost +
       priceAdjustment;
+
+  }else{
+
+    sellingPrice =
+      totalCost /
+      (1 - profitMargin) +
+      priceAdjustment;
+
   }
 
   sellingPrice =
-    Math.max(0,sellingPrice);
+    Math.max(
+      0,
+      sellingPrice
+    );
 
   const grossProfit =
-    sellingPrice - totalCost;
+    sellingPrice -
+    totalCost;
 
   const grossMargin =
     sellingPrice > 0
-      ? grossProfit / sellingPrice
+      ? grossProfit /
+        sellingPrice
       : 0;
 
   const pricePerSquare =
     squares > 0
-      ? sellingPrice / squares
+      ? sellingPrice /
+        squares
       : 0;
 
   currentResult = {
+
     materialCost,
     laborTotal,
     totalCost,
@@ -1450,170 +2674,317 @@ function calculate(){
     grossMargin,
     pricePerSquare,
     materialSquares
+
   };
 
-  document.getElementById("calculatorResults").style.display = "block";
+  document.getElementById(
+    "calculatorResults"
+  ).style.display = "block";
 
-  document.getElementById("resultMaterial").textContent =
+  document.getElementById(
+    "resultMaterial"
+  ).textContent =
     money(materialCost);
 
-  document.getElementById("resultLabor").textContent =
+  document.getElementById(
+    "resultLabor"
+  ).textContent =
     money(laborTotal);
 
-  document.getElementById("resultTotal").textContent =
+  document.getElementById(
+    "resultTotal"
+  ).textContent =
     money(totalCost);
 
-  document.getElementById("resultPrice").textContent =
+  document.getElementById(
+    "resultPrice"
+  ).textContent =
     money(sellingPrice);
 
-  document.getElementById("resultProfit").textContent =
+  document.getElementById(
+    "resultProfit"
+  ).textContent =
     money(grossProfit);
 
-  document.getElementById("resultMargin").textContent =
-    (grossMargin * 100).toFixed(1) + "%";
+  document.getElementById(
+    "resultMargin"
+  ).textContent =
+    (grossMargin * 100)
+      .toFixed(1) +
+    "%";
 
-  document.getElementById("resultPerSquare").textContent =
+  document.getElementById(
+    "resultPerSquare"
+  ).textContent =
     money(pricePerSquare);
 
-  document.getElementById("resultMaterialSquares").textContent =
+  document.getElementById(
+    "resultMaterialSquares"
+  ).textContent =
     materialSquares.toFixed(1);
 
-  document.getElementById("qtyShingles").textContent =
-    Math.ceil(materialSquares * 3);
+  document.getElementById(
+    "qtyShingles"
+  ).textContent =
+    Math.ceil(
+      materialSquares * 3
+    );
 
-  document.getElementById("qtyStarter").textContent =
-    Math.ceil(materialSquares);
+  document.getElementById(
+    "qtyStarter"
+  ).textContent =
+    Math.ceil(
+      materialSquares
+    );
 
-  document.getElementById("qtyRidge").textContent =
-    Math.ceil(materialSquares / 1.5);
+  document.getElementById(
+    "qtyRidge"
+  ).textContent =
+    Math.ceil(
+      materialSquares / 1.5
+    );
 
-  document.getElementById("qtyUnderlayment").textContent =
-    Math.ceil(materialSquares / 2);
+  document.getElementById(
+    "qtyUnderlayment"
+  ).textContent =
+    Math.ceil(
+      materialSquares / 2
+    );
 
-  document.getElementById("qtyIce").textContent =
-    Math.ceil(materialSquares / 2);
+  document.getElementById(
+    "qtyIce"
+  ).textContent =
+    Math.ceil(
+      materialSquares / 2
+    );
 
-  document.getElementById("qtyDrip").textContent =
-    Math.ceil(squares);
+  document.getElementById(
+    "qtyDrip"
+  ).textContent =
+    Math.ceil(
+      squares
+    );
 
   return currentResult;
+
 }
+
 
 function collectEstimate(){
 
   if(!currentResult){
+
     calculate();
+
   }
 
-  const r = currentResult;
+  const r =
+    currentResult;
 
   return {
 
     id:editingId,
 
-    customerName:text("customerName"),
-    customerPhone:text("customerPhone"),
-    customerEmail:text("customerEmail"),
-    projectAddress:text("projectAddress"),
+    customerName:
+      text("customerName"),
 
-    estimateNumber:text("estimateNumber") || generateEstimateNumber(),
-    validDays:num("validDays") || 30,
+    customerPhone:
+      text("customerPhone"),
 
-    followUpDate:text("followUpDate"),
-    followUpStatus:text("followUpStatus"),
-    followUpNotes:text("followUpNotes"),
+    customerEmail:
+      text("customerEmail"),
 
-    squares:num("squares"),
-    pitch:num("pitch"),
-    layers:num("layers"),
-    waste:num("waste"),
+    projectAddress:
+      text("projectAddress"),
 
-    shingleCost:num("shingleCost"),
-    starterCost:num("starterCost"),
-    ridgeCost:num("ridgeCost"),
-    laborCost:num("laborCost"),
-    tearOffCost:num("tearOffCost"),
-    otherMaterial:num("otherMaterial"),
-    otherLabor:num("otherLabor"),
+    estimateNumber:
+      text("estimateNumber") ||
+      generateEstimateNumber(),
 
-    overhead:num("overhead"),
-    profitMargin:num("profitMargin"),
-    priceAdjustment:num("priceAdjustment"),
+    validDays:
+      num("validDays") || 30,
 
-    scopeOfWork:text("scopeOfWork"),
-    importantInfo:text("importantInfo"),
+    followUpDate:
+      text("followUpDate"),
 
-    materialCost:r.materialCost,
-    laborTotal:r.laborTotal,
-    totalCost:r.totalCost,
-    sellingPrice:r.sellingPrice,
-    grossProfit:r.grossProfit,
-    grossMargin:r.grossMargin,
-    pricePerSquare:r.pricePerSquare,
-    materialSquares:r.materialSquares,
+    followUpStatus:
+      text("followUpStatus"),
+
+    followUpNotes:
+      text("followUpNotes"),
+
+    squares:
+      num("squares"),
+
+    pitch:
+      num("pitch"),
+
+    layers:
+      num("layers"),
+
+    waste:
+      num("waste"),
+
+    shingleCost:
+      num("shingleCost"),
+
+    starterCost:
+      num("starterCost"),
+
+    ridgeCost:
+      num("ridgeCost"),
+
+    laborCost:
+      num("laborCost"),
+
+    tearOffCost:
+      num("tearOffCost"),
+
+    otherMaterial:
+      num("otherMaterial"),
+
+    otherLabor:
+      num("otherLabor"),
+
+    overhead:
+      num("overhead"),
+
+    profitMargin:
+      num("profitMargin"),
+
+    priceAdjustment:
+      num("priceAdjustment"),
+
+    scopeOfWork:
+      text("scopeOfWork"),
+
+    importantInfo:
+      text("importantInfo"),
+
+    materialCost:
+      r.materialCost,
+
+    laborTotal:
+      r.laborTotal,
+
+    totalCost:
+      r.totalCost,
+
+    sellingPrice:
+      r.sellingPrice,
+
+    grossProfit:
+      r.grossProfit,
+
+    grossMargin:
+      r.grossMargin,
+
+    pricePerSquare:
+      r.pricePerSquare,
+
+    materialSquares:
+      r.materialSquares,
 
     status:
       editingId
-        ? (estimates.find(e=>e.id===editingId)?.status || "Lead")
+        ? (
+          estimates.find(
+            e=>e.id===editingId
+          )?.status ||
+          "Lead"
+        )
         : "Lead"
+
   };
+
 }
+
 
 async function saveCurrentEstimate(){
 
   if(!currentUser){
+
     alert("Please log in first.");
+
     return;
+
   }
 
-  const estimate = collectEstimate();
+  const estimate =
+    collectEstimate();
 
   if(!estimate.customerName){
-    if(!confirm("Customer name is blank. Save anyway?")){
+
+    if(!confirm(
+      "Customer name is blank. Save anyway?"
+    )){
+
       return;
+
     }
+
   }
 
   const success =
-    await saveEstimateToCloud(estimate);
+    await saveEstimateToCloud(
+      estimate
+    );
 
   if(success){
+
     alert(
       estimate.id
         ? "Estimate updated successfully."
         : "Estimate saved successfully."
     );
 
-    switchPage("estimatesPage");
+    switchPage(
+      "estimatesPage"
+    );
+
   }
+
 }
+
 
 function loadEstimate(id){
 
   const e =
-    estimates.find(x => x.id === id);
+    estimates.find(
+      x=>x.id===id
+    );
 
   if(!e){
-    alert("Estimate not found.");
+
+    alert(
+      "Estimate not found."
+    );
+
     return;
+
   }
 
-  editingId = e.id;
+  editingId =
+    e.id;
 
   const fields = {
+
     customerName:e.customerName,
     customerPhone:e.customerPhone,
     customerEmail:e.customerEmail,
     projectAddress:e.projectAddress,
     estimateNumber:e.estimateNumber,
     validDays:e.validDays,
+
     followUpDate:e.followUpDate,
     followUpStatus:e.followUpStatus,
     followUpNotes:e.followUpNotes,
+
     squares:e.squares,
     pitch:e.pitch,
     layers:e.layers,
     waste:e.waste,
+
     shingleCost:e.shingleCost,
     starterCost:e.starterCost,
     ridgeCost:e.ridgeCost,
@@ -1621,102 +2992,232 @@ function loadEstimate(id){
     tearOffCost:e.tearOffCost,
     otherMaterial:e.otherMaterial,
     otherLabor:e.otherLabor,
+
     overhead:e.overhead,
     profitMargin:e.profitMargin,
     priceAdjustment:e.priceAdjustment,
+
     scopeOfWork:e.scopeOfWork,
     importantInfo:e.importantInfo
+
   };
 
-  Object.entries(fields).forEach(([id,value])=>{
-    const el = document.getElementById(id);
-    if(el) el.value = value ?? "";
-  });
+  Object.entries(
+    fields
+  ).forEach(
+    ([id,value])=>{
+
+      const el =
+        document.getElementById(id);
+
+      if(el){
+
+        el.value =
+          value ?? "";
+
+      }
+
+    }
+  );
 
   currentResult = {
-    materialCost:e.materialCost,
-    laborTotal:e.laborTotal,
-    totalCost:e.totalCost,
-    sellingPrice:e.sellingPrice,
-    grossProfit:e.grossProfit,
-    grossMargin:e.grossMargin,
-    pricePerSquare:e.pricePerSquare,
-    materialSquares:e.materialSquares
+
+    materialCost:
+      e.materialCost,
+
+    laborTotal:
+      e.laborTotal,
+
+    totalCost:
+      e.totalCost,
+
+    sellingPrice:
+      e.sellingPrice,
+
+    grossProfit:
+      e.grossProfit,
+
+    grossMargin:
+      e.grossMargin,
+
+    pricePerSquare:
+      e.pricePerSquare,
+
+    materialSquares:
+      e.materialSquares
+
   };
 
   calculate();
 
-  switchPage("calculatorPage");
+  switchPage(
+    "calculatorPage"
+  );
+
 }
+
 
 async function duplicateEstimate(id){
 
   const original =
-    estimates.find(e => e.id === id);
+    estimates.find(
+      e=>e.id===id
+    );
 
   if(!original) return;
 
   const copy = {
+
     ...original,
+
     id:null,
-    estimateNumber:generateEstimateNumber(),
+
+    estimateNumber:
+      generateEstimateNumber(),
+
     status:"Lead",
+
     followUpDate:"",
-    followUpStatus:"Not Scheduled",
+
+    followUpStatus:
+      "Not Scheduled",
+
     followUpNotes:""
+
   };
 
   delete copy.created_at;
 
   const success =
-    await saveEstimateToCloud(copy);
+    await saveEstimateToCloud(
+      copy
+    );
 
   if(success){
-    alert("Estimate duplicated.");
+
+    alert(
+      "Estimate duplicated."
+    );
+
   }
+
 }
+
 
 function resetCalculator(){
 
   editingId = null;
   currentResult = null;
 
-  document.getElementById("customerName").value = "";
-  document.getElementById("customerPhone").value = "";
-  document.getElementById("customerEmail").value = "";
-  document.getElementById("projectAddress").value = "";
-  document.getElementById("estimateNumber").value =
+  document.getElementById(
+    "customerName"
+  ).value = "";
+
+  document.getElementById(
+    "customerPhone"
+  ).value = "";
+
+  document.getElementById(
+    "customerEmail"
+  ).value = "";
+
+  document.getElementById(
+    "projectAddress"
+  ).value = "";
+
+  document.getElementById(
+    "estimateNumber"
+  ).value =
     generateEstimateNumber();
 
-  document.getElementById("validDays").value = 30;
+  document.getElementById(
+    "validDays"
+  ).value = 30;
 
-  document.getElementById("squares").value = 20;
-  document.getElementById("pitch").value = 1.10;
-  document.getElementById("layers").value = 1;
-  document.getElementById("waste").value = 10;
+  document.getElementById(
+    "squares"
+  ).value = 20;
 
-  document.getElementById("shingleCost").value = 110;
-  document.getElementById("starterCost").value = 12;
-  document.getElementById("ridgeCost").value = 15;
-  document.getElementById("laborCost").value = 90;
-  document.getElementById("tearOffCost").value = 35;
-  document.getElementById("otherMaterial").value = 0;
-  document.getElementById("otherLabor").value = 0;
+  document.getElementById(
+    "pitch"
+  ).value = 1.10;
 
-  document.getElementById("overhead").value = 10;
-  document.getElementById("profitMargin").value = 30;
-  document.getElementById("priceAdjustment").value = 0;
+  document.getElementById(
+    "layers"
+  ).value = 1;
 
-  document.getElementById("scopeOfWork").value = "";
-  document.getElementById("importantInfo").value = "";
-  document.getElementById("followUpDate").value = "";
-  document.getElementById("followUpStatus").value =
+  document.getElementById(
+    "waste"
+  ).value = 10;
+
+  document.getElementById(
+    "shingleCost"
+  ).value = 110;
+
+  document.getElementById(
+    "starterCost"
+  ).value = 12;
+
+  document.getElementById(
+    "ridgeCost"
+  ).value = 15;
+
+  document.getElementById(
+    "laborCost"
+  ).value = 90;
+
+  document.getElementById(
+    "tearOffCost"
+  ).value = 35;
+
+  document.getElementById(
+    "otherMaterial"
+  ).value = 0;
+
+  document.getElementById(
+    "otherLabor"
+  ).value = 0;
+
+  document.getElementById(
+    "overhead"
+  ).value = 10;
+
+  document.getElementById(
+    "profitMargin"
+  ).value = 30;
+
+  document.getElementById(
+    "priceAdjustment"
+  ).value = 0;
+
+  document.getElementById(
+    "scopeOfWork"
+  ).value = "";
+
+  document.getElementById(
+    "importantInfo"
+  ).value = "";
+
+  document.getElementById(
+    "followUpDate"
+  ).value = "";
+
+  document.getElementById(
+    "followUpStatus"
+  ).value =
     "Not Scheduled";
-  document.getElementById("followUpNotes").value = "";
 
-  document.getElementById("calculatorResults").style.display =
+  document.getElementById(
+    "followUpNotes"
+  ).value = "";
+
+  document.getElementById(
+    "calculatorResults"
+  ).style.display =
     "none";
+
 }
+
 
 /* =========================================================
    ESTIMATE TABLE
@@ -1725,7 +3226,9 @@ function resetCalculator(){
 function renderEstimates(){
 
   const container =
-    document.getElementById("estimateTable");
+    document.getElementById(
+      "estimateTable"
+    );
 
   if(!estimates.length){
 
@@ -1735,40 +3238,59 @@ function renderEstimates(){
       </div>`;
 
     return;
+
   }
 
   const search =
-    document.getElementById("estimateSearch")
-      ?.value
+    document.getElementById(
+      "estimateSearch"
+    )?.value
       .toLowerCase()
       .trim() || "";
 
   const filter =
-    document.getElementById("estimateFilter")
-      ?.value || "All";
+    document.getElementById(
+      "estimateFilter"
+    )?.value ||
+    "All";
 
   let filtered =
-    estimates.filter(e => {
+    estimates.filter(
+      e=>{
 
-      const matchesSearch =
-        !search ||
-        e.customerName.toLowerCase().includes(search) ||
-        e.projectAddress.toLowerCase().includes(search) ||
-        e.estimateNumber.toLowerCase().includes(search);
+        const matchesSearch =
+          !search ||
+          e.customerName
+            .toLowerCase()
+            .includes(search) ||
+          e.projectAddress
+            .toLowerCase()
+            .includes(search) ||
+          e.estimateNumber
+            .toLowerCase()
+            .includes(search);
 
-      const matchesFilter =
-        filter === "All" ||
-        e.status === filter;
+        const matchesFilter =
+          filter === "All" ||
+          e.status === filter;
 
-      return matchesSearch && matchesFilter;
-    });
+        return (
+          matchesSearch &&
+          matchesFilter
+        );
+
+      }
+    );
 
   if(!filtered.length){
 
     container.innerHTML =
-      `<div class="notice">No matching estimates.</div>`;
+      `<div class="notice">
+        No matching estimates.
+      </div>`;
 
     return;
+
   }
 
   let html = `
@@ -1787,39 +3309,77 @@ function renderEstimates(){
     <tbody>
   `;
 
-  filtered.forEach(e=>{
+  filtered.forEach(
+    e=>{
 
-    html += `
+      html += `
       <tr>
 
         <td>
-          <strong>${escapeHtml(e.estimateNumber)}</strong>
+
+          <strong>
+            ${escapeHtml(
+              e.estimateNumber
+            )}
+          </strong>
+
           <div class="small">
-            ${escapeHtml(e.projectAddress)}
+            ${escapeHtml(
+              e.projectAddress
+            )}
           </div>
+
         </td>
 
         <td>
-          ${escapeHtml(e.customerName)}
+
+          ${escapeHtml(
+            e.customerName
+          )}
+
           <div class="small">
-            ${escapeHtml(e.customerPhone)}
+            ${escapeHtml(
+              e.customerPhone
+            )}
           </div>
+
         </td>
 
         <td>
-          <span class="status status-${escapeHtml(e.status)}">
-            ${escapeHtml(e.status)}
+
+          <span
+            class="status status-${escapeHtml(
+              e.status
+            )}">
+
+            ${escapeHtml(
+              e.status
+            )}
+
           </span>
+
         </td>
 
-        <td>${money(e.sellingPrice)}</td>
-
-        <td>${money(e.grossProfit)}</td>
+        <td>
+          ${money(
+            e.sellingPrice
+          )}
+        </td>
 
         <td>
-          ${e.followUpDate
-            ? escapeHtml(e.followUpDate)
-            : "—"}
+          ${money(
+            e.grossProfit
+          )}
+        </td>
+
+        <td>
+          ${
+            e.followUpDate
+              ? escapeHtml(
+                  e.followUpDate
+                )
+              : "—"
+          }
         </td>
 
         <td>
@@ -1855,116 +3415,322 @@ function renderEstimates(){
         </td>
 
       </tr>
-    `;
-  });
+      `;
+
+    }
+  );
 
   html += `
     </tbody>
   </table>
   `;
 
-  container.innerHTML = html;
+  container.innerHTML =
+    html;
+
 }
+
 
 /* =========================================================
    DASHBOARD
    ========================================================= */
 
-function updateDashboard(){
+function getDashboardData(){
 
   const total =
     estimates.length;
 
   const nonLost =
-    estimates.filter(e=>e.status !== "Lost");
+    estimates.filter(
+      e=>e.status !== "Lost"
+    );
 
   const projectedRevenue =
     nonLost.reduce(
-      (sum,e)=>sum + Number(e.sellingPrice || 0),
+      (sum,e)=>
+        sum +
+        Number(
+          e.sellingPrice || 0
+        ),
       0
     );
 
   const projectedProfit =
     nonLost.reduce(
-      (sum,e)=>sum + Number(e.grossProfit || 0),
+      (sum,e)=>
+        sum +
+        Number(
+          e.grossProfit || 0
+        ),
       0
     );
 
   const sold =
     estimates.filter(
-      e => e.status === "Sold" ||
-           e.status === "Completed"
+      e=>
+        e.status === "Sold" ||
+        e.status === "Completed"
     );
 
   const soldRevenue =
     sold.reduce(
-      (sum,e)=>sum + Number(e.sellingPrice || 0),
+      (sum,e)=>
+        sum +
+        Number(
+          e.sellingPrice || 0
+        ),
       0
     );
 
   const lost =
-    estimates.filter(e=>e.status === "Lost");
+    estimates.filter(
+      e=>e.status === "Lost"
+    );
 
   const lostRevenue =
     lost.reduce(
-      (sum,e)=>sum + Number(e.sellingPrice || 0),
+      (sum,e)=>
+        sum +
+        Number(
+          e.sellingPrice || 0
+        ),
       0
     );
 
   const closedCount =
-    sold.length + lost.length;
+    sold.length +
+    lost.length;
 
   const closeRate =
     closedCount > 0
-      ? sold.length / closedCount * 100
+      ? sold.length /
+        closedCount *
+        100
       : 0;
 
-  document.getElementById("dashEstimates").textContent =
-    total;
+  return {
 
-  document.getElementById("dashRevenue").textContent =
-    money(projectedRevenue);
+    total,
+    projectedRevenue,
+    projectedProfit,
+    soldRevenue,
+    lostRevenue,
+    closeRate
 
-  document.getElementById("dashProfit").textContent =
-    money(projectedProfit);
+  };
 
-  document.getElementById("dashSold").textContent =
-    money(soldRevenue);
-
-  document.getElementById("dashLost").textContent =
-    money(lostRevenue);
-
-  document.getElementById("dashClose").textContent =
-    closeRate.toFixed(1) + "%";
-
-  renderDashboardFollowups();
 }
+
+
+function updateDashboard(){
+
+  const data =
+    getDashboardData();
+
+  const container =
+    document.getElementById(
+      "dashboardStats"
+    );
+
+  const widgets =
+    appSettings.dashboardWidgets;
+
+  let html = "";
+
+  if(widgets.estimates){
+
+    html += `
+      <div class="stat">
+
+        <div class="stat-label">
+          TOTAL ESTIMATES
+        </div>
+
+        <div class="stat-value">
+          ${data.total}
+        </div>
+
+      </div>
+    `;
+
+  }
+
+  if(widgets.revenue){
+
+    html += `
+      <div class="stat">
+
+        <div class="stat-label">
+          PROJECTED REVENUE
+        </div>
+
+        <div class="stat-value">
+          ${money(
+            data.projectedRevenue
+          )}
+        </div>
+
+      </div>
+    `;
+
+  }
+
+  if(widgets.profit){
+
+    html += `
+      <div class="stat">
+
+        <div class="stat-label">
+          PROJECTED PROFIT
+        </div>
+
+        <div class="stat-value">
+          ${money(
+            data.projectedProfit
+          )}
+        </div>
+
+      </div>
+    `;
+
+  }
+
+  if(widgets.sold){
+
+    html += `
+      <div class="stat">
+
+        <div class="stat-label">
+          SOLD REVENUE
+        </div>
+
+        <div class="stat-value">
+          ${money(
+            data.soldRevenue
+          )}
+        </div>
+
+      </div>
+    `;
+
+  }
+
+  if(widgets.lost){
+
+    html += `
+      <div class="stat">
+
+        <div class="stat-label">
+          LOST REVENUE
+        </div>
+
+        <div class="stat-value">
+          ${money(
+            data.lostRevenue
+          )}
+        </div>
+
+      </div>
+    `;
+
+  }
+
+  if(widgets.close){
+
+    html += `
+      <div class="stat">
+
+        <div class="stat-label">
+          CLOSE RATE
+        </div>
+
+        <div class="stat-value">
+          ${data.closeRate.toFixed(1)}%
+        </div>
+
+      </div>
+    `;
+
+  }
+
+  if(!html){
+
+    html = `
+      <div class="card">
+        <div class="small">
+          Your dashboard is empty.
+          Open Settings to choose what you want to display.
+        </div>
+      </div>
+    `;
+
+  }
+
+  container.innerHTML =
+    html;
+
+  document.getElementById(
+    "dashboardFollowupCard"
+  ).style.display =
+    widgets.followups
+      ? "block"
+      : "none";
+
+  if(widgets.followups){
+
+    renderDashboardFollowups();
+
+  }
+
+  renderMiniDashboard();
+
+}
+
 
 function isOverdue(date){
 
   if(!date) return false;
 
   const today =
-    new Date().toISOString().slice(0,10);
+    new Date()
+      .toISOString()
+      .slice(0,10);
 
   return date < today;
+
 }
+
+
+function getUpcomingFollowups(){
+
+  return estimates
+    .filter(
+      e=>
+        e.followUpDate &&
+        e.followUpStatus !==
+          "Completed"
+    )
+    .sort(
+      (a,b)=>
+        a.followUpDate
+          .localeCompare(
+            b.followUpDate
+          )
+    )
+    .slice(0,10);
+
+}
+
 
 function renderDashboardFollowups(){
 
   const container =
-    document.getElementById("dashboardFollowups");
+    document.getElementById(
+      "dashboardFollowups"
+    );
 
   const upcoming =
-    estimates
-      .filter(e =>
-        e.followUpDate &&
-        e.followUpStatus !== "Completed"
-      )
-      .sort((a,b)=>
-        a.followUpDate.localeCompare(b.followUpDate)
-      )
-      .slice(0,10);
+    getUpcomingFollowups();
 
   if(!upcoming.length){
 
@@ -1974,53 +3740,77 @@ function renderDashboardFollowups(){
       </div>`;
 
     return;
+
   }
 
   let html = "";
 
-  upcoming.forEach(e=>{
+  upcoming.forEach(
+    e=>{
 
-    const overdue =
-      isOverdue(e.followUpDate);
+      const overdue =
+        isOverdue(
+          e.followUpDate
+        );
 
-    html += `
-      <div class="notice ${overdue ? "error" : ""}">
+      html += `
 
-        <strong>
-          ${escapeHtml(e.customerName || "Unnamed Customer")}
-        </strong>
+        <div class="notice ${
+          overdue
+            ? "error"
+            : ""
+        }">
 
-        <div>
-          Follow-up:
-          <strong>${escapeHtml(e.followUpDate)}</strong>
+          <strong>
+            ${escapeHtml(
+              e.customerName ||
+              "Unnamed Customer"
+            )}
+          </strong>
+
+          <div>
+            Follow-up:
+            <strong>
+              ${escapeHtml(
+                e.followUpDate
+              )}
+            </strong>
+          </div>
+
+          <div class="small">
+            ${escapeHtml(
+              e.followUpNotes || ""
+            )}
+          </div>
+
+          <div class="actions">
+
+            <button
+              class="btn"
+              onclick="loadEstimate('${e.id}')">
+              Open Estimate
+            </button>
+
+            <button
+              class="btn-success"
+              onclick="completeFollowUp('${e.id}')">
+              Mark Complete
+            </button>
+
+          </div>
+
         </div>
 
-        <div class="small">
-          ${escapeHtml(e.followUpNotes || "")}
-        </div>
+      `;
 
-        <div class="actions">
+    }
+  );
 
-          <button
-            class="btn"
-            onclick="loadEstimate('${e.id}')">
-            Open Estimate
-          </button>
+  container.innerHTML =
+    html;
 
-          <button
-            class="btn-success"
-            onclick="completeFollowUp('${e.id}')">
-            Mark Complete
-          </button>
-
-        </div>
-
-      </div>
-    `;
-  });
-
-  container.innerHTML = html;
 }
+
 
 async function completeFollowUp(id){
 
@@ -2028,28 +3818,454 @@ async function completeFollowUp(id){
     await supabaseClient
       .from("estimates")
       .update({
-        follow_up_status:"Completed",
-        updated_at:new Date().toISOString()
+
+        follow_up_status:
+          "Completed",
+
+        updated_at:
+          new Date().toISOString()
+
       })
       .eq("id",id)
-      .eq("user_id",currentUser.id);
+      .eq(
+        "user_id",
+        currentUser.id
+      );
 
   if(error){
-    alert(error.message);
+
+    alert(
+      error.message
+    );
+
     return;
+
   }
 
   const e =
-    estimates.find(x=>x.id===id);
+    estimates.find(
+      x=>x.id===id
+    );
 
   if(e){
-    e.followUpStatus = "Completed";
+
+    e.followUpStatus =
+      "Completed";
+
   }
 
   renderEstimates();
   renderPipeline();
   updateDashboard();
+  renderMiniDashboard();
+
 }
+
+
+/* =========================================================
+   MINI DASHBOARD DROPDOWN
+   ========================================================= */
+
+function renderMiniDashboard(){
+
+  const grid =
+    document.getElementById(
+      "miniDashboardGrid"
+    );
+
+  if(!grid) return;
+
+  const data =
+    getDashboardData();
+
+  const widgets =
+    appSettings.dashboardWidgets;
+
+  let html = "";
+
+  if(widgets.estimates){
+
+    html += `
+      <div class="mini-stat">
+
+        <div class="mini-label">
+          ESTIMATES
+        </div>
+
+        <div class="mini-value">
+          ${data.total}
+        </div>
+
+      </div>
+    `;
+
+  }
+
+  if(widgets.revenue){
+
+    html += `
+      <div class="mini-stat">
+
+        <div class="mini-label">
+          PROJECTED REVENUE
+        </div>
+
+        <div class="mini-value">
+          ${money(
+            data.projectedRevenue
+          )}
+        </div>
+
+      </div>
+    `;
+
+  }
+
+  if(widgets.profit){
+
+    html += `
+      <div class="mini-stat">
+
+        <div class="mini-label">
+          PROJECTED PROFIT
+        </div>
+
+        <div class="mini-value">
+          ${money(
+            data.projectedProfit
+          )}
+        </div>
+
+      </div>
+    `;
+
+  }
+
+  if(widgets.sold){
+
+    html += `
+      <div class="mini-stat">
+
+        <div class="mini-label">
+          SOLD
+        </div>
+
+        <div class="mini-value">
+          ${money(
+            data.soldRevenue
+          )}
+        </div>
+
+      </div>
+    `;
+
+  }
+
+  if(widgets.lost){
+
+    html += `
+      <div class="mini-stat">
+
+        <div class="mini-label">
+          LOST
+        </div>
+
+        <div class="mini-value">
+          ${money(
+            data.lostRevenue
+          )}
+        </div>
+
+      </div>
+    `;
+
+  }
+
+  if(widgets.close){
+
+    html += `
+      <div class="mini-stat">
+
+        <div class="mini-label">
+          CLOSE RATE
+        </div>
+
+        <div class="mini-value">
+          ${data.closeRate.toFixed(1)}%
+        </div>
+
+      </div>
+    `;
+
+  }
+
+  if(!html){
+
+    html = `
+      <div class="small"
+        style="grid-column:1/-1">
+        No dashboard widgets selected.
+      </div>
+    `;
+
+  }
+
+  grid.innerHTML =
+    html;
+
+  const followupContainer =
+    document.getElementById(
+      "miniDashboardFollowups"
+    );
+
+  if(
+    !widgets.followups
+  ){
+
+    followupContainer.innerHTML =
+      "";
+
+    return;
+
+  }
+
+  const followups =
+    getUpcomingFollowups();
+
+  if(!followups.length){
+
+    followupContainer.innerHTML =
+      `<div class="small">
+        No scheduled follow-ups.
+      </div>`;
+
+    return;
+
+  }
+
+  const next =
+    followups[0];
+
+  followupContainer.innerHTML = `
+
+    <div class="notice ${
+      isOverdue(
+        next.followUpDate
+      )
+      ? "error"
+      : ""
+    }">
+
+      <strong>
+        Next Follow-Up
+      </strong>
+
+      <div>
+        ${escapeHtml(
+          next.customerName ||
+          "Unnamed Customer"
+        )}
+      </div>
+
+      <div class="small">
+        ${escapeHtml(
+          next.followUpDate
+        )}
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+function toggleDashboardMenu(){
+
+  const menu =
+    document.getElementById(
+      "dashboardMenu"
+    );
+
+  menu.classList.toggle(
+    "open"
+  );
+
+  if(
+    menu.classList.contains(
+      "open"
+    )
+  ){
+
+    renderMiniDashboard();
+
+  }
+
+}
+
+
+function closeDashboardMenu(){
+
+  document.getElementById(
+    "dashboardMenu"
+  ).classList.remove(
+    "open"
+  );
+
+}
+
+
+function openDashboardFromMenu(){
+
+  closeDashboardMenu();
+
+  switchPage(
+    "dashboardPage"
+  );
+
+}
+
+
+/* =========================================================
+   SETTINGS UI
+   ========================================================= */
+
+function renderDashboardSettings(){
+
+  const container =
+    document.getElementById(
+      "dashboardWidgetSettings"
+    );
+
+  if(!container) return;
+
+  const widgets = [
+
+    {
+      key:"estimates",
+      title:"Total Estimates",
+      description:
+        "Number of estimates currently saved."
+    },
+
+    {
+      key:"revenue",
+      title:"Projected Revenue",
+      description:
+        "Revenue from all active estimates."
+    },
+
+    {
+      key:"profit",
+      title:"Projected Profit",
+      description:
+        "Projected gross profit from active estimates."
+    },
+
+    {
+      key:"sold",
+      title:"Sold Revenue",
+      description:
+        "Revenue from sold and completed jobs."
+    },
+
+    {
+      key:"lost",
+      title:"Lost Revenue",
+      description:
+        "Potential revenue from lost jobs."
+    },
+
+    {
+      key:"close",
+      title:"Close Rate",
+      description:
+        "Sold/completed jobs compared with sold + lost."
+    },
+
+    {
+      key:"followups",
+      title:"Follow-Ups",
+      description:
+        "Upcoming and overdue customer follow-ups."
+    }
+
+  ];
+
+  let html = "";
+
+  widgets.forEach(
+    widget=>{
+
+      const checked =
+        appSettings
+          .dashboardWidgets[
+            widget.key
+          ];
+
+      html += `
+
+        <label class="widget-option">
+
+          <input
+            type="checkbox"
+            data-dashboard-widget="${widget.key}"
+            ${checked ? "checked" : ""}>
+
+          <div>
+
+            <div class="setting-title">
+              ${widget.title}
+            </div>
+
+            <div class="setting-description">
+              ${widget.description}
+            </div>
+
+          </div>
+
+        </label>
+
+      `;
+
+    }
+  );
+
+  container.innerHTML =
+    html;
+
+  container
+    .querySelectorAll(
+      "[data-dashboard-widget]"
+    )
+    .forEach(
+      checkbox=>{
+
+        checkbox.addEventListener(
+          "change",
+          ()=>{
+
+            const key =
+              checkbox.dataset
+                .dashboardWidget;
+
+            appSettings
+              .dashboardWidgets[key] =
+              checkbox.checked;
+
+            saveAppSettings();
+
+            updateDashboard();
+            renderMiniDashboard();
+
+          }
+        );
+
+      }
+    );
+
+}
+
 
 /* =========================================================
    PIPELINE
@@ -2058,104 +4274,154 @@ async function completeFollowUp(id){
 function renderPipeline(){
 
   const container =
-    document.getElementById("pipelineContainer");
+    document.getElementById(
+      "pipelineContainer"
+    );
 
   const statuses =
-    ["Lead","Estimated","Sold","Completed","Lost"];
+    [
+      "Lead",
+      "Estimated",
+      "Sold",
+      "Completed",
+      "Lost"
+    ];
 
   let html = "";
 
-  statuses.forEach(status=>{
+  statuses.forEach(
+    status=>{
 
-    const jobs =
-      estimates.filter(e=>e.status===status);
+      const jobs =
+        estimates.filter(
+          e=>e.status===status
+        );
 
-    const revenue =
-      jobs.reduce(
-        (sum,e)=>sum + Number(e.sellingPrice || 0),
-        0
-      );
-
-    html += `
-      <div class="card">
-
-        <h3>
-          ${status}
-          <span class="small">
-            (${jobs.length})
-          </span>
-        </h3>
-
-        <div class="small">
-          ${money(revenue)}
-        </div>
-
-        <div style="margin-top:12px">
-    `;
-
-    if(!jobs.length){
+      const revenue =
+        jobs.reduce(
+          (sum,e)=>
+            sum +
+            Number(
+              e.sellingPrice || 0
+            ),
+          0
+        );
 
       html += `
-        <div class="small">
-          No jobs in this stage.
+
+        <div class="card">
+
+          <h3>
+
+            ${status}
+
+            <span class="small">
+              (${jobs.length})
+            </span>
+
+          </h3>
+
+          <div class="small">
+            ${money(revenue)}
+          </div>
+
+          <div style="margin-top:12px">
+      `;
+
+      if(!jobs.length){
+
+        html += `
+          <div class="small">
+            No jobs in this stage.
+          </div>
+        `;
+
+      }else{
+
+        jobs.forEach(
+          e=>{
+
+            html += `
+
+              <div
+                class="result"
+                style="margin-bottom:10px">
+
+                <strong>
+                  ${escapeHtml(
+                    e.customerName ||
+                    "Unnamed"
+                  )}
+                </strong>
+
+                <div class="small">
+                  ${escapeHtml(
+                    e.estimateNumber
+                  )}
+                </div>
+
+                <div
+                  style="margin-top:6px">
+
+                  ${money(
+                    e.sellingPrice
+                  )}
+
+                </div>
+
+                <div class="actions">
+
+                  <button
+                    class="btn"
+                    onclick="loadEstimate('${e.id}')">
+                    Open
+                  </button>
+
+                  <select
+                    onchange="updateEstimateStatus('${e.id}',this.value)"
+                    style="max-width:160px">
+
+                    ${
+                      statuses
+                        .map(
+                          s=>
+                            `<option ${
+                              s===e.status
+                                ? "selected"
+                                : ""
+                            }>
+                              ${s}
+                            </option>`
+                        )
+                        .join("")
+                    }
+
+                  </select>
+
+                </div>
+
+              </div>
+
+            `;
+
+          }
+        );
+
+      }
+
+      html += `
+          </div>
         </div>
       `;
 
-    }else{
-
-      jobs.forEach(e=>{
-
-        html += `
-          <div class="result" style="margin-bottom:10px">
-
-            <strong>
-              ${escapeHtml(e.customerName || "Unnamed")}
-            </strong>
-
-            <div class="small">
-              ${escapeHtml(e.estimateNumber)}
-            </div>
-
-            <div style="margin-top:6px">
-              ${money(e.sellingPrice)}
-            </div>
-
-            <div class="actions">
-
-              <button
-                class="btn"
-                onclick="loadEstimate('${e.id}')">
-                Open
-              </button>
-
-              <select
-                onchange="updateEstimateStatus('${e.id}',this.value)"
-                style="max-width:160px">
-
-                ${["Lead","Estimated","Sold","Completed","Lost"]
-                  .map(s =>
-                    `<option ${s===e.status ? "selected":""}>
-                      ${s}
-                    </option>`
-                  ).join("")}
-
-              </select>
-
-            </div>
-
-          </div>
-        `;
-      });
     }
+  );
 
-    html += `
-        </div>
-      </div>
-    `;
-  });
+  container.innerHTML =
+    html;
 
-  container.innerHTML = html;
 }
+
 
 /* =========================================================
    PROPOSAL
@@ -2164,11 +4430,18 @@ function renderPipeline(){
 function generateProposal(id){
 
   const e =
-    estimates.find(x=>x.id===id);
+    estimates.find(
+      x=>x.id===id
+    );
 
   if(!e){
-    alert("Estimate not found.");
+
+    alert(
+      "Estimate not found."
+    );
+
     return;
+
   }
 
   const expiration =
@@ -2176,85 +4449,155 @@ function generateProposal(id){
 
   expiration.setDate(
     expiration.getDate() +
-    Number(e.validDays || 30)
+    Number(
+      e.validDays || 30
+    )
   );
 
   const expirationText =
     expiration.toLocaleDateString();
 
   const proposal =
-    document.getElementById("proposalContent");
+    document.getElementById(
+      "proposalContent"
+    );
 
   proposal.innerHTML = `
 
     <div class="proposal-header">
 
-      <h1>ROOFBIDDER</h1>
+      <h1>
+        ROOFBIDDER
+      </h1>
 
       <p>
         Roofing estimates. Built for profit.
       </p>
 
       <p>
-        <strong>Estimate #:</strong>
-        ${escapeHtml(e.estimateNumber)}
+        <strong>
+          Estimate #:
+        </strong>
+
+        ${escapeHtml(
+          e.estimateNumber
+        )}
+
       </p>
 
     </div>
 
-    <h2>Roofing Proposal</h2>
+    <h2>
+      Roofing Proposal
+    </h2>
 
     <p>
-      <strong>Prepared For:</strong><br>
-      ${escapeHtml(e.customerName || "")}<br>
-      ${escapeHtml(e.projectAddress || "")}<br>
-      ${escapeHtml(e.customerPhone || "")}<br>
-      ${escapeHtml(e.customerEmail || "")}
+
+      <strong>
+        Prepared For:
+      </strong>
+
+      <br>
+
+      ${escapeHtml(
+        e.customerName || ""
+      )}
+
+      <br>
+
+      ${escapeHtml(
+        e.projectAddress || ""
+      )}
+
+      <br>
+
+      ${escapeHtml(
+        e.customerPhone || ""
+      )}
+
+      <br>
+
+      ${escapeHtml(
+        e.customerEmail || ""
+      )}
+
     </p>
 
     <hr>
 
-    <h3>Scope of Work</h3>
+    <h3>
+      Scope of Work
+    </h3>
 
     <p>
-      ${escapeHtml(e.scopeOfWork || "Roofing work as discussed with homeowner.")}
+      ${escapeHtml(
+        e.scopeOfWork ||
+        "Roofing work as discussed with homeowner."
+      )}
     </p>
 
     ${
       e.importantInfo
       ? `
-        <h3>Important Information</h3>
-        <p>${escapeHtml(e.importantInfo)}</p>
+        <h3>
+          Important Information
+        </h3>
+
+        <p>
+          ${escapeHtml(
+            e.importantInfo
+          )}
+        </p>
       `
       : ""
     }
 
     <hr>
 
-    <h2>Project Investment</h2>
+    <h2>
+      Project Investment
+    </h2>
 
     <div class="proposal-total">
-      ${money(e.sellingPrice)}
+
+      ${money(
+        e.sellingPrice
+      )}
+
     </div>
 
     <p>
+
       This proposal is valid through
-      <strong>${expirationText}</strong>.
+
+      <strong>
+        ${expirationText}
+      </strong>.
+
     </p>
 
     <p>
-      Final pricing may be subject to changes resulting from
-      concealed conditions, customer-requested changes,
-      code requirements, or work outside the stated scope.
+
+      Final pricing may be subject to changes
+      resulting from concealed conditions,
+      customer-requested changes, code
+      requirements, or work outside the
+      stated scope.
+
     </p>
 
     <br>
 
-    <h3>Acceptance</h3>
+    <h3>
+      Acceptance
+    </h3>
 
     <p>
-      By signing below, the customer acknowledges the scope
-      of work and project investment described in this proposal.
+
+      By signing below, the customer acknowledges
+      the scope of work and project investment
+      described in this proposal.
+
     </p>
 
     <br><br>
@@ -2262,28 +4605,46 @@ function generateProposal(id){
     <div class="grid">
 
       <div>
-        __________________________________<br>
+
+        __________________________________
+
+        <br>
+
         Customer Signature
+
       </div>
 
       <div>
-        __________________________________<br>
+
+        __________________________________
+
+        <br>
+
         Date
+
       </div>
 
     </div>
 
   `;
 
-  document.getElementById("proposalOverlay").style.display =
+  document.getElementById(
+    "proposalOverlay"
+  ).style.display =
     "block";
+
 }
+
 
 function closeProposal(){
 
-  document.getElementById("proposalOverlay").style.display =
+  document.getElementById(
+    "proposalOverlay"
+  ).style.display =
     "none";
+
 }
+
 
 /* =========================================================
    NAVIGATION
@@ -2291,18 +4652,31 @@ function closeProposal(){
 
 function switchPage(pageId){
 
-  document.querySelectorAll(".page")
-    .forEach(page=>{
-      page.classList.remove("active");
-    });
+  document.querySelectorAll(
+    ".page"
+  ).forEach(
+    page=>{
+      page.classList.remove(
+        "active"
+      );
+    }
+  );
 
-  document.querySelectorAll(".tab")
-    .forEach(tab=>{
-      tab.classList.remove("active");
-    });
+  document.querySelectorAll(
+    ".tab"
+  ).forEach(
+    tab=>{
+      tab.classList.remove(
+        "active"
+      );
+    }
+  );
 
-  document.getElementById(pageId)
-    .classList.add("active");
+  document.getElementById(
+    pageId
+  ).classList.add(
+    "active"
+  );
 
   const tab =
     document.querySelector(
@@ -2310,66 +4684,243 @@ function switchPage(pageId){
     );
 
   if(tab){
-    tab.classList.add("active");
+
+    tab.classList.add(
+      "active"
+    );
+
   }
 
-  if(pageId === "dashboardPage"){
+  if(
+    pageId ===
+    "dashboardPage"
+  ){
+
     updateDashboard();
+
   }
 
-  if(pageId === "estimatesPage"){
+  if(
+    pageId ===
+    "estimatesPage"
+  ){
+
     renderEstimates();
+
   }
 
-  if(pageId === "pipelinePage"){
+  if(
+    pageId ===
+    "pipelinePage"
+  ){
+
     renderPipeline();
+
   }
+
+  if(
+    pageId ===
+    "settingsPage"
+  ){
+
+    renderDashboardSettings();
+
+    document.getElementById(
+      "settingsEmail"
+    ).textContent =
+      currentUser?.email ||
+      "—";
+
+  }
+
 }
+
 
 /* =========================================================
    EVENTS
    ========================================================= */
 
-document.addEventListener("DOMContentLoaded",()=>{
+document.addEventListener(
+  "DOMContentLoaded",
+  ()=>{
 
-  document.querySelectorAll(".tab")
-    .forEach(tab=>{
+    applyTheme();
 
-      tab.addEventListener("click",()=>{
-        switchPage(tab.dataset.page);
-      });
+    document.querySelectorAll(
+      ".tab"
+    ).forEach(
+      tab=>{
 
-    });
+        tab.addEventListener(
+          "click",
+          ()=>{
 
-  document.getElementById("loginBtn")
-    .addEventListener("click",login);
+            switchPage(
+              tab.dataset.page
+            );
 
-  document.getElementById("signupBtn")
-    .addEventListener("click",signup);
+          }
+        );
 
-  document.getElementById("logoutBtn")
-    .addEventListener("click",logout);
+      }
+    );
 
-  document.getElementById("calculateBtn")
-    .addEventListener("click",calculate);
 
-  document.getElementById("saveEstimateBtn")
-    .addEventListener("click",saveCurrentEstimate);
+    document.getElementById(
+      "loginBtn"
+    ).addEventListener(
+      "click",
+      login
+    );
 
-  document.getElementById("newEstimateBtn")
-    .addEventListener("click",()=>{
-      resetCalculator();
-    });
 
-  document.getElementById("estimateSearch")
-    .addEventListener("input",renderEstimates);
+    document.getElementById(
+      "signupBtn"
+    ).addEventListener(
+      "click",
+      signup
+    );
 
-  document.getElementById("estimateFilter")
-    .addEventListener("change",renderEstimates);
 
-  handleAuth();
+    document.getElementById(
+      "logoutBtn"
+    ).addEventListener(
+      "click",
+      logout
+    );
 
-});
+
+    document.getElementById(
+      "calculateBtn"
+    ).addEventListener(
+      "click",
+      calculate
+    );
+
+
+    document.getElementById(
+      "saveEstimateBtn"
+    ).addEventListener(
+      "click",
+      saveCurrentEstimate
+    );
+
+
+    document.getElementById(
+      "newEstimateBtn"
+    ).addEventListener(
+      "click",
+      ()=>{
+        resetCalculator();
+      }
+    );
+
+
+    document.getElementById(
+      "estimateSearch"
+    ).addEventListener(
+      "input",
+      renderEstimates
+    );
+
+
+    document.getElementById(
+      "estimateFilter"
+    ).addEventListener(
+      "change",
+      renderEstimates
+    );
+
+
+    document.getElementById(
+      "darkModeToggle"
+    ).addEventListener(
+      "change",
+      event=>{
+
+        appSettings.darkMode =
+          event.target.checked;
+
+        saveAppSettings();
+        applyTheme();
+
+      }
+    );
+
+
+    document.getElementById(
+      "showAllDashboardBtn"
+    ).addEventListener(
+      "click",
+      showAllDashboardWidgets
+    );
+
+
+    document.getElementById(
+      "resetDashboardBtn"
+    ).addEventListener(
+      "click",
+      resetDashboardSettings
+    );
+
+
+    document.getElementById(
+      "dashboardToggle"
+    ).addEventListener(
+      "click",
+      event=>{
+
+        event.stopPropagation();
+
+        toggleDashboardMenu();
+
+      }
+    );
+
+
+    document.getElementById(
+      "closeDashboardMenu"
+    ).addEventListener(
+      "click",
+      closeDashboardMenu
+    );
+
+
+    document.addEventListener(
+      "click",
+      event=>{
+
+        const menu =
+          document.getElementById(
+            "dashboardMenu"
+          );
+
+        const toggle =
+          document.getElementById(
+            "dashboardToggle"
+          );
+
+        if(
+          menu.classList.contains(
+            "open"
+          ) &&
+          !menu.contains(event.target) &&
+          !toggle.contains(event.target)
+        ){
+
+          closeDashboardMenu();
+
+        }
+
+      }
+    );
+
+
+    handleAuth();
+
+  }
+);
+
 </script>
 
 </body>
