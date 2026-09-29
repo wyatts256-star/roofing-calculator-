@@ -1,33 +1,27 @@
-<!<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>RoofBidder</title>
+<title>RoofBidder — Roofing CRM</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root{
-  --bg:#f4f6f9;
-  --card:#ffffff;
+  --bg:#f4f7fb;
+  --surface:#ffffff;
+  --surface2:#f8fafc;
+  --border:#e5e7eb;
   --text:#172033;
-  --muted:#6b7280;
-  --border:#e1e5eb;
-  --blue:#1769ff;
-  --green:#15945b;
-  --red:#d92d20;
-  --yellow:#b77900;
-  --shadow:0 6px 20px rgba(0,0,0,.06);
-}
-
-body.dark{
-  --bg:#0d1117;
-  --card:#151b23;
-  --text:#f3f4f6;
-  --muted:#9ca3af;
-  --border:#29313d;
-  --shadow:0 6px 20px rgba(0,0,0,.25);
+  --muted:#667085;
+  --primary:#1769ff;
+  --primary2:#0b55d8;
+  --success:#0f9f6e;
+  --warning:#e99b16;
+  --danger:#dc3545;
+  --shadow:0 10px 30px rgba(15,23,42,.07);
+  --radius:18px;
 }
 
 *{
@@ -36,9 +30,19 @@ body.dark{
 
 body{
   margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   background:var(--bg);
   color:var(--text);
+}
+
+body.dark{
+  --bg:#0b1220;
+  --surface:#111a2b;
+  --surface2:#172236;
+  --border:#27344b;
+  --text:#f4f7fb;
+  --muted:#9aa8bc;
+  --shadow:0 10px 30px rgba(0,0,0,.3);
 }
 
 button,
@@ -56,98 +60,278 @@ button{
   display:none!important;
 }
 
-/* ================= HEADER ================= */
+.app{
+  min-height:100vh;
+}
 
-.appbar{
-  height:64px;
-  background:var(--card);
-  border-bottom:1px solid var(--border);
+/* ================================
+   AUTH
+================================ */
+
+.auth-screen{
+  min-height:100vh;
   display:flex;
   align-items:center;
-  gap:12px;
-  padding:0 15px;
-  position:sticky;
+  justify-content:center;
+  padding:24px;
+  background:
+    radial-gradient(circle at top left,#dceaff,transparent 40%),
+    radial-gradient(circle at bottom right,#e8f0ff,transparent 40%),
+    var(--bg);
+}
+
+.auth-card{
+  width:100%;
+  max-width:440px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:28px;
+  padding:34px;
+  box-shadow:var(--shadow);
+}
+
+.logo{
+  font-size:27px;
+  font-weight:900;
+  letter-spacing:-1px;
+}
+
+.logo span{
+  color:var(--primary);
+}
+
+.auth-sub{
+  color:var(--muted);
+  margin:7px 0 26px;
+}
+
+.auth-tabs{
+  display:flex;
+  gap:8px;
+  margin-bottom:22px;
+}
+
+.auth-tab{
+  flex:1;
+  border:1px solid var(--border);
+  background:var(--surface2);
+  color:var(--muted);
+  border-radius:12px;
+  padding:11px;
+  font-weight:700;
+}
+
+.auth-tab.active{
+  background:var(--primary);
+  color:white;
+  border-color:var(--primary);
+}
+
+.field{
+  margin-bottom:15px;
+}
+
+.field label{
+  display:block;
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:7px;
+}
+
+.field input,
+.field select,
+.field textarea,
+.input{
+  width:100%;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text);
+  border-radius:11px;
+  padding:12px 13px;
+  outline:none;
+}
+
+.field textarea{
+  min-height:100px;
+  resize:vertical;
+}
+
+.field input:focus,
+.field select:focus,
+.field textarea:focus,
+.input:focus{
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(23,105,255,.12);
+}
+
+.primary{
+  background:var(--primary);
+  color:white;
+  border:0;
+  border-radius:11px;
+  padding:12px 17px;
+  font-weight:800;
+}
+
+.primary:hover{
+  background:var(--primary2);
+}
+
+.secondary{
+  background:var(--surface2);
+  color:var(--text);
+  border:1px solid var(--border);
+  border-radius:11px;
+  padding:11px 15px;
+  font-weight:700;
+}
+
+.danger{
+  background:#fff1f2;
+  color:var(--danger);
+  border:1px solid #fecdd3;
+  border-radius:11px;
+  padding:11px 15px;
+  font-weight:700;
+}
+
+body.dark .danger{
+  background:#35151c;
+  border-color:#57202a;
+}
+
+.full{
+  width:100%;
+}
+
+/* ================================
+   LAYOUT
+================================ */
+
+.shell{
+  display:flex;
+  min-height:100vh;
+}
+
+.sidebar{
+  width:250px;
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  padding:22px 15px;
+  position:fixed;
+  left:0;
   top:0;
+  bottom:0;
   z-index:50;
 }
 
 .brand{
-  font-weight:900;
-  letter-spacing:.5px;
-  white-space:nowrap;
+  padding:4px 10px 25px;
 }
 
-.brand span{
-  color:var(--blue);
+.brand small{
+  display:block;
+  color:var(--muted);
+  margin-top:3px;
 }
 
-.page-title{
-  flex:1;
+.nav{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+
+.nav button{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  padding:12px 13px;
+  border-radius:11px;
+  text-align:left;
+  font-weight:700;
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.nav button:hover{
+  background:var(--surface2);
+  color:var(--text);
+}
+
+.nav button.active{
+  background:#eaf1ff;
+  color:var(--primary);
+}
+
+body.dark .nav button.active{
+  background:#172a4d;
+}
+
+.sidebar-bottom{
+  position:absolute;
+  bottom:18px;
+  left:15px;
+  right:15px;
+}
+
+.main{
+  margin-left:250px;
+  width:calc(100% - 250px);
+}
+
+.topbar{
+  height:72px;
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  position:sticky;
+  top:0;
+  z-index:30;
+}
+
+.mobile-menu{
+  display:none;
+}
+
+.topbar-title{
+  font-size:19px;
+  font-weight:850;
+}
+
+.topbar-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.user-pill{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.avatar{
+  width:34px;
+  height:34px;
+  border-radius:50%;
+  background:var(--primary);
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   font-weight:800;
 }
 
-.icon-btn{
-  width:42px;
-  height:42px;
-  border:1px solid var(--border);
-  border-radius:10px;
-  background:var(--card);
-  color:var(--text);
-  font-size:20px;
-}
-
-/* ================= MENU ================= */
-
-.drawer{
-  position:fixed;
-  top:64px;
-  bottom:0;
-  left:0;
-  width:275px;
-  background:var(--card);
-  border-right:1px solid var(--border);
-  z-index:70;
-  padding:12px;
-  transform:translateX(-110%);
-  transition:.2s ease;
-  overflow:auto;
-}
-
-.drawer.open{
-  transform:translateX(0);
-}
-
-.backdrop{
-  position:fixed;
-  inset:64px 0 0;
-  background:rgba(0,0,0,.45);
-  z-index:60;
-}
-
-.nav-btn{
-  width:100%;
-  border:0;
-  background:transparent;
-  color:var(--text);
-  padding:13px;
-  border-radius:9px;
-  text-align:left;
-  font-weight:750;
-  margin-bottom:4px;
-}
-
-.nav-btn:hover,
-.nav-btn.active{
-  background:#1769ff15;
-  color:var(--blue);
-}
-
-/* ================= GENERAL ================= */
-
-main{
-  max-width:1250px;
+.content{
+  padding:28px;
+  max-width:1500px;
   margin:auto;
-  padding:18px;
 }
 
 .page{
@@ -158,266 +342,646 @@ main{
   display:block;
 }
 
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:17px;
-  margin-bottom:15px;
-  box-shadow:var(--shadow);
+/* ================================
+   HEADERS
+================================ */
+
+.page-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:15px;
+  margin-bottom:24px;
 }
 
-.grid{
-  display:grid;
-  gap:13px;
+.page-header h1{
+  margin:0;
+  font-size:28px;
+  letter-spacing:-.7px;
 }
 
-.g2{
-  grid-template-columns:repeat(2,1fr);
-}
-
-.g3{
-  grid-template-columns:repeat(3,1fr);
-}
-
-.g4{
-  grid-template-columns:repeat(4,1fr);
-}
-
-label{
-  display:block;
-  font-size:12px;
-  font-weight:800;
+.page-header p{
   color:var(--muted);
-  margin-bottom:6px;
-}
-
-input,
-select,
-textarea{
-  width:100%;
-  padding:11px;
-  border:1px solid var(--border);
-  border-radius:9px;
-  background:var(--card);
-  color:var(--text);
-}
-
-textarea{
-  min-height:90px;
-  resize:vertical;
-}
-
-.btn{
-  border:0;
-  border-radius:9px;
-  padding:10px 14px;
-  background:var(--blue);
-  color:#fff;
-  font-weight:800;
-}
-
-.btn.secondary{
-  background:var(--card);
-  color:var(--text);
-  border:1px solid var(--border);
-}
-
-.btn.danger{
-  background:var(--red);
+  margin:5px 0 0;
 }
 
 .actions{
   display:flex;
-  gap:8px;
+  gap:9px;
   flex-wrap:wrap;
 }
 
-.muted{
-  color:var(--muted);
+/* ================================
+   DASHBOARD
+================================ */
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:16px;
+  margin-bottom:22px;
 }
 
-.small{
-  font-size:12px;
+.stat{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px;
+  box-shadow:var(--shadow);
 }
+
+.stat-label{
+  color:var(--muted);
+  font-size:13px;
+  font-weight:700;
+}
+
+.stat-value{
+  font-size:28px;
+  font-weight:900;
+  margin-top:7px;
+}
+
+.stat-note{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:1.4fr 1fr;
+  gap:18px;
+}
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:21px;
+  margin-bottom:18px;
+}
+
+.card-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:17px;
+}
+
+.card-title h3{
+  margin:0;
+  font-size:16px;
+}
+
+/* ================================
+   CRM
+================================ */
 
 .search-box{
   position:relative;
+  margin-bottom:15px;
 }
 
 .search-box input{
-  padding-left:40px;
+  width:100%;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:var(--surface);
+  color:var(--text);
+  padding:15px 18px 15px 45px;
   font-size:15px;
-  min-height:46px;
+  box-shadow:var(--shadow);
 }
 
 .search-icon{
   position:absolute;
-  left:13px;
+  left:16px;
   top:13px;
-  z-index:2;
+  color:var(--muted);
 }
+
+.filters{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+
+.filter{
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--muted);
+  border-radius:999px;
+  padding:8px 13px;
+  font-size:13px;
+  font-weight:750;
+}
+
+.filter.active{
+  background:var(--primary);
+  border-color:var(--primary);
+  color:white;
+}
+
+.job-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
+
+.job-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:17px;
+  padding:18px;
+  transition:.15s;
+  cursor:pointer;
+}
+
+.job-card:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow);
+  border-color:#b9cdfc;
+}
+
+.job-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+
+.job-name{
+  font-size:17px;
+  font-weight:850;
+}
+
+.job-address{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:4px;
+  line-height:1.4;
+}
+
+.job-price{
+  font-size:22px;
+  font-weight:900;
+  margin-top:17px;
+}
+
+.job-bottom{
+  border-top:1px solid var(--border);
+  margin-top:15px;
+  padding-top:13px;
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:12px;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  border-radius:999px;
+  padding:5px 9px;
+  font-size:11px;
+  font-weight:850;
+  white-space:nowrap;
+}
+
+.badge-lead{
+  background:#eef2ff;
+  color:#4f46e5;
+}
+
+.badge-estimated{
+  background:#eaf4ff;
+  color:#1769ff;
+}
+
+.badge-sold{
+  background:#e8f8f1;
+  color:#07865c;
+}
+
+.badge-completed{
+  background:#e8f8f1;
+  color:#087f5b;
+}
+
+.badge-lost{
+  background:#fff0f1;
+  color:#c92a3a;
+}
+
+/* ================================
+   JOB PAGE
+================================ */
+
+.job-hero{
+  background:linear-gradient(135deg,#102a5c,#1769ff);
+  color:white;
+  border-radius:24px;
+  padding:26px;
+  margin-bottom:18px;
+  box-shadow:0 15px 40px rgba(23,105,255,.2);
+}
+
+.job-hero-row{
+  display:flex;
+  justify-content:space-between;
+  gap:20px;
+  align-items:flex-start;
+}
+
+.job-hero h1{
+  margin:0;
+  font-size:30px;
+}
+
+.job-hero-address{
+  opacity:.82;
+  margin-top:5px;
+}
+
+.hero-price{
+  text-align:right;
+}
+
+.hero-price .amount{
+  font-size:31px;
+  font-weight:900;
+}
+
+.hero-price small{
+  opacity:.8;
+}
+
+.job-tabs{
+  display:flex;
+  gap:5px;
+  overflow:auto;
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:5px;
+  border-radius:14px;
+  margin-bottom:18px;
+}
+
+.job-tab{
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  padding:10px 15px;
+  border-radius:10px;
+  font-weight:750;
+  white-space:nowrap;
+}
+
+.job-tab.active{
+  background:var(--primary);
+  color:white;
+}
+
+.job-columns{
+  display:grid;
+  grid-template-columns:1.45fr .8fr;
+  gap:18px;
+}
+
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:13px;
+}
+
+.info-item{
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:13px;
+}
+
+.info-label{
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.4px;
+}
+
+.info-value{
+  margin-top:5px;
+  font-weight:750;
+  word-break:break-word;
+}
+
+.money-list{
+  display:flex;
+  flex-direction:column;
+}
+
+.money-row{
+  display:flex;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.money-row:last-child{
+  border-bottom:0;
+}
+
+.money-row span:first-child{
+  color:var(--muted);
+}
+
+.money-row strong{
+  font-weight:850;
+}
+
+.timeline{
+  position:relative;
+  padding-left:25px;
+}
+
+.timeline:before{
+  content:"";
+  position:absolute;
+  left:7px;
+  top:4px;
+  bottom:4px;
+  width:2px;
+  background:var(--border);
+}
+
+.timeline-item{
+  position:relative;
+  margin-bottom:20px;
+}
+
+.timeline-dot{
+  position:absolute;
+  left:-24px;
+  top:3px;
+  width:16px;
+  height:16px;
+  border-radius:50%;
+  background:var(--primary);
+  border:3px solid var(--surface);
+  box-shadow:0 0 0 1px var(--primary);
+}
+
+.timeline-title{
+  font-weight:800;
+}
+
+.timeline-date{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:2px;
+}
+
+.timeline-desc{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:5px;
+}
+
+/* ================================
+   TABLES
+================================ */
 
 .table-wrap{
   overflow-x:auto;
 }
 
-.table{
+table{
   width:100%;
   border-collapse:collapse;
 }
 
-.table th,
-.table td{
-  padding:10px;
-  border-bottom:1px solid var(--border);
+th{
   text-align:left;
-  font-size:13px;
-  white-space:nowrap;
-}
-
-.badge{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:999px;
-  background:#1769ff15;
-  color:var(--blue);
-  font-size:11px;
-  font-weight:900;
-}
-
-.badge.green{
-  background:#15945b18;
-  color:var(--green);
-}
-
-.badge.red{
-  background:#d92d2018;
-  color:var(--red);
-}
-
-.badge.yellow{
-  background:#b7790018;
-  color:var(--yellow);
-}
-
-/* ================= FILTERS ================= */
-
-.filter-row{
-  display:flex;
-  gap:7px;
-  flex-wrap:wrap;
-  margin-top:12px;
-}
-
-.filter-btn{
-  border:1px solid var(--border);
-  background:var(--card);
-  color:var(--text);
-  border-radius:999px;
-  padding:8px 12px;
-  font-size:12px;
-  font-weight:800;
-}
-
-.filter-btn.active{
-  background:var(--blue);
-  color:#fff;
-  border-color:var(--blue);
-}
-
-.result-count{
-  margin-top:10px;
-  font-size:12px;
   color:var(--muted);
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.4px;
+  padding:11px;
+  border-bottom:1px solid var(--border);
 }
 
-/* ================= AUTH ================= */
+td{
+  padding:13px 11px;
+  border-bottom:1px solid var(--border);
+  font-size:13px;
+}
 
-.auth{
-  min-height:100vh;
+tr:last-child td{
+  border-bottom:0;
+}
+
+/* ================================
+   FORMS
+================================ */
+
+.form-grid{
   display:grid;
-  place-items:center;
-  padding:18px;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
 }
 
-.auth-box{
-  width:min(430px,100%);
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:17px;
-  padding:25px;
-  box-shadow:var(--shadow);
+.form-grid.three{
+  grid-template-columns:repeat(3,1fr);
 }
 
-.auth-modes{
+.form-full{
+  grid-column:1/-1;
+}
+
+.form-actions{
   display:flex;
-  gap:6px;
-  margin:18px 0;
+  justify-content:flex-end;
+  gap:9px;
+  margin-top:20px;
 }
 
-.auth-modes button{
-  flex:1;
-  padding:10px;
-  border:1px solid var(--border);
-  background:var(--card);
-  color:var(--text);
-  border-radius:9px;
-  font-weight:800;
+/* ================================
+   MODAL
+================================ */
+
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(5,12,25,.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:100;
 }
 
-.auth-modes button.active{
-  background:var(--blue);
-  color:#fff;
+.modal-backdrop.show{
+  display:flex;
 }
 
-/* ================= TOGGLES ================= */
+.modal{
+  width:100%;
+  max-width:650px;
+  max-height:90vh;
+  overflow:auto;
+  background:var(--surface);
+  border-radius:20px;
+  box-shadow:0 30px 80px rgba(0,0,0,.25);
+  padding:23px;
+}
 
-.toggle{
+.modal-head{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:13px 0;
-  border-bottom:1px solid var(--border);
+  margin-bottom:20px;
 }
 
-.toggle input{
-  width:auto;
+.modal-head h2{
+  margin:0;
+  font-size:20px;
 }
 
-/* ================= STATS ================= */
-
-.stat .number{
-  font-size:25px;
-  font-weight:900;
-  margin-top:5px;
+.close{
+  border:0;
+  background:var(--surface2);
+  color:var(--muted);
+  width:35px;
+  height:35px;
+  border-radius:10px;
+  font-size:20px;
 }
 
-/* ================= MOBILE ================= */
+/* ================================
+   EMPTY
+================================ */
 
-@media(max-width:800px){
+.empty{
+  text-align:center;
+  padding:50px 20px;
+  color:var(--muted);
+}
 
-  .g2,
-  .g3,
-  .g4{
+.empty-icon{
+  font-size:40px;
+  margin-bottom:10px;
+}
+
+/* ================================
+   MOBILE
+================================ */
+
+@media(max-width:1050px){
+  .stats{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .job-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .dashboard-grid,
+  .job-columns{
     grid-template-columns:1fr;
   }
+}
 
-  main{
-    padding:12px;
+@media(max-width:750px){
+  .sidebar{
+    transform:translateX(-100%);
+    transition:.2s;
+    box-shadow:var(--shadow);
   }
 
-  .page-title{
-    font-size:14px;
+  .sidebar.open{
+    transform:translateX(0);
   }
 
-  .user-email{
+  .main{
+    margin-left:0;
+    width:100%;
+  }
+
+  .mobile-menu{
+    display:block;
+    border:0;
+    background:var(--surface2);
+    color:var(--text);
+    width:39px;
+    height:39px;
+    border-radius:10px;
+    margin-right:10px;
+  }
+
+  .topbar{
+    padding:0 15px;
+  }
+
+  .topbar-title{
+    font-size:16px;
+  }
+
+  .user-pill span{
     display:none;
   }
 
-  .table th,
-  .table td{
-    font-size:12px;
+  .content{
+    padding:18px 14px;
+  }
+
+  .page-header{
+    flex-direction:column;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+
+  .stat{
+    padding:15px;
+  }
+
+  .stat-value{
+    font-size:22px;
+  }
+
+  .job-grid{
+    grid-template-columns:1fr;
+  }
+
+  .form-grid,
+  .form-grid.three{
+    grid-template-columns:1fr;
+  }
+
+  .info-grid{
+    grid-template-columns:1fr;
+  }
+
+  .job-hero{
+    padding:20px;
+  }
+
+  .job-hero-row{
+    flex-direction:column;
+  }
+
+  .hero-price{
+    text-align:left;
+  }
+
+  .hero-price .amount{
+    font-size:27px;
   }
 }
 </style>
@@ -425,2203 +989,3175 @@ textarea{
 
 <body>
 
-<!-- =====================================================
-AUTH
-===================================================== -->
+<!-- =========================
+AUTH SCREEN
+========================= -->
 
-<div id="authScreen" class="auth">
+<div id="authScreen" class="auth-screen">
 
-  <div class="auth-box">
+  <div class="auth-card">
 
-    <div class="brand">
-      ROOF<span>BIDDER</span>
-    </div>
-
-    <p class="muted">
+    <div class="logo">ROOF<span>BIDDER</span></div>
+    <div class="auth-sub">
       Roofing estimates. Built for profit.
-    </p>
-
-    <div class="auth-modes">
-
-      <button
-        id="contractorMode"
-        class="active"
-        onclick="setAuthMode('contractor')">
-        Contractor
-      </button>
-
-      <button
-        id="homeownerMode"
-        onclick="setAuthMode('homeowner')">
-        Homeowner
-      </button>
-
     </div>
 
-    <h2 id="authTitle">
-      Contractor Login
-    </h2>
-
-    <div id="nameWrap" class="hidden">
-
-      <label>Name</label>
-
-      <input
-        id="authName"
-        type="text"
-        placeholder="Your name">
-
-    </div>
-
-    <label>Email</label>
-
-    <input
-      id="authEmail"
-      type="email"
-      placeholder="you@example.com">
-
-    <label>Password</label>
-
-    <input
-      id="authPassword"
-      type="password"
-      placeholder="Password">
-
-    <div class="actions" style="margin-top:15px">
-
-      <button
-        class="btn"
-        onclick="loginUser()">
-        Login
+    <div class="auth-tabs">
+      <button id="loginTab" class="auth-tab active" onclick="showAuth('login')">
+        Contractor Login
       </button>
 
-      <button
-        class="btn secondary"
-        onclick="signupUser()">
+      <button id="signupTab" class="auth-tab" onclick="showAuth('signup')">
         Create Account
       </button>
-
     </div>
 
-    <p
-      id="authMessage"
-      class="small muted">
-    </p>
+    <div id="loginForm">
 
-  </div>
-
-</div>
-
-
-<!-- =====================================================
-APP
-===================================================== -->
-
-<div id="app" class="hidden">
-
-<header class="appbar">
-
-  <button
-    class="icon-btn"
-    onclick="toggleMenu()">
-    ☰
-  </button>
-
-  <div class="brand">
-    ROOF<span>BIDDER</span>
-  </div>
-
-  <div
-    id="pageTitle"
-    class="page-title">
-    Dashboard
-  </div>
-
-  <div
-    id="userEmail"
-    class="user-email small muted">
-  </div>
-
-  <button
-    class="icon-btn"
-    onclick="go('settings')">
-    ⚙️
-  </button>
-
-</header>
-
-
-<div
-  id="backdrop"
-  class="backdrop hidden"
-  onclick="closeMenu()">
-</div>
-
-
-<aside
-  id="drawer"
-  class="drawer">
-
-  <button
-    class="nav-btn active"
-    data-page="dashboard"
-    onclick="go('dashboard')">
-    📊 Dashboard
-  </button>
-
-  <button
-    class="nav-btn"
-    data-page="calculator"
-    onclick="go('calculator')">
-    🧮 Calculator
-  </button>
-
-  <button
-    class="nav-btn"
-    data-page="estimates"
-    onclick="go('estimates')">
-    📋 Estimates
-  </button>
-
-  <button
-    class="nav-btn"
-    data-page="pipeline"
-    onclick="go('pipeline')">
-    📈 Pipeline
-  </button>
-
-  <button
-    class="nav-btn"
-    data-page="purchaseorders"
-    onclick="go('purchaseorders')">
-    🧾 Purchase Orders
-  </button>
-
-  <button
-    class="nav-btn"
-    data-page="settings"
-    onclick="go('settings')">
-    ⚙️ Settings
-  </button>
-
-  <button
-    class="nav-btn"
-    data-page="homeowner"
-    onclick="go('homeowner')">
-    🏠 Homeowner Portal
-  </button>
-
-  <hr>
-
-  <button
-    class="nav-btn"
-    onclick="logout()">
-    🚪 Logout
-  </button>
-
-</aside>
-
-
-<main>
-
-<!-- =====================================================
-DASHBOARD
-===================================================== -->
-
-<section
-  id="dashboard"
-  class="page active">
-
-  <div class="card">
-
-    <h2 style="margin-top:0">
-      Jobs
-    </h2>
-
-    <!-- FIXED SEARCH -->
-    <div class="search-box">
-
-      <span class="search-icon">
-        🔎
-      </span>
-
-      <input
-        id="jobSearch"
-        type="search"
-        autocomplete="off"
-        placeholder="Search customer, estimate #, address, phone or email..."
-        oninput="handleJobSearch()">
-
-    </div>
-
-
-    <!-- FIXED FILTERS -->
-
-    <div class="filter-row">
-
-      <button
-        class="filter-btn active"
-        data-job-filter="All"
-        onclick="setJobFilter('All')">
-        All Jobs
-      </button>
-
-      <button
-        class="filter-btn"
-        data-job-filter="Lead"
-        onclick="setJobFilter('Lead')">
-        Leads
-      </button>
-
-      <button
-        class="filter-btn"
-        data-job-filter="Estimated"
-        onclick="setJobFilter('Estimated')">
-        Estimates
-      </button>
-
-      <button
-        class="filter-btn"
-        data-job-filter="Sold"
-        onclick="setJobFilter('Sold')">
-        Sold
-      </button>
-
-      <button
-        class="filter-btn"
-        data-job-filter="Completed"
-        onclick="setJobFilter('Completed')">
-        Completed
-      </button>
-
-      <button
-        class="filter-btn"
-        data-job-filter="Lost"
-        onclick="setJobFilter('Lost')">
-        Lost
-      </button>
-
-    </div>
-
-
-    <div class="grid g2" style="margin-top:12px">
-
-      <div>
-
-        <label>
-          Sort Jobs
-        </label>
-
-        <select
-          id="jobSort"
-          onchange="handleJobSearch()">
-
-          <option value="newest">
-            Newest
-          </option>
-
-          <option value="oldest">
-            Oldest
-          </option>
-
-          <option value="highest">
-            Highest Value
-          </option>
-
-          <option value="lowest">
-            Lowest Value
-          </option>
-
-          <option value="followup">
-            Follow-Up Due
-          </option>
-
-        </select>
-
+      <div class="field">
+        <label>Email</label>
+        <input id="loginEmail" type="email" placeholder="you@company.com">
       </div>
 
-      <div style="display:flex;align-items:end">
+      <div class="field">
+        <label>Password</label>
+        <input id="loginPassword" type="password" placeholder="Password">
+      </div>
 
-        <button
-          class="btn secondary"
-          style="width:100%"
-          onclick="clearJobFilters()">
-          Clear Search & Filters
+      <button class="primary full" onclick="login()">
+        Sign In
+      </button>
+
+    </div>
+
+    <div id="signupForm" class="hidden">
+
+      <div class="field">
+        <label>Email</label>
+        <input id="signupEmail" type="email" placeholder="you@company.com">
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input id="signupPassword" type="password" placeholder="Create a password">
+      </div>
+
+      <button class="primary full" onclick="signup()">
+        Create Contractor Account
+      </button>
+
+    </div>
+
+    <div id="authMessage" style="margin-top:15px;color:#dc3545;font-size:13px;"></div>
+
+  </div>
+</div>
+
+
+<!-- =========================
+MAIN APP
+========================= -->
+
+<div id="app" class="app hidden">
+
+<div class="shell">
+
+  <!-- SIDEBAR -->
+
+  <aside id="sidebar" class="sidebar">
+
+    <div class="brand">
+      <div class="logo">ROOF<span>BIDDER</span></div>
+      <small>Roofing CRM</small>
+    </div>
+
+    <nav class="nav">
+
+      <button data-page="dashboard" onclick="go('dashboard')">
+        📊 Dashboard
+      </button>
+
+      <button data-page="crm" onclick="go('crm')">
+        👥 CRM
+      </button>
+
+      <button data-page="calculator" onclick="go('calculator')">
+        🧮 Calculator
+      </button>
+
+      <button data-page="estimates" onclick="go('estimates')">
+        📄 Estimates
+      </button>
+
+      <button data-page="pipeline" onclick="go('pipeline')">
+        🔥 Pipeline
+      </button>
+
+      <button data-page="purchaseOrders" onclick="go('purchaseOrders')">
+        📦 Purchase Orders
+      </button>
+
+      <button data-page="settings" onclick="go('settings')">
+        ⚙️ Settings
+      </button>
+
+    </nav>
+
+    <div class="sidebar-bottom">
+
+      <button class="secondary full" onclick="logout()">
+        Sign Out
+      </button>
+
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN -->
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div style="display:flex;align-items:center;">
+
+        <button class="mobile-menu" onclick="toggleSidebar()">
+          ☰
         </button>
 
-      </div>
-
-    </div>
-
-
-    <div
-      id="jobResultCount"
-      class="result-count">
-    </div>
-
-  </div>
-
-
-  <div
-    id="dashboardStats"
-    class="grid g4">
-  </div>
-
-
-  <div class="card">
-
-    <div id="dashboardJobs">
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =====================================================
-CALCULATOR
-===================================================== -->
-
-<section
-  id="calculator"
-  class="page">
-
-  <div class="card">
-
-    <h2>
-      Roofing Calculator
-    </h2>
-
-    <div class="grid g3">
-
-      <div>
-        <label>Customer</label>
-        <input id="cCustomer">
-      </div>
-
-      <div>
-        <label>Phone</label>
-        <input id="cPhone">
-      </div>
-
-      <div>
-        <label>Email</label>
-        <input id="cEmail">
-      </div>
-
-      <div style="grid-column:1/-1">
-
-        <label>
-          Project Address
-        </label>
-
-        <input id="cAddress">
+        <div id="topbarTitle" class="topbar-title">
+          Dashboard
+        </div>
 
       </div>
 
-      <div>
-        <label>Squares</label>
-        <input
-          id="cSquares"
-          type="number"
-          value="20">
+      <div class="topbar-right">
+
+        <div class="user-pill">
+          <div id="avatar" class="avatar">R</div>
+          <span id="userEmail"></span>
+        </div>
+
       </div>
 
-      <div>
-        <label>Pitch Multiplier</label>
-        <input
-          id="cPitch"
-          type="number"
-          step=".01"
-          value="1.15">
-      </div>
-
-      <div>
-        <label>Layers</label>
-        <input
-          id="cLayers"
-          type="number"
-          value="1">
-      </div>
-
-      <div>
-        <label>Waste %</label>
-        <input
-          id="cWaste"
-          type="number"
-          value="10">
-      </div>
-
-      <div>
-        <label>Shingle $/sq</label>
-        <input
-          id="cShingle"
-          type="number"
-          value="110">
-      </div>
-
-      <div>
-        <label>Starter $/sq</label>
-        <input
-          id="cStarter"
-          type="number"
-          value="35">
-      </div>
-
-      <div>
-        <label>Ridge $/sq</label>
-        <input
-          id="cRidge"
-          type="number"
-          value="35">
-      </div>
-
-      <div>
-        <label>Labor $/sq</label>
-        <input
-          id="cLabor"
-          type="number"
-          value="90">
-      </div>
-
-      <div>
-        <label>Tear-off $/sq/layer</label>
-        <input
-          id="cTear"
-          type="number"
-          value="35">
-      </div>
-
-      <div>
-        <label>Other Material</label>
-        <input
-          id="cOtherMaterial"
-          type="number"
-          value="0">
-      </div>
-
-      <div>
-        <label>Other Labor</label>
-        <input
-          id="cOtherLabor"
-          type="number"
-          value="0">
-      </div>
-
-      <div>
-        <label>Overhead %</label>
-        <input
-          id="cOverhead"
-          type="number"
-          value="10">
-      </div>
-
-      <div>
-        <label>Profit Margin %</label>
-        <input
-          id="cMargin"
-          type="number"
-          value="30">
-      </div>
-
-      <div>
-        <label>Price Adjustment</label>
-        <input
-          id="cAdjustment"
-          type="number"
-          value="0">
-      </div>
-
-    </div>
-
-    <div
-      class="actions"
-      style="margin-top:15px">
-
-      <button
-        class="btn"
-        onclick="calculateEstimate()">
-        Calculate
-      </button>
-
-      <button
-        class="btn secondary"
-        onclick="saveEstimate()">
-        Save Estimate
-      </button>
-
-    </div>
-
-  </div>
-
-  <div
-    id="calculatorResult"
-    class="card">
-  </div>
-
-</section>
+    </header>
 
 
-<!-- =====================================================
-ESTIMATES
-===================================================== -->
+    <div class="content">
 
-<section
-  id="estimates"
-  class="page">
+      <!-- ================= DASHBOARD ================= -->
 
-  <div class="card">
+      <section id="page-dashboard" class="page">
 
-    <div class="search-box">
+        <div class="page-header">
 
-      <span class="search-icon">
-        🔎
-      </span>
+          <div>
+            <h1>Dashboard</h1>
+            <p>Your roofing business at a glance.</p>
+          </div>
 
-      <input
-        id="estimateSearch"
-        type="search"
-        autocomplete="off"
-        placeholder="Search estimates..."
-        oninput="renderEstimates()">
+          <div class="actions">
+            <button class="primary" onclick="newEstimate()">
+              + New Estimate
+            </button>
+          </div>
 
-    </div>
+        </div>
 
-    <div class="grid g2" style="margin-top:12px">
 
-      <div>
+        <div id="dashboardStats" class="stats"></div>
 
-        <label>
-          Status
-        </label>
 
-        <select
-          id="estimateStatus"
-          onchange="renderEstimates()">
+        <div class="dashboard-grid">
 
-          <option value="All">
-            All
-          </option>
+          <div class="card">
 
-          <option value="Lead">
-            Lead
-          </option>
+            <div class="card-title">
+              <h3>Recent Jobs</h3>
+              <button class="secondary" onclick="go('crm')">
+                View CRM
+              </button>
+            </div>
 
-          <option value="Estimated">
-            Estimated
-          </option>
+            <div id="recentJobs"></div>
 
-          <option value="Sold">
+          </div>
+
+
+          <div class="card">
+
+            <div class="card-title">
+              <h3>Follow-Ups</h3>
+              <button class="secondary" onclick="go('crm')">
+                CRM
+              </button>
+            </div>
+
+            <div id="dashboardFollowups"></div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= CRM ================= -->
+
+      <section id="page-crm" class="page">
+
+        <div class="page-header">
+
+          <div>
+            <h1>CRM</h1>
+            <p>Manage every lead, estimate, customer and job from one place.</p>
+          </div>
+
+          <div class="actions">
+
+            <button class="secondary" onclick="go('pipeline')">
+              Pipeline
+            </button>
+
+            <button class="primary" onclick="newEstimate()">
+              + New Job
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="search-box">
+
+          <span class="search-icon">🔎</span>
+
+          <input
+            id="crmSearch"
+            placeholder="Search customer, address, estimate #, phone or email..."
+            oninput="renderCRM()"
+          >
+
+        </div>
+
+
+        <div class="filters">
+
+          <button class="filter active" data-filter="All" onclick="setCRMFilter('All')">
+            All Jobs
+          </button>
+
+          <button class="filter" data-filter="Lead" onclick="setCRMFilter('Lead')">
+            Leads
+          </button>
+
+          <button class="filter" data-filter="Estimated" onclick="setCRMFilter('Estimated')">
+            Estimates
+          </button>
+
+          <button class="filter" data-filter="Sold" onclick="setCRMFilter('Sold')">
             Sold
-          </option>
+          </button>
 
-          <option value="Completed">
+          <button class="filter" data-filter="Completed" onclick="setCRMFilter('Completed')">
             Completed
-          </option>
+          </button>
 
-          <option value="Lost">
+          <button class="filter" data-filter="Lost" onclick="setCRMFilter('Lost')">
             Lost
-          </option>
+          </button>
 
-        </select>
+        </div>
 
-      </div>
 
-      <div>
+        <div style="display:flex;justify-content:flex-end;margin-bottom:15px;">
 
-        <label>
-          Sort
-        </label>
+          <select id="crmSort" class="input" style="width:auto;" onchange="renderCRM()">
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+            <option value="highest">Highest Value</option>
+            <option value="followup">Follow-Up Due</option>
+          </select>
 
-        <select
-          id="estimateSort"
-          onchange="renderEstimates()">
+        </div>
 
-          <option value="newest">
-            Newest
-          </option>
 
-          <option value="oldest">
-            Oldest
-          </option>
+        <div id="crmJobs" class="job-grid"></div>
 
-          <option value="highest">
-            Highest Value
-          </option>
+      </section>
 
-          <option value="lowest">
-            Lowest Value
-          </option>
 
-        </select>
+      <!-- ================= JOB PAGE ================= -->
 
-      </div>
+      <section id="page-job" class="page">
+
+        <div id="jobPageContent"></div>
+
+      </section>
+
+
+      <!-- ================= CALCULATOR ================= -->
+
+      <section id="page-calculator" class="page">
+
+        <div class="page-header">
+
+          <div>
+            <h1 id="calculatorTitle">Roofing Calculator</h1>
+            <p>Build a profitable roofing estimate.</p>
+          </div>
+
+          <div class="actions">
+            <button class="secondary" onclick="resetCalculator()">
+              Clear
+            </button>
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-title">
+            <h3>Customer & Job</h3>
+          </div>
+
+          <div class="form-grid">
+
+            <div class="field">
+              <label>Customer Name</label>
+              <input id="customerName">
+            </div>
+
+            <div class="field">
+              <label>Phone</label>
+              <input id="customerPhone">
+            </div>
+
+            <div class="field">
+              <label>Email</label>
+              <input id="customerEmail">
+            </div>
+
+            <div class="field">
+              <label>Project Address</label>
+              <input id="projectAddress">
+            </div>
+
+            <div class="field">
+              <label>Lead Source</label>
+              <select id="leadSource">
+                <option>Referral</option>
+                <option>Facebook</option>
+                <option>Google</option>
+                <option>Website</option>
+                <option>Door Knock</option>
+                <option>Insurance</option>
+                <option>Home Show</option>
+                <option>Repeat Customer</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Job Type</label>
+              <select id="jobType">
+                <option>Roof Replacement</option>
+                <option>Roof Repair</option>
+                <option>Siding</option>
+                <option>Gutters</option>
+                <option>Exterior Repair</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label>Roof Type</label>
+              <input id="roofType" placeholder="Architectural Shingle">
+            </div>
+
+            <div class="field">
+              <label>Salesperson</label>
+              <input id="salesperson">
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-title">
+            <h3>Roof Measurements</h3>
+          </div>
+
+          <div class="form-grid three">
+
+            <div class="field">
+              <label>Roof Squares</label>
+              <input id="squares" type="number" step=".1" value="20" oninput="calculate()">
+            </div>
+
+            <div class="field">
+              <label>Pitch</label>
+              <input id="pitch" type="number" step=".1" value="4" oninput="calculate()">
+            </div>
+
+            <div class="field">
+              <label>Layers</label>
+              <input id="layers" type="number" value="1" oninput="calculate()">
+            </div>
+
+            <div class="field">
+              <label>Waste %</label>
+              <input id="waste" type="number" value="10" oninput="calculate()">
+            </div>
+
+            <div class="field">
+              <label>Profit Margin %</label>
+              <input id="profitMargin" type="number" value="30" oninput="calculate()">
+            </div>
+
+            <div class="field">
+              <label>Overhead</label>
+              <input id="overhead" type="number" value="0" oninput="calculate()">
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-title">
+            <h3>Costs</h3>
+          </div>
+
+          <div class="form-grid three">
+
+            <div class="field">
+              <label>Shingle / Sq</label>
+              <input id="shingleCost" type="number" value="110" oninput="calculate()">
+            </div>
+
+            <div class="field">
+              <label>Starter / Sq</label>
+              <input id="starterCost" type="number" value="35" oninput="calculate()">
+            </div>
+
+            <div class="field">
+              <label>Ridge / Sq</label>
+              <input id="ridgeCost" type="number" value="35" oninput="calculate()">
+            </div>
+
+            <div class="field">
+              <label>Labor / Sq</label>
+              <input id="laborCost" type="number" value="90" oninput="calculate()">
+            </div>
+
+            <div class="field">
+              <label>Tear Off / Sq</label>
+              <input id="tearOffCost" type="number" value="35" oninput="calculate()">
+            </div>
+
+            <div class="field">
+              <label>Other Material</label>
+              <input id="otherMaterial" type="number" value="0" oninput="calculate()">
+            </div>
+
+            <div class="field">
+              <label>Other Labor</label>
+              <input id="otherLabor" type="number" value="0" oninput="calculate()">
+            </div>
+
+            <div class="field">
+              <label>Price Adjustment</label>
+              <input id="priceAdjustment" type="number" value="0" oninput="calculate()">
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-title">
+            <h3>Scope & Notes</h3>
+          </div>
+
+          <div class="field">
+            <label>Scope of Work</label>
+            <textarea id="scopeOfWork" placeholder="Describe the work to be completed..."></textarea>
+          </div>
+
+          <div class="field">
+            <label>Important Information</label>
+            <textarea id="importantInfo" placeholder="Notes, exclusions, customer requests, etc."></textarea>
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-title">
+            <h3>Estimate Summary</h3>
+          </div>
+
+          <div id="calculatorSummary"></div>
+
+          <div class="form-actions">
+
+            <button class="secondary" onclick="go('crm')">
+              Cancel
+            </button>
+
+            <button class="primary" onclick="saveEstimate()">
+              Save Job
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= ESTIMATES ================= -->
+
+      <section id="page-estimates" class="page">
+
+        <div class="page-header">
+
+          <div>
+            <h1>Estimates</h1>
+            <p>Your saved roofing estimates.</p>
+          </div>
+
+          <button class="primary" onclick="newEstimate()">
+            + New Estimate
+          </button>
+
+        </div>
+
+        <div class="card">
+
+          <div class="search-box">
+            <span class="search-icon">🔎</span>
+            <input id="estimateSearch" placeholder="Search estimates..." oninput="renderEstimates()">
+          </div>
+
+          <div id="estimateTable"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= PIPELINE ================= -->
+
+      <section id="page-pipeline" class="page">
+
+        <div class="page-header">
+
+          <div>
+            <h1>Pipeline</h1>
+            <p>See where every roofing opportunity stands.</p>
+          </div>
+
+        </div>
+
+        <div id="pipelineContent"></div>
+
+      </section>
+
+
+      <!-- ================= PURCHASE ORDERS ================= -->
+
+      <section id="page-purchaseOrders" class="page">
+
+        <div class="page-header">
+
+          <div>
+            <h1>Purchase Orders</h1>
+            <p>Keep material ordering tied directly to your jobs.</p>
+          </div>
+
+          <button class="primary" onclick="newPO()">
+            + New PO
+          </button>
+
+        </div>
+
+        <div class="card">
+
+          <div class="search-box">
+            <span class="search-icon">🔎</span>
+            <input id="poSearch" placeholder="Search POs..." oninput="renderPOs()">
+          </div>
+
+          <div id="poTable"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ================= SETTINGS ================= -->
+
+      <section id="page-settings" class="page">
+
+        <div class="page-header">
+
+          <div>
+            <h1>Settings</h1>
+            <p>Customize RoofBidder for your company.</p>
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-title">
+            <h3>Appearance</h3>
+          </div>
+
+          <div class="field">
+            <label>Theme</label>
+
+            <select id="themeSetting" onchange="saveTheme()">
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-title">
+            <h3>Company Profile</h3>
+          </div>
+
+          <div class="form-grid">
+
+            <div class="field">
+              <label>Company Name</label>
+              <input id="companyName">
+            </div>
+
+            <div class="field">
+              <label>Phone</label>
+              <input id="companyPhone">
+            </div>
+
+            <div class="field">
+              <label>Email</label>
+              <input id="companyEmail">
+            </div>
+
+            <div class="field">
+              <label>Website</label>
+              <input id="companyWebsite">
+            </div>
+
+            <div class="field form-full">
+              <label>Address</label>
+              <input id="companyAddress">
+            </div>
+
+          </div>
+
+          <div class="form-actions">
+
+            <button class="primary" onclick="saveCompanyProfile()">
+              Save Company Profile
+            </button>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-title">
+            <h3>Default Estimating Settings</h3>
+          </div>
+
+          <div class="form-grid three">
+
+            <div class="field">
+              <label>Default Waste %</label>
+              <input id="settingWaste" type="number">
+            </div>
+
+            <div class="field">
+              <label>Default Profit Margin %</label>
+              <input id="settingMargin" type="number">
+            </div>
+
+            <div class="field">
+              <label>Default Overhead</label>
+              <input id="settingOverhead" type="number">
+            </div>
+
+            <div class="field">
+              <label>Shingle / Sq</label>
+              <input id="settingShingle" type="number">
+            </div>
+
+            <div class="field">
+              <label>Starter / Sq</label>
+              <input id="settingStarter" type="number">
+            </div>
+
+            <div class="field">
+              <label>Ridge / Sq</label>
+              <input id="settingRidge" type="number">
+            </div>
+
+            <div class="field">
+              <label>Labor / Sq</label>
+              <input id="settingLabor" type="number">
+            </div>
+
+            <div class="field">
+              <label>Tear Off / Sq</label>
+              <input id="settingTearOff" type="number">
+            </div>
+
+          </div>
+
+          <div class="form-actions">
+
+            <button class="primary" onclick="saveSettings()">
+              Save Defaults
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
 
     </div>
 
-  </div>
+  </main>
 
-  <div class="card">
-
-    <div
-      id="estimateTable"
-      class="table-wrap">
-    </div>
-
-  </div>
-
-</section>
+</div>
+</div>
 
 
-<!-- =====================================================
-PIPELINE
-===================================================== -->
+<!-- =========================
+MODAL
+========================= -->
 
-<section
-  id="pipeline"
-  class="page">
+<div id="modalBackdrop" class="modal-backdrop" onclick="closeModal(event)">
 
-  <div class="card">
+  <div class="modal" onclick="event.stopPropagation()">
 
-    <h2>
-      Pipeline
-    </h2>
+    <div class="modal-head">
 
-    <div
-      id="pipelineGrid"
-      class="grid g3">
-    </div>
+      <h2 id="modalTitle"></h2>
 
-  </div>
-
-</section>
-
-
-<!-- =====================================================
-PURCHASE ORDERS
-===================================================== -->
-
-<section
-  id="purchaseorders"
-  class="page">
-
-  <div class="card">
-
-    <div class="actions">
-
-      <h2 style="flex:1">
-        Purchase Orders
-      </h2>
-
-      <button
-        class="btn"
-        onclick="createPO()">
-        + New PO
+      <button class="close" onclick="hideModal()">
+        ×
       </button>
 
     </div>
 
-    <div
-      class="grid g2"
-      style="margin-top:12px">
-
-      <div class="search-box">
-
-        <span class="search-icon">
-          🔎
-        </span>
-
-        <input
-          id="poSearch"
-          type="search"
-          placeholder="Search PO #, job, vendor or customer..."
-          oninput="renderPOs()">
-
-      </div>
-
-      <select
-        id="poStatus"
-        onchange="renderPOs()">
-
-        <option value="All">
-          All
-        </option>
-
-        <option value="Draft">
-          Draft
-        </option>
-
-        <option value="Ordered">
-          Ordered
-        </option>
-
-        <option value="Partially Received">
-          Partially Received
-        </option>
-
-        <option value="Received">
-          Received
-        </option>
-
-        <option value="Cancelled">
-          Cancelled
-        </option>
-
-      </select>
-
-    </div>
+    <div id="modalBody"></div>
 
   </div>
 
-  <div class="card">
-
-    <div
-      id="poTable"
-      class="table-wrap">
-    </div>
-
-  </div>
-
-</section>
-
-
-<!-- =====================================================
-SETTINGS
-===================================================== -->
-
-<section
-  id="settings"
-  class="page">
-
-  <div class="card">
-
-    <h2>
-      Company Profile
-    </h2>
-
-    <div class="grid g2">
-
-      <div>
-        <label>Company Name</label>
-        <input id="sCompany">
-      </div>
-
-      <div>
-        <label>Phone</label>
-        <input id="sPhone">
-      </div>
-
-      <div>
-        <label>Email</label>
-        <input id="sEmail">
-      </div>
-
-      <div>
-        <label>Website</label>
-        <input id="sWebsite">
-      </div>
-
-      <div style="grid-column:1/-1">
-
-        <label>
-          Address
-        </label>
-
-        <input id="sAddress">
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div class="card">
-
-    <h2>
-      Proposal Settings
-    </h2>
-
-    <div class="grid g2">
-
-      <div>
-
-        <label>
-          Default Valid Days
-        </label>
-
-        <input
-          id="sValidDays"
-          type="number">
-
-      </div>
-
-      <div>
-
-        <label>
-          Default Scope
-        </label>
-
-        <textarea id="sScope"></textarea>
-
-      </div>
-
-      <div>
-
-        <label>
-          Default Important Information
-        </label>
-
-        <textarea id="sImportant"></textarea>
-
-      </div>
-
-    </div>
-
-    <div class="toggle">
-      <span>Show phone</span>
-      <input
-        id="sShowPhone"
-        type="checkbox">
-    </div>
-
-    <div class="toggle">
-      <span>Show email</span>
-      <input
-        id="sShowEmail"
-        type="checkbox">
-    </div>
-
-    <div class="toggle">
-      <span>Show address</span>
-      <input
-        id="sShowAddress"
-        type="checkbox">
-    </div>
-
-    <div class="toggle">
-      <span>Show website</span>
-      <input
-        id="sShowWebsite"
-        type="checkbox">
-    </div>
-
-  </div>
-
-
-  <div class="card">
-
-    <h2>
-      Estimate Defaults
-    </h2>
-
-    <div class="grid g3">
-
-      <div>
-        <label>Waste %</label>
-        <input id="sWaste" type="number">
-      </div>
-
-      <div>
-        <label>Profit Margin %</label>
-        <input id="sMargin" type="number">
-      </div>
-
-      <div>
-        <label>Overhead %</label>
-        <input id="sOverhead" type="number">
-      </div>
-
-      <div>
-        <label>Layers</label>
-        <input id="sLayers" type="number">
-      </div>
-
-      <div>
-        <label>Pitch Multiplier</label>
-        <input id="sPitch" type="number">
-      </div>
-
-      <div>
-        <label>Shingle $/sq</label>
-        <input id="sShingle" type="number">
-      </div>
-
-      <div>
-        <label>Starter $/sq</label>
-        <input id="sStarter" type="number">
-      </div>
-
-      <div>
-        <label>Ridge $/sq</label>
-        <input id="sRidge" type="number">
-      </div>
-
-      <div>
-        <label>Labor $/sq</label>
-        <input id="sLabor" type="number">
-      </div>
-
-      <div>
-        <label>Tear-off $/sq/layer</label>
-        <input id="sTear" type="number">
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <div class="card">
-
-    <h2>
-      Dashboard Widgets
-    </h2>
-
-    <div id="widgetSettings"></div>
-
-  </div>
-
-
-  <div class="card">
-
-    <h2>
-      Appearance
-    </h2>
-
-    <select
-      id="themeSelect"
-      onchange="changeTheme(this.value)">
-
-      <option value="light">
-        Light
-      </option>
-
-      <option value="dark">
-        Dark
-      </option>
-
-    </select>
-
-  </div>
-
-
-  <div class="card">
-
-    <h2>
-      Account
-    </h2>
-
-    <p
-      id="settingsEmail"
-      class="muted">
-    </p>
-
-    <div class="actions">
-
-      <button
-        class="btn secondary"
-        onclick="changePassword()">
-        Change Password
-      </button>
-
-      <button
-        class="btn danger"
-        onclick="logout()">
-        Logout
-      </button>
-
-    </div>
-
-  </div>
-
-
-  <button
-    class="btn"
-    onclick="saveSettings()">
-    Save All Settings
-  </button>
-
-</section>
-
-
-<!-- =====================================================
-HOMEOWNER
-===================================================== -->
-
-<section
-  id="homeowner"
-  class="page">
-
-  <div class="card">
-
-    <h2>
-      Homeowner Portal
-    </h2>
-
-    <p class="muted">
-      Your connected proposals will appear here.
-    </p>
-
-    <div id="homeownerProposals"></div>
-
-  </div>
-
-</section>
-
-</main>
 </div>
 
 
 <script>
-
 /* =====================================================
-SUPABASE
+   ROOFBIDDER V8.2.2
 ===================================================== */
 
 const SUPABASE_URL =
-"https://ovuirmlmdpbqumriakcm.supabase.co";
+  "https://ovuirmlmdpbqumriakcm.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY =
-"sb_publishable_79QIWXKGoCtpUwF3t4KTRw_A9lAuao3";
+  "sb_publishable_79QIWXKGoCtpUwF3t4KTRw_A9lAuao3";
 
 const supabaseClient =
-window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
 
 
 /* =====================================================
-STATE
+   STATE
 ===================================================== */
 
 let currentUser = null;
-
-let isHomeowner = false;
-
 let estimates = [];
-
 let purchaseOrders = [];
-
-let jobFilter = "All";
-
-let lastCalculation = null;
-
-let settings = {
-
-  default_valid_days:30,
-
-  default_waste:10,
-
-  default_profit_margin:30,
-
-  default_overhead:10,
-
-  default_layers:1,
-
-  default_pitch:1.15,
-
-  default_shingle_cost:110,
-
-  default_starter_cost:35,
-
-  default_ridge_cost:35,
-
-  default_labor_cost:90,
-
-  default_tear_off_cost:35,
-
-  default_scope:"",
-
-  default_important_info:"",
-
-  show_phone:true,
-
-  show_email:true,
-
-  show_address:true,
-
-  show_website:true,
-
-  theme:"light",
-
-  dashboard_widgets:{
-    revenue:true,
-    profit:true,
-    soldLost:true,
-    closeRate:true,
-    followups:true,
-    recent:true,
-    pipeline:true
-  },
-
-  company:{}
-
-};
+let currentJob = null;
+let currentJobTab = "overview";
+let crmFilter = "All";
+let editingEstimateId = null;
 
 
 /* =====================================================
-HELPERS
+   HELPERS
 ===================================================== */
 
 function $(id){
   return document.getElementById(id);
 }
 
+function money(value){
+  return Number(value || 0).toLocaleString("en-US",{
+    style:"currency",
+    currency:"USD"
+  });
+}
+
+function num(id){
+  return Number($(id)?.value || 0);
+}
 
 function escapeHTML(value){
-
   return String(value ?? "")
-    .replace(/[&<>"']/g,char => ({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#39;"
-    }[char]));
-
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
 
+function formatDate(value){
+  if(!value) return "—";
 
-function money(value){
+  const d = new Date(value + (String(value).length === 10 ? "T00:00:00" : ""));
 
-  return "$" +
-    Number(value || 0).toLocaleString(
-      undefined,
-      {
-        minimumFractionDigits:2,
-        maximumFractionDigits:2
-      }
-    );
+  if(isNaN(d)) return value;
 
+  return d.toLocaleDateString("en-US",{
+    month:"short",
+    day:"numeric",
+    year:"numeric"
+  });
 }
 
+function statusBadge(status){
+  const s = String(status || "Lead");
 
-function showAuthMessage(message){
+  const cls =
+    s === "Sold" ? "badge-sold" :
+    s === "Completed" ? "badge-completed" :
+    s === "Lost" ? "badge-lost" :
+    s === "Estimated" ? "badge-estimated" :
+    "badge-lead";
 
-  $("authMessage").textContent =
-    message || "";
-
+  return `<span class="badge ${cls}">${escapeHTML(s)}</span>`;
 }
 
-
-/* =====================================================
-AUTH MODE
-===================================================== */
-
-function setAuthMode(mode){
-
-  $("authScreen").dataset.mode =
-    mode;
-
-  $("contractorMode")
-    .classList.toggle(
-      "active",
-      mode === "contractor"
-    );
-
-  $("homeownerMode")
-    .classList.toggle(
-      "active",
-      mode === "homeowner"
-    );
-
-  $("authTitle").textContent =
-    mode === "homeowner"
-      ? "Homeowner Login"
-      : "Contractor Login";
-
-  $("nameWrap")
-    .classList.toggle(
-      "hidden",
-      mode !== "homeowner"
-    );
-
+function initials(name){
+  return String(name || "R")
+    .split(" ")
+    .map(x=>x[0])
+    .join("")
+    .substring(0,2)
+    .toUpperCase();
 }
 
 
 /* =====================================================
-LOGIN
+   AUTH
 ===================================================== */
 
-async function loginUser(){
+function showAuth(type){
 
-  const email =
-    $("authEmail")
-      .value
-      .trim();
+  $("loginForm").classList.toggle("hidden",type !== "login");
+  $("signupForm").classList.toggle("hidden",type !== "signup");
 
-  const password =
-    $("authPassword")
-      .value;
+  $("loginTab").classList.toggle("active",type === "login");
+  $("signupTab").classList.toggle("active",type === "signup");
+
+  $("authMessage").textContent = "";
+}
+
+
+async function login(){
+
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
 
   if(!email || !password){
-
-    showAuthMessage(
-      "Enter your email and password."
-    );
-
+    $("authMessage").textContent = "Enter your email and password.";
     return;
   }
 
-  const {data,error} =
-    await supabaseClient.auth.signInWithPassword({
+  $("authMessage").textContent = "Signing in...";
 
+  const {error} =
+    await supabaseClient.auth.signInWithPassword({
       email,
       password
-
     });
 
   if(error){
-
-    showAuthMessage(
-      error.message
-    );
-
-    return;
+    $("authMessage").textContent = error.message;
   }
-
-  currentUser =
-    data.user;
-
-  isHomeowner =
-    currentUser.user_metadata?.role ===
-    "homeowner";
-
-  await startApplication();
-
 }
 
 
-/* =====================================================
-SIGNUP
-===================================================== */
+async function signup(){
 
-async function signupUser(){
-
-  const email =
-    $("authEmail")
-      .value
-      .trim();
-
-  const password =
-    $("authPassword")
-      .value;
-
-  const name =
-    $("authName")
-      .value
-      .trim();
-
-  const mode =
-    $("authScreen").dataset.mode ||
-    "contractor";
+  const email = $("signupEmail").value.trim();
+  const password = $("signupPassword").value;
 
   if(!email || !password){
-
-    showAuthMessage(
-      "Enter an email and password."
-    );
-
+    $("authMessage").textContent = "Enter an email and password.";
     return;
   }
 
   if(password.length < 6){
-
-    showAuthMessage(
-      "Password must be at least 6 characters."
-    );
-
+    $("authMessage").textContent =
+      "Password must be at least 6 characters.";
     return;
   }
 
-  const role =
-    mode === "homeowner"
-      ? "homeowner"
-      : "contractor";
+  $("authMessage").textContent = "Creating account...";
 
-
-  const {data,error} =
+  const {error} =
     await supabaseClient.auth.signUp({
-
       email,
-
       password,
-
       options:{
         data:{
-          role
+          role:"contractor"
         }
       }
-
     });
 
-
   if(error){
-
-    showAuthMessage(
-      error.message
-    );
-
+    $("authMessage").textContent = error.message;
     return;
   }
 
-
-  if(data.user && !data.session){
-
-    showAuthMessage(
-      "Account created. Check your email to confirm your account, then log in."
-    );
-
-    return;
-  }
+  $("authMessage").style.color = "#0f9f6e";
+  $("authMessage").textContent =
+    "Account created. Check your email if confirmation is required.";
+}
 
 
-  if(data.session){
-
-    currentUser =
-      data.user;
-
-    isHomeowner =
-      role === "homeowner";
+async function logout(){
+  await supabaseClient.auth.signOut();
+}
 
 
-    if(isHomeowner){
+supabaseClient.auth.onAuthStateChange(
+  async (event,session)=>{
 
-      await supabaseClient
-        .from("homeowner_profiles")
-        .upsert({
+    if(session?.user){
 
-          user_id:
-            currentUser.id,
+      currentUser = session.user;
 
-          full_name:
-            name
+      $("authScreen").classList.add("hidden");
+      $("app").classList.remove("hidden");
 
-        },{
-          onConflict:"user_id"
-        });
+      $("userEmail").textContent =
+        currentUser.email || "";
+
+      $("avatar").textContent =
+        initials(currentUser.email);
+
+      await initializeApp();
+
+    }else{
+
+      currentUser = null;
+
+      $("authScreen").classList.remove("hidden");
+      $("app").classList.add("hidden");
 
     }
 
-
-    await startApplication();
-
   }
-
-}
+);
 
 
 /* =====================================================
-START APP
+   INITIALIZATION
 ===================================================== */
 
-async function startApplication(){
-
-  $("authScreen")
-    .classList.add("hidden");
-
-  $("app")
-    .classList.remove("hidden");
-
-  $("userEmail").textContent =
-    currentUser.email || "";
-
-
-  if(isHomeowner){
-
-    go("homeowner");
-
-    await loadHomeownerProposals();
-
-    return;
-  }
-
-
-  await loadSettings();
+async function initializeApp(){
 
   await loadEstimates();
-
   await loadPurchaseOrders();
+  await loadSettings();
 
-  go("dashboard");
+  calculate();
 
+  const params = new URLSearchParams(location.search);
+  const jobId = params.get("job");
+
+  if(jobId && estimates.some(e=>e.id === jobId)){
+    await openJob(jobId);
+  }else{
+    go("dashboard");
+  }
+
+  renderDashboard();
 }
 
 
 /* =====================================================
-MENU
+   NAVIGATION
 ===================================================== */
 
-function toggleMenu(){
+const pageTitles = {
+  dashboard:"Dashboard",
+  crm:"CRM",
+  job:"Job",
+  calculator:"Calculator",
+  estimates:"Estimates",
+  pipeline:"Pipeline",
+  purchaseOrders:"Purchase Orders",
+  settings:"Settings"
+};
 
-  $("drawer")
-    .classList.toggle("open");
-
-  $("backdrop")
-    .classList.toggle(
-      "hidden"
-    );
-
-}
-
-
-function closeMenu(){
-
-  $("drawer")
-    .classList.remove("open");
-
-  $("backdrop")
-    .classList.add(
-      "hidden"
-    );
-
-}
-
-
-/* =====================================================
-NAVIGATION
-===================================================== */
 
 function go(page){
 
-  const target =
-    $(page);
-
-  if(!target)
-    return;
-
-
-  /*
-    IMPORTANT:
-    This removes active from EVERY page first.
-    It NEVER toggles the requested page.
-  */
-
   document
     .querySelectorAll(".page")
-    .forEach(section => {
+    .forEach(p=>p.classList.remove("active"));
 
-      section.classList.remove(
-        "active"
-      );
+  const target = $("page-" + page);
 
-    });
-
-
-  target.classList.add(
-    "active"
-  );
-
+  if(target){
+    target.classList.add("active");
+  }
 
   document
-    .querySelectorAll(
-      ".nav-btn[data-page]"
-    )
-    .forEach(button => {
-
-      button.classList.toggle(
+    .querySelectorAll(".nav button")
+    .forEach(btn=>{
+      btn.classList.toggle(
         "active",
-        button.dataset.page === page
+        btn.dataset.page === page
       );
-
     });
 
-
-  const titles = {
-
-    dashboard:"Dashboard",
-
-    calculator:"Calculator",
-
-    estimates:"Estimates",
-
-    pipeline:"Pipeline",
-
-    purchaseorders:"Purchase Orders",
-
-    settings:"Settings",
-
-    homeowner:"Homeowner Portal"
-
-  };
-
-
-  $("pageTitle").textContent =
-    titles[page] ||
-    "RoofBidder";
-
-
-  closeMenu();
-
+  $("topbarTitle").textContent =
+    pageTitles[page] || "RoofBidder";
 
   if(page === "dashboard"){
-
     renderDashboard();
-
   }
 
+  if(page === "crm"){
+    renderCRM();
+  }
 
   if(page === "estimates"){
-
     renderEstimates();
-
   }
-
 
   if(page === "pipeline"){
-
     renderPipeline();
-
   }
 
-
-  if(page === "purchaseorders"){
-
+  if(page === "purchaseOrders"){
     renderPOs();
-
   }
-
 
   if(page === "settings"){
-
-    renderSettings();
-
+    loadSettings();
   }
 
+  $("sidebar").classList.remove("open");
+}
 
-  if(page === "homeowner"){
 
-    loadHomeownerProposals();
-
-  }
-
+function toggleSidebar(){
+  $("sidebar").classList.toggle("open");
 }
 
 
 /* =====================================================
-LOAD ESTIMATES
+   ESTIMATES
 ===================================================== */
 
 async function loadEstimates(){
-
-  if(!currentUser)
-    return;
-
 
   const {data,error} =
     await supabaseClient
       .from("estimates")
       .select("*")
-      .eq(
-        "user_id",
-        currentUser.id
-      )
-      .order(
-        "updated_at",
-        {
-          ascending:false
-        }
-      );
-
+      .order("saved_at",{ascending:false});
 
   if(error){
-
-    console.error(
-      "Estimate loading error:",
-      error
-    );
-
-    estimates = [];
-
+    console.error(error);
     return;
   }
 
+  estimates = data || [];
+}
 
-  estimates =
-    Array.isArray(data)
-      ? data
-      : [];
 
+async function loadPurchaseOrders(){
+
+  const {data,error} =
+    await supabaseClient
+      .from("purchase_orders")
+      .select("*")
+      .order("created_at",{ascending:false});
+
+  if(error){
+    console.error(error);
+    purchaseOrders = [];
+    return;
+  }
+
+  purchaseOrders = data || [];
 }
 
 
 /* =====================================================
-SEARCH TEXT
+   CALCULATOR
 ===================================================== */
 
-function estimateSearchText(e){
+function newEstimate(){
 
-  return [
+  editingEstimateId = null;
 
-    e.customer_name,
+  resetCalculator();
 
-    e.customer_phone,
+  $("calculatorTitle").textContent =
+    "New Roofing Estimate";
 
-    e.customer_email,
-
-    e.project_address,
-
-    e.estimate_number,
-
-    e.status
-
-  ]
-
-    .map(value =>
-      String(value ?? "")
-        .toLowerCase()
-        .trim()
-    )
-
-    .join(" ");
-
+  go("calculator");
 }
 
 
-/* =====================================================
-DOES ESTIMATE MATCH SEARCH?
-===================================================== */
+function resetCalculator(){
 
-function estimateMatchesSearch(
-  estimate,
-  search
-){
+  editingEstimateId = null;
 
-  const q =
-    String(search || "")
-      .toLowerCase()
-      .trim();
+  const defaults = {
+    customerName:"",
+    customerPhone:"",
+    customerEmail:"",
+    projectAddress:"",
+    salesperson:"",
+    roofType:"Architectural Shingle",
+    squares:20,
+    pitch:4,
+    layers:1,
+    waste:10,
+    profitMargin:30,
+    overhead:0,
+    shingleCost:110,
+    starterCost:35,
+    ridgeCost:35,
+    laborCost:90,
+    tearOffCost:35,
+    otherMaterial:0,
+    otherLabor:0,
+    priceAdjustment:0,
+    scopeOfWork:"",
+    importantInfo:""
+  };
 
+  Object.entries(defaults).forEach(([id,value])=>{
+    if($(id)) $(id).value = value;
+  });
 
-  if(!q)
-    return true;
+  if($("leadSource")) $("leadSource").value = "Referral";
+  if($("jobType")) $("jobType").value = "Roof Replacement";
 
+  $("calculatorTitle").textContent =
+    "Roofing Calculator";
 
-  return estimateSearchText(
-    estimate
-  ).includes(q);
-
+  calculate();
 }
 
 
-/* =====================================================
-FILTER ESTIMATES
-===================================================== */
+function calculate(){
 
-function getFilteredJobs(){
+  const squares = num("squares");
+  const waste = num("waste");
+  const profitMargin = num("profitMargin");
 
-  const searchInput =
-    $("jobSearch");
+  const materialSquares =
+    squares * (1 + waste / 100);
 
+  const shingle =
+    materialSquares * num("shingleCost");
 
-  const search =
-    searchInput
-      ? searchInput.value
-      : "";
+  const starter =
+    materialSquares * num("starterCost");
 
+  const ridge =
+    materialSquares * num("ridgeCost");
 
-  let list =
-    estimates.filter(
-      estimate => {
+  const tearOff =
+    squares * num("tearOffCost") * Math.max(1,num("layers"));
 
-        const matchesSearch =
-          estimateMatchesSearch(
-            estimate,
-            search
-          );
+  const labor =
+    squares * num("laborCost");
 
+  const otherMaterial =
+    num("otherMaterial");
 
-        const matchesStatus =
-          jobFilter === "All" ||
-          String(
-            estimate.status || "Lead"
-          ) === jobFilter;
+  const otherLabor =
+    num("otherLabor");
 
+  const overhead =
+    num("overhead");
 
-        return (
-          matchesSearch &&
-          matchesStatus
-        );
+  const materialCost =
+    shingle +
+    starter +
+    ridge +
+    otherMaterial;
 
-      }
-    );
+  const laborTotal =
+    labor +
+    tearOff +
+    otherLabor;
 
+  const totalCost =
+    materialCost +
+    laborTotal +
+    overhead;
 
-  const sort =
-    $("jobSort")
-      ? $("jobSort").value
-      : "newest";
+  let sellingPrice =
+    totalCost / Math.max(.01,1-profitMargin/100);
 
+  sellingPrice += num("priceAdjustment");
 
-  list.sort(
-    (a,b) => {
+  const grossProfit =
+    sellingPrice-totalCost;
 
-      if(sort === "highest"){
-
-        return Number(
-          b.selling_price || 0
-        ) -
-        Number(
-          a.selling_price || 0
-        );
-
-      }
-
-
-      if(sort === "lowest"){
-
-        return Number(
-          a.selling_price || 0
-        ) -
-        Number(
-          b.selling_price || 0
-        );
-
-      }
-
-
-      if(sort === "oldest"){
-
-        return new Date(
-          a.updated_at ||
-          a.saved_at ||
-          0
-        ) -
-        new Date(
-          b.updated_at ||
-          b.saved_at ||
-          0
-        );
-
-      }
-
-
-      if(sort === "followup"){
-
-        const ad =
-          a.follow_up_date ||
-          "9999-12-31";
-
-        const bd =
-          b.follow_up_date ||
-          "9999-12-31";
-
-        return (
-          new Date(ad) -
-          new Date(bd)
-        );
-
-      }
-
-
-      return new Date(
-        b.updated_at ||
-        b.saved_at ||
-        0
-      ) -
-      new Date(
-        a.updated_at ||
-        a.saved_at ||
-        0
-      );
-
-    }
-  );
-
-
-  return list;
-
-}
-
-
-/* =====================================================
-SEARCH HANDLER
-===================================================== */
-
-function handleJobSearch(){
-
-  /*
-    This explicitly re-runs the entire search/filter
-    pipeline every time the user types or changes sort.
-  */
-
-  renderDashboard();
-
-}
-
-
-/* =====================================================
-SET FILTER
-===================================================== */
-
-function setJobFilter(filter){
-
-  /*
-    Store filter in JS state.
-    Then rebuild results directly from estimates.
-  */
-
-  jobFilter =
-    filter;
-
-
-  document
-    .querySelectorAll(
-      "[data-job-filter]"
-    )
-    .forEach(button => {
-
-      button.classList.toggle(
-        "active",
-        button.dataset.jobFilter ===
-        filter
-      );
-
-    });
-
-
-  renderDashboard();
-
-}
-
-
-/* =====================================================
-CLEAR FILTERS
-===================================================== */
-
-function clearJobFilters(){
-
-  if($("jobSearch"))
-    $("jobSearch").value = "";
-
-
-  jobFilter =
-    "All";
-
-
-  if($("jobSort"))
-    $("jobSort").value =
-      "newest";
-
-
-  document
-    .querySelectorAll(
-      "[data-job-filter]"
-    )
-    .forEach(button => {
-
-      button.classList.toggle(
-        "active",
-        button.dataset.jobFilter ===
-        "All"
-      );
-
-    });
-
-
-  renderDashboard();
-
-}
-
-
-/* =====================================================
-DASHBOARD
-===================================================== */
-
-function renderDashboard(){
-
-  const filtered =
-    getFilteredJobs();
-
-
-  const totalRevenue =
-    estimates.reduce(
-      (sum,e) =>
-        sum +
-        Number(
-          e.selling_price || 0
-        ),
-      0
-    );
-
-
-  const totalProfit =
-    estimates.reduce(
-      (sum,e) =>
-        sum +
-        Number(
-          e.gross_profit || 0
-        ),
-      0
-    );
-
-
-  const sold =
-    estimates.filter(
-      e =>
-        e.status === "Sold" ||
-        e.status === "Completed"
-    );
-
-
-  const lost =
-    estimates.filter(
-      e =>
-        e.status === "Lost"
-    );
-
-
-  const soldRevenue =
-    sold.reduce(
-      (sum,e) =>
-        sum +
-        Number(
-          e.selling_price || 0
-        ),
-      0
-    );
-
-
-  const lostRevenue =
-    lost.reduce(
-      (sum,e) =>
-        sum +
-        Number(
-          e.selling_price || 0
-        ),
-      0
-    );
-
-
-  const decided =
-    sold.length +
-    lost.length;
-
-
-  const closeRate =
-    decided
-      ? sold.length /
-        decided *
-        100
+  const grossMargin =
+    sellingPrice > 0
+      ? grossProfit/sellingPrice*100
       : 0;
 
+  const pricePerSquare =
+    squares > 0
+      ? sellingPrice/squares
+      : 0;
 
-  $("dashboardStats").innerHTML = `
+  $("calculatorSummary").innerHTML = `
 
-    <div class="card stat">
+    <div class="stats">
 
-      <div class="small muted">
-        Total Jobs
+      <div class="stat">
+        <div class="stat-label">Material Cost</div>
+        <div class="stat-value">${money(materialCost)}</div>
       </div>
 
-      <div class="number">
-        ${estimates.length}
+      <div class="stat">
+        <div class="stat-label">Labor Cost</div>
+        <div class="stat-value">${money(laborTotal)}</div>
       </div>
 
-    </div>
-
-
-    <div class="card stat">
-
-      <div class="small muted">
-        Projected Revenue
+      <div class="stat">
+        <div class="stat-label">Total Cost</div>
+        <div class="stat-value">${money(totalCost)}</div>
       </div>
 
-      <div class="number">
-        ${money(totalRevenue)}
-      </div>
-
-    </div>
-
-
-    <div class="card stat">
-
-      <div class="small muted">
-        Projected Profit
-      </div>
-
-      <div class="number">
-        ${money(totalProfit)}
+      <div class="stat">
+        <div class="stat-label">Selling Price</div>
+        <div class="stat-value">${money(sellingPrice)}</div>
       </div>
 
     </div>
 
+    <div class="info-grid">
 
-    <div class="card stat">
-
-      <div class="small muted">
-        Sold Revenue
+      <div class="info-item">
+        <div class="info-label">Material Squares</div>
+        <div class="info-value">${materialSquares.toFixed(1)}</div>
       </div>
 
-      <div class="number">
-        ${money(soldRevenue)}
+      <div class="info-item">
+        <div class="info-label">Price / Square</div>
+        <div class="info-value">${money(pricePerSquare)}</div>
       </div>
 
-    </div>
-
-
-    <div class="card stat">
-
-      <div class="small muted">
-        Lost Revenue
+      <div class="info-item">
+        <div class="info-label">Gross Profit</div>
+        <div class="info-value">${money(grossProfit)}</div>
       </div>
 
-      <div class="number">
-        ${money(lostRevenue)}
-      </div>
-
-    </div>
-
-
-    <div class="card stat">
-
-      <div class="small muted">
-        Close Rate
-      </div>
-
-      <div class="number">
-        ${closeRate.toFixed(1)}%
+      <div class="info-item">
+        <div class="info-label">Gross Margin</div>
+        <div class="info-value">${grossMargin.toFixed(1)}%</div>
       </div>
 
     </div>
 
   `;
+}
 
 
-  $("jobResultCount").textContent =
-    `Showing ${filtered.length} of ${estimates.length} jobs`;
+async function saveEstimate(){
+
+  if(!currentUser) return;
+
+  const customerName =
+    $("customerName").value.trim();
+
+  if(!customerName){
+    alert("Enter a customer name.");
+    return;
+  }
+
+  calculate();
+
+  const squares = num("squares");
+  const waste = num("waste");
+  const profitMargin = num("profitMargin");
+
+  const materialSquares =
+    squares * (1 + waste/100);
+
+  const materialCost =
+    materialSquares * (
+      num("shingleCost") +
+      num("starterCost") +
+      num("ridgeCost")
+    ) +
+    num("otherMaterial");
+
+  const laborTotal =
+    squares * num("laborCost") +
+    squares * num("tearOffCost") * Math.max(1,num("layers")) +
+    num("otherLabor");
+
+  const totalCost =
+    materialCost +
+    laborTotal +
+    num("overhead");
+
+  let sellingPrice =
+    totalCost / Math.max(.01,1-profitMargin/100);
+
+  sellingPrice += num("priceAdjustment");
+
+  const grossProfit =
+    sellingPrice-totalCost;
+
+  const grossMargin =
+    sellingPrice > 0
+      ? grossProfit/sellingPrice*100
+      : 0;
+
+  const pricePerSquare =
+    squares > 0
+      ? sellingPrice/squares
+      : 0;
 
 
-  if(!filtered.length){
+  if(editingEstimateId){
 
-    $("dashboardJobs").innerHTML = `
+    const existing =
+      estimates.find(e=>e.id === editingEstimateId);
 
-      <div style="padding:20px 0">
+    const {error} =
+      await supabaseClient
+        .from("estimates")
+        .update({
 
-        <h3>
-          No jobs found
-        </h3>
+          customer_name:customerName,
+          customer_phone:$("customerPhone").value,
+          customer_email:$("customerEmail").value,
+          project_address:$("projectAddress").value,
 
-        <p class="muted">
-          Try a different search or filter.
-        </p>
+          lead_source:$("leadSource").value,
+          salesperson:$("salesperson").value,
+          roof_type:$("roofType").value,
+          job_type:$("jobType").value,
 
-        <button
-          class="btn secondary"
-          onclick="clearJobFilters()">
-          Clear Search & Filters
-        </button>
+          squares,
+          pitch:num("pitch"),
+          layers:num("layers"),
+          waste,
+          profit_margin:profitMargin,
 
+          shingle_cost:num("shingleCost"),
+          starter_cost:num("starterCost"),
+          ridge_cost:num("ridgeCost"),
+          labor_cost:num("laborCost"),
+          tear_off_cost:num("tearOffCost"),
+          other_material:num("otherMaterial"),
+          other_labor:num("otherLabor"),
+          overhead:num("overhead"),
+          price_adjustment:num("priceAdjustment"),
+
+          scope_of_work:$("scopeOfWork").value,
+          important_info:$("importantInfo").value,
+
+          material_squares:materialSquares,
+          material_cost:materialCost,
+          labor_total:laborTotal,
+          total_cost:totalCost,
+          selling_price:sellingPrice,
+          gross_profit:grossProfit,
+          gross_margin:grossMargin,
+          price_per_square:pricePerSquare,
+
+          updated_at:new Date().toISOString()
+
+        })
+        .eq("id",editingEstimateId)
+        .eq("user_id",currentUser.id);
+
+    if(error){
+      alert(error.message);
+      return;
+    }
+
+    await addActivity(
+      editingEstimateId,
+      "Estimate Updated",
+      "Estimate information was updated."
+    );
+
+    await loadEstimates();
+
+    await openJob(editingEstimateId);
+
+    return;
+  }
+
+
+  const estimateNumber =
+    await nextEstimateNumber();
+
+
+  const {data,error} =
+    await supabaseClient
+      .from("estimates")
+      .insert({
+
+        user_id:currentUser.id,
+
+        customer_name:customerName,
+        customer_phone:$("customerPhone").value,
+        customer_email:$("customerEmail").value,
+        project_address:$("projectAddress").value,
+
+        estimate_number:estimateNumber,
+
+        valid_days:30,
+
+        follow_up_status:"Not Scheduled",
+
+        squares,
+        pitch:num("pitch"),
+        layers:num("layers"),
+        waste,
+
+        shingle_cost:num("shingleCost"),
+        starter_cost:num("starterCost"),
+        ridge_cost:num("ridgeCost"),
+        labor_cost:num("laborCost"),
+        tear_off_cost:num("tearOffCost"),
+        other_material:num("otherMaterial"),
+        other_labor:num("otherLabor"),
+        overhead:num("overhead"),
+        profit_margin:profitMargin,
+        price_adjustment:num("priceAdjustment"),
+
+        scope_of_work:$("scopeOfWork").value,
+        important_info:$("importantInfo").value,
+
+        material_cost:materialCost,
+        labor_total:laborTotal,
+        total_cost:totalCost,
+        selling_price:sellingPrice,
+        gross_profit:grossProfit,
+        gross_margin:grossMargin,
+        price_per_square:pricePerSquare,
+        material_squares:materialSquares,
+
+        status:"Lead",
+
+        lead_source:$("leadSource").value,
+        salesperson:$("salesperson").value,
+        roof_type:$("roofType").value,
+        job_type:$("jobType").value
+
+      })
+      .select()
+      .single();
+
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  estimates.unshift(data);
+
+  await addActivity(
+    data.id,
+    "Job Created",
+    "New roofing job created."
+  );
+
+  await openJob(data.id);
+}
+
+
+async function nextEstimateNumber(){
+
+  const year =
+    new Date().getFullYear();
+
+  const count =
+    estimates.length + 1;
+
+  return `RB-${year}-${String(count).padStart(4,"0")}`;
+}
+
+
+/* =====================================================
+   CRM
+===================================================== */
+
+function setCRMFilter(filter){
+
+  crmFilter = filter;
+
+  document
+    .querySelectorAll(".filter")
+    .forEach(btn=>{
+      btn.classList.toggle(
+        "active",
+        btn.dataset.filter === filter
+      );
+    });
+
+  renderCRM();
+}
+
+
+function estimateMatchesSearch(e,search){
+
+  if(!search) return true;
+
+  const q =
+    search.toLowerCase();
+
+  return [
+    e.customer_name,
+    e.customer_phone,
+    e.customer_email,
+    e.project_address,
+    e.estimate_number,
+    e.lead_source,
+    e.roof_type
+  ]
+  .join(" ")
+  .toLowerCase()
+  .includes(q);
+}
+
+
+function getCRMJobs(){
+
+  const search =
+    $("crmSearch")?.value.trim() || "";
+
+  let list =
+    estimates.filter(e=>{
+
+      const status =
+        e.status || "Lead";
+
+      return (
+        (crmFilter === "All" || status === crmFilter) &&
+        estimateMatchesSearch(e,search)
+      );
+
+    });
+
+
+  const sort =
+    $("crmSort")?.value || "newest";
+
+
+  list.sort((a,b)=>{
+
+    if(sort === "highest"){
+      return Number(b.selling_price||0) -
+             Number(a.selling_price||0);
+    }
+
+    if(sort === "oldest"){
+      return new Date(a.saved_at||0) -
+             new Date(b.saved_at||0);
+    }
+
+    if(sort === "followup"){
+      return String(a.follow_up_date||"9999") >
+             String(b.follow_up_date||"9999")
+             ? 1 : -1;
+    }
+
+    return new Date(b.saved_at||0) -
+           new Date(a.saved_at||0);
+
+  });
+
+  return list;
+}
+
+
+function renderCRM(){
+
+  const list = getCRMJobs();
+
+  if(!list.length){
+
+    $("crmJobs").innerHTML = `
+      <div class="card" style="grid-column:1/-1;">
+        <div class="empty">
+          <div class="empty-icon">🏠</div>
+          <strong>No jobs found</strong>
+          <div style="margin-top:5px;">
+            Create your first roofing job.
+          </div>
+        </div>
       </div>
-
     `;
 
     return;
   }
 
 
-  $("dashboardJobs").innerHTML = `
+  $("crmJobs").innerHTML =
+    list.map(job=>`
+
+      <div class="job-card" onclick="openJob('${job.id}')">
+
+        <div class="job-top">
+
+          <div>
+
+            <div class="job-name">
+              ${escapeHTML(job.customer_name || "Unnamed Customer")}
+            </div>
+
+            <div class="job-address">
+              ${escapeHTML(job.project_address || "No address")}
+            </div>
+
+          </div>
+
+          ${statusBadge(job.status)}
+
+        </div>
+
+        <div class="job-price">
+          ${money(job.selling_price)}
+        </div>
+
+        <div class="job-bottom">
+
+          <span>
+            ${escapeHTML(job.estimate_number || "")}
+          </span>
+
+          <span>
+            ${formatDate(job.saved_at)}
+          </span>
+
+        </div>
+
+      </div>
+
+    `).join("");
+}
+
+
+/* =====================================================
+   JOB PAGE
+===================================================== */
+
+async function openJob(id){
+
+  const job =
+    estimates.find(e=>e.id === id);
+
+  if(!job) return;
+
+  currentJob = job;
+
+  currentJobTab = "overview";
+
+  history.replaceState(
+    {},
+    "",
+    location.pathname + "?job=" + encodeURIComponent(id)
+  );
+
+  await renderJobPage();
+
+  go("job");
+}
+
+
+async function renderJobPage(){
+
+  if(!currentJob) return;
+
+  const job = currentJob;
+
+  const poCount =
+    purchaseOrders.filter(
+      p=>p.estimate_id === job.id
+    ).length;
+
+
+  const {data:notes} =
+    await supabaseClient
+      .from("job_notes")
+      .select("*")
+      .eq("estimate_id",job.id)
+      .order("created_at",{ascending:false});
+
+
+  const {data:activity} =
+    await supabaseClient
+      .from("job_activity")
+      .select("*")
+      .eq("estimate_id",job.id)
+      .order("created_at",{ascending:false});
+
+
+  const {data:followups} =
+    await supabaseClient
+      .from("job_followups")
+      .select("*")
+      .eq("estimate_id",job.id)
+      .order("follow_up_date",{ascending:true});
+
+
+  const contacts =
+    await supabaseClient
+      .from("job_contacts")
+      .select("*")
+      .eq("estimate_id",job.id);
+
+
+  $("jobPageContent").innerHTML = `
+
+    <button
+      class="secondary"
+      onclick="go('crm');history.replaceState({},'',location.pathname)"
+      style="margin-bottom:16px;">
+      ← Back to CRM
+    </button>
+
+
+    <div class="job-hero">
+
+      <div class="job-hero-row">
+
+        <div>
+
+          <div style="margin-bottom:9px;">
+            ${statusBadge(job.status)}
+          </div>
+
+          <h1>
+            ${escapeHTML(job.customer_name || "Unnamed Customer")}
+          </h1>
+
+          <div class="job-hero-address">
+            ${escapeHTML(job.project_address || "No project address")}
+          </div>
+
+          <div style="opacity:.7;margin-top:8px;font-size:12px;">
+            ${escapeHTML(job.estimate_number || "")}
+          </div>
+
+        </div>
+
+        <div class="hero-price">
+
+          <div class="amount">
+            ${money(job.selling_price)}
+          </div>
+
+          <small>
+            Estimated Selling Price
+          </small>
+
+        </div>
+
+      </div>
+
+
+      <div class="actions" style="margin-top:20px;">
+
+        <button
+          class="secondary"
+          onclick="editJob('${job.id}')">
+          ✏️ Edit Job
+        </button>
+
+        <button
+          class="secondary"
+          onclick="changeJobStatus('${job.id}')">
+          🔄 Status
+        </button>
+
+        <button
+          class="secondary"
+          onclick="newPO('${job.id}')">
+          📦 Create PO
+        </button>
+
+        <button
+          class="secondary"
+          onclick="addNote('${job.id}')">
+          📝 Add Note
+        </button>
+
+        <button
+          class="secondary"
+          onclick="addFollowup('${job.id}')">
+          📅 Follow-Up
+        </button>
+
+        <button
+          class="secondary"
+          onclick="editEstimate('${job.id}')">
+          🧮 Edit Estimate
+        </button>
+
+        <button
+          class="danger"
+          onclick="deleteJob('${job.id}')">
+          Delete
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="job-tabs">
+
+      <button
+        class="job-tab ${currentJobTab==="overview"?"active":""}"
+        onclick="setJobTab('overview')">
+        Overview
+      </button>
+
+      <button
+        class="job-tab ${currentJobTab==="estimate"?"active":""}"
+        onclick="setJobTab('estimate')">
+        Estimate
+      </button>
+
+      <button
+        class="job-tab ${currentJobTab==="activity"?"active":""}"
+        onclick="setJobTab('activity')">
+        Activity
+      </button>
+
+      <button
+        class="job-tab ${currentJobTab==="followups"?"active":""}"
+        onclick="setJobTab('followups')">
+        Follow-Ups
+      </button>
+
+      <button
+        class="job-tab ${currentJobTab==="pos"?"active":""}"
+        onclick="setJobTab('pos')">
+        Purchase Orders (${poCount})
+      </button>
+
+    </div>
+
+
+    <div class="job-columns">
+
+      <div>
+
+        ${renderJobTab(job,notes || [],activity || [],followups || [],contacts.data || [])}
+
+      </div>
+
+
+      <div>
+
+        <div class="card">
+
+          <div class="card-title">
+            <h3>Customer</h3>
+          </div>
+
+          <div class="info-grid">
+
+            <div class="info-item">
+              <div class="info-label">Name</div>
+              <div class="info-value">
+                ${escapeHTML(job.customer_name || "—")}
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-label">Phone</div>
+              <div class="info-value">
+                ${job.customer_phone
+                  ? `<a href="tel:${escapeHTML(job.customer_phone)}">${escapeHTML(job.customer_phone)}</a>`
+                  : "—"}
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-label">Email</div>
+              <div class="info-value">
+                ${job.customer_email
+                  ? `<a href="mailto:${escapeHTML(job.customer_email)}">${escapeHTML(job.customer_email)}</a>`
+                  : "—"}
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-label">Lead Source</div>
+              <div class="info-value">
+                ${escapeHTML(job.lead_source || "—")}
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-title">
+            <h3>Job Information</h3>
+          </div>
+
+          <div class="info-grid">
+
+            <div class="info-item">
+              <div class="info-label">Job Type</div>
+              <div class="info-value">
+                ${escapeHTML(job.job_type || "—")}
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-label">Roof Type</div>
+              <div class="info-value">
+                ${escapeHTML(job.roof_type || "—")}
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-label">Squares</div>
+              <div class="info-value">
+                ${job.squares || 0}
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-label">Pitch</div>
+              <div class="info-value">
+                ${job.pitch || 0}/12
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-label">Layers</div>
+              <div class="info-value">
+                ${job.layers || 0}
+              </div>
+            </div>
+
+            <div class="info-item">
+              <div class="info-label">Salesperson</div>
+              <div class="info-value">
+                ${escapeHTML(job.salesperson || "—")}
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <div class="card">
+
+          <div class="card-title">
+            <h3>Profitability</h3>
+          </div>
+
+          <div class="money-list">
+
+            <div class="money-row">
+              <span>Selling Price</span>
+              <strong>${money(job.selling_price)}</strong>
+            </div>
+
+            <div class="money-row">
+              <span>Total Cost</span>
+              <strong>${money(job.total_cost)}</strong>
+            </div>
+
+            <div class="money-row">
+              <span>Gross Profit</span>
+              <strong>${money(job.gross_profit)}</strong>
+            </div>
+
+            <div class="money-row">
+              <span>Gross Margin</span>
+              <strong>${Number(job.gross_margin||0).toFixed(1)}%</strong>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+}
+
+
+function renderJobTab(job,notes,activity,followups,contacts){
+
+  if(currentJobTab === "estimate"){
+
+    return `
+
+      <div class="card">
+
+        <div class="card-title">
+
+          <h3>Estimate Breakdown</h3>
+
+          <button
+            class="secondary"
+            onclick="editEstimate('${job.id}')">
+            Edit
+          </button>
+
+        </div>
+
+        <div class="money-list">
+
+          <div class="money-row">
+            <span>Material Cost</span>
+            <strong>${money(job.material_cost)}</strong>
+          </div>
+
+          <div class="money-row">
+            <span>Labor</span>
+            <strong>${money(job.labor_total)}</strong>
+          </div>
+
+          <div class="money-row">
+            <span>Overhead</span>
+            <strong>${money(job.overhead)}</strong>
+          </div>
+
+          <div class="money-row">
+            <span>Total Cost</span>
+            <strong>${money(job.total_cost)}</strong>
+          </div>
+
+          <div class="money-row">
+            <span>Selling Price</span>
+            <strong>${money(job.selling_price)}</strong>
+          </div>
+
+          <div class="money-row">
+            <span>Gross Profit</span>
+            <strong>${money(job.gross_profit)}</strong>
+          </div>
+
+          <div class="money-row">
+            <span>Gross Margin</span>
+            <strong>${Number(job.gross_margin||0).toFixed(1)}%</strong>
+          </div>
+
+          <div class="money-row">
+            <span>Price / Square</span>
+            <strong>${money(job.price_per_square)}</strong>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          <h3>Scope of Work</h3>
+        </div>
+
+        <div style="white-space:pre-wrap;line-height:1.6;color:var(--muted);">
+          ${escapeHTML(job.scope_of_work || "No scope entered.")}
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          <h3>Important Information</h3>
+        </div>
+
+        <div style="white-space:pre-wrap;line-height:1.6;color:var(--muted);">
+          ${escapeHTML(job.important_info || "No additional information.")}
+        </div>
+
+      </div>
+
+    `;
+  }
+
+
+  if(currentJobTab === "activity"){
+
+    return `
+
+      <div class="card">
+
+        <div class="card-title">
+
+          <h3>Job Timeline</h3>
+
+          <button
+            class="secondary"
+            onclick="addActivityManually('${job.id}')">
+            + Activity
+          </button>
+
+        </div>
+
+        <div class="timeline">
+
+          ${
+            activity.length
+            ? activity.map(a=>`
+
+              <div class="timeline-item">
+
+                <div class="timeline-dot"></div>
+
+                <div class="timeline-title">
+                  ${escapeHTML(a.title)}
+                </div>
+
+                <div class="timeline-date">
+                  ${formatDate(a.created_at)}
+                </div>
+
+                ${
+                  a.description
+                  ? `<div class="timeline-desc">
+                      ${escapeHTML(a.description)}
+                     </div>`
+                  : ""
+                }
+
+              </div>
+
+            `).join("")
+            : `
+              <div class="empty">
+                No activity yet.
+              </div>
+            `
+          }
+
+        </div>
+
+      </div>
+
+
+      <div class="card">
+
+        <div class="card-title">
+          <h3>Notes</h3>
+
+          <button
+            class="primary"
+            onclick="addNote('${job.id}')">
+            + Add Note
+          </button>
+
+        </div>
+
+        ${
+          notes.length
+          ? notes.map(n=>`
+
+            <div style="
+              padding:14px;
+              background:var(--surface2);
+              border:1px solid var(--border);
+              border-radius:12px;
+              margin-bottom:10px;
+            ">
+
+              <div style="
+                font-size:11px;
+                color:var(--muted);
+                margin-bottom:5px;
+              ">
+                ${formatDate(n.created_at)}
+              </div>
+
+              <div style="white-space:pre-wrap;">
+                ${escapeHTML(n.note)}
+              </div>
+
+            </div>
+
+          `).join("")
+          : `
+            <div class="empty">
+              No notes yet.
+            </div>
+          `
+        }
+
+      </div>
+
+    `;
+  }
+
+
+  if(currentJobTab === "followups"){
+
+    return `
+
+      <div class="card">
+
+        <div class="card-title">
+
+          <h3>Follow-Ups</h3>
+
+          <button
+            class="primary"
+            onclick="addFollowup('${job.id}')">
+            + Schedule
+          </button>
+
+        </div>
+
+        ${
+          followups.length
+          ? `
+            <div class="table-wrap">
+
+              <table>
+
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Method</th>
+                    <th>Status</th>
+                    <th>Notes</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+
+                  ${followups.map(f=>`
+
+                    <tr>
+
+                      <td>${formatDate(f.follow_up_date)}</td>
+
+                      <td>${escapeHTML(f.method)}</td>
+
+                      <td>${escapeHTML(f.status)}</td>
+
+                      <td>${escapeHTML(f.notes || "")}</td>
+
+                    </tr>
+
+                  `).join("")}
+
+                </tbody>
+
+              </table>
+
+            </div>
+          `
+          : `
+            <div class="empty">
+              <div class="empty-icon">📅</div>
+              No follow-ups scheduled.
+            </div>
+          `
+        }
+
+      </div>
+
+    `;
+  }
+
+
+  if(currentJobTab === "pos"){
+
+    const pos =
+      purchaseOrders.filter(
+        p=>p.estimate_id === job.id
+      );
+
+    return `
+
+      <div class="card">
+
+        <div class="card-title">
+
+          <h3>Purchase Orders</h3>
+
+          <button
+            class="primary"
+            onclick="newPO('${job.id}')">
+            + New PO
+          </button>
+
+        </div>
+
+        ${
+          pos.length
+          ? `
+            <div class="table-wrap">
+
+              <table>
+
+                <thead>
+                  <tr>
+                    <th>PO #</th>
+                    <th>Vendor</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+
+                  ${pos.map(p=>`
+
+                    <tr>
+
+                      <td><strong>${escapeHTML(p.po_number)}</strong></td>
+
+                      <td>${escapeHTML(p.vendor || "—")}</td>
+
+                      <td>${money(p.total)}</td>
+
+                      <td>${escapeHTML(p.status)}</td>
+
+                    </tr>
+
+                  `).join("")}
+
+                </tbody>
+
+              </table>
+
+            </div>
+          `
+          : `
+            <div class="empty">
+              <div class="empty-icon">📦</div>
+              No purchase orders for this job.
+            </div>
+          `
+        }
+
+      </div>
+
+    `;
+  }
+
+
+  return `
+
+    <div class="card">
+
+      <div class="card-title">
+        <h3>Job Overview</h3>
+      </div>
+
+      <div class="info-grid">
+
+        <div class="info-item">
+          <div class="info-label">Created</div>
+          <div class="info-value">
+            ${formatDate(job.saved_at)}
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Last Updated</div>
+          <div class="info-value">
+            ${formatDate(job.updated_at || job.saved_at)}
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Follow-Up</div>
+          <div class="info-value">
+            ${formatDate(job.follow_up_date)}
+          </div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">Valid Days</div>
+          <div class="info-value">
+            ${job.valid_days || 30}
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="card">
+
+      <div class="card-title">
+        <h3>Scope of Work</h3>
+      </div>
+
+      <div style="white-space:pre-wrap;line-height:1.6;color:var(--muted);">
+        ${escapeHTML(job.scope_of_work || "No scope entered.")}
+      </div>
+
+    </div>
+
+  `;
+}
+
+
+async function setJobTab(tab){
+
+  currentJobTab = tab;
+
+  await renderJobPage();
+}
+
+
+/* =====================================================
+   EDIT JOB
+===================================================== */
+
+function editJob(id){
+
+  const job =
+    estimates.find(e=>e.id === id);
+
+  if(!job) return;
+
+
+  showModal(
+    "Edit Job",
+    `
+
+      <div class="form-grid">
+
+        <div class="field">
+          <label>Customer Name</label>
+          <input id="editJobName" value="${escapeHTML(job.customer_name)}">
+        </div>
+
+        <div class="field">
+          <label>Phone</label>
+          <input id="editJobPhone" value="${escapeHTML(job.customer_phone)}">
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input id="editJobEmail" value="${escapeHTML(job.customer_email)}">
+        </div>
+
+        <div class="field">
+          <label>Lead Source</label>
+          <input id="editJobLead" value="${escapeHTML(job.lead_source)}">
+        </div>
+
+        <div class="field form-full">
+          <label>Project Address</label>
+          <input id="editJobAddress" value="${escapeHTML(job.project_address)}">
+        </div>
+
+        <div class="field">
+          <label>Job Type</label>
+          <input id="editJobType" value="${escapeHTML(job.job_type)}">
+        </div>
+
+        <div class="field">
+          <label>Roof Type</label>
+          <input id="editJobRoof" value="${escapeHTML(job.roof_type)}">
+        </div>
+
+        <div class="field">
+          <label>Salesperson</label>
+          <input id="editJobSales" value="${escapeHTML(job.salesperson)}">
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+
+        <button class="secondary" onclick="hideModal()">
+          Cancel
+        </button>
+
+        <button class="primary" onclick="saveJobEdit('${job.id}')">
+          Save Changes
+        </button>
+
+      </div>
+
+    `
+  );
+}
+
+
+async function saveJobEdit(id){
+
+  const {error} =
+    await supabaseClient
+      .from("estimates")
+      .update({
+
+        customer_name:$("editJobName").value,
+        customer_phone:$("editJobPhone").value,
+        customer_email:$("editJobEmail").value,
+        project_address:$("editJobAddress").value,
+        lead_source:$("editJobLead").value,
+        job_type:$("editJobType").value,
+        roof_type:$("editJobRoof").value,
+        salesperson:$("editJobSales").value,
+        updated_at:new Date().toISOString()
+
+      })
+      .eq("id",id)
+      .eq("user_id",currentUser.id);
+
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  hideModal();
+
+  await loadEstimates();
+
+  currentJob =
+    estimates.find(e=>e.id === id);
+
+  await addActivity(
+    id,
+    "Job Updated",
+    "Customer or job information was updated."
+  );
+
+  await renderJobPage();
+
+  renderDashboard();
+  renderCRM();
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
+function changeJobStatus(id){
+
+  const job =
+    estimates.find(e=>e.id === id);
+
+  if(!job) return;
+
+
+  showModal(
+    "Change Job Status",
+    `
+
+      <div class="field">
+
+        <label>Status</label>
+
+        <select id="newJobStatus">
+
+          <option ${job.status==="Lead"?"selected":""}>Lead</option>
+          <option ${job.status==="Estimated"?"selected":""}>Estimated</option>
+          <option ${job.status==="Sold"?"selected":""}>Sold</option>
+          <option ${job.status==="Completed"?"selected":""}>Completed</option>
+          <option ${job.status==="Lost"?"selected":""}>Lost</option>
+
+        </select>
+
+      </div>
+
+      <div class="form-actions">
+
+        <button class="secondary" onclick="hideModal()">
+          Cancel
+        </button>
+
+        <button class="primary" onclick="saveJobStatus('${id}')">
+          Update Status
+        </button>
+
+      </div>
+
+    `
+  );
+}
+
+
+async function saveJobStatus(id){
+
+  const status =
+    $("newJobStatus").value;
+
+  const job =
+    estimates.find(e=>e.id === id);
+
+  const oldStatus =
+    job?.status || "Lead";
+
+
+  const updates = {
+    status,
+    updated_at:new Date().toISOString()
+  };
+
+  if(status === "Completed"){
+    updates.completed_date =
+      new Date().toISOString().slice(0,10);
+  }
+
+
+  const {error} =
+    await supabaseClient
+      .from("estimates")
+      .update(updates)
+      .eq("id",id)
+      .eq("user_id",currentUser.id);
+
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+
+  hideModal();
+
+  await addActivity(
+    id,
+    `Status Changed: ${oldStatus} → ${status}`,
+    `Job status changed to ${status}.`
+  );
+
+  await loadEstimates();
+
+  currentJob =
+    estimates.find(e=>e.id === id);
+
+  await renderJobPage();
+
+  renderDashboard();
+  renderCRM();
+  renderPipeline();
+}
+
+
+/* =====================================================
+   NOTES
+===================================================== */
+
+function addNote(id){
+
+  showModal(
+    "Add Job Note",
+    `
+
+      <div class="field">
+
+        <label>Note</label>
+
+        <textarea
+          id="newNote"
+          placeholder="Enter your note..."
+        ></textarea>
+
+      </div>
+
+      <div class="form-actions">
+
+        <button class="secondary" onclick="hideModal()">
+          Cancel
+        </button>
+
+        <button class="primary" onclick="saveNote('${id}')">
+          Save Note
+        </button>
+
+      </div>
+
+    `
+  );
+}
+
+
+async function saveNote(id){
+
+  const note =
+    $("newNote").value.trim();
+
+  if(!note) return;
+
+
+  const {error} =
+    await supabaseClient
+      .from("job_notes")
+      .insert({
+        user_id:currentUser.id,
+        estimate_id:id,
+        note
+      });
+
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+
+  await addActivity(
+    id,
+    "Note Added",
+    note
+  );
+
+  hideModal();
+
+  await renderJobPage();
+}
+
+
+async function addActivity(
+  estimateId,
+  title,
+  description=""
+){
+
+  if(!currentUser) return;
+
+  await supabaseClient
+    .from("job_activity")
+    .insert({
+      user_id:currentUser.id,
+      estimate_id:estimateId,
+      activity_type:"System",
+      title,
+      description
+    });
+}
+
+
+function addActivityManually(id){
+
+  showModal(
+    "Add Activity",
+    `
+
+      <div class="field">
+        <label>Title</label>
+        <input id="activityTitle" placeholder="Called customer">
+      </div>
+
+      <div class="field">
+        <label>Description</label>
+        <textarea id="activityDescription"></textarea>
+      </div>
+
+      <div class="form-actions">
+
+        <button class="secondary" onclick="hideModal()">
+          Cancel
+        </button>
+
+        <button class="primary" onclick="saveManualActivity('${id}')">
+          Add Activity
+        </button>
+
+      </div>
+
+    `
+  );
+}
+
+
+async function saveManualActivity(id){
+
+  const title =
+    $("activityTitle").value.trim();
+
+  const description =
+    $("activityDescription").value.trim();
+
+  if(!title) return;
+
+
+  await addActivity(
+    id,
+    title,
+    description
+  );
+
+  hideModal();
+
+  await renderJobPage();
+}
+
+
+/* =====================================================
+   FOLLOW UPS
+===================================================== */
+
+function addFollowup(id){
+
+  showModal(
+    "Schedule Follow-Up",
+    `
+
+      <div class="form-grid">
+
+        <div class="field">
+          <label>Date</label>
+          <input id="followupDate" type="date">
+        </div>
+
+        <div class="field">
+          <label>Method</label>
+
+          <select id="followupMethod">
+            <option>Phone</option>
+            <option>Text</option>
+            <option>Email</option>
+            <option>Visit</option>
+            <option>Other</option>
+          </select>
+
+        </div>
+
+        <div class="field form-full">
+
+          <label>Notes</label>
+
+          <textarea id="followupNotes"
+            placeholder="What needs to happen?"></textarea>
+
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+
+        <button class="secondary" onclick="hideModal()">
+          Cancel
+        </button>
+
+        <button class="primary" onclick="saveFollowup('${id}')">
+          Schedule
+        </button>
+
+      </div>
+
+    `
+  );
+}
+
+
+async function saveFollowup(id){
+
+  const date =
+    $("followupDate").value;
+
+  if(!date){
+    alert("Choose a follow-up date.");
+    return;
+  }
+
+
+  const {error} =
+    await supabaseClient
+      .from("job_followups")
+      .insert({
+
+        user_id:currentUser.id,
+        estimate_id:id,
+        follow_up_date:date,
+        method:$("followupMethod").value,
+        notes:$("followupNotes").value
+
+      });
+
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+
+  await supabaseClient
+    .from("estimates")
+    .update({
+      follow_up_date:date,
+      follow_up_status:"Scheduled",
+      follow_up_notes:$("followupNotes").value
+    })
+    .eq("id",id)
+    .eq("user_id",currentUser.id);
+
+
+  await addActivity(
+    id,
+    "Follow-Up Scheduled",
+    `${$("followupMethod").value} follow-up scheduled for ${formatDate(date)}.`
+  );
+
+
+  hideModal();
+
+  await loadEstimates();
+
+  currentJob =
+    estimates.find(e=>e.id === id);
+
+  await renderJobPage();
+  renderDashboard();
+}
+
+
+/* =====================================================
+   EDIT ESTIMATE
+===================================================== */
+
+function editEstimate(id){
+
+  const job =
+    estimates.find(e=>e.id === id);
+
+  if(!job) return;
+
+  editingEstimateId = id;
+
+  const fields = {
+    customerName:job.customer_name,
+    customerPhone:job.customer_phone,
+    customerEmail:job.customer_email,
+    projectAddress:job.project_address,
+    leadSource:job.lead_source || "Referral",
+    jobType:job.job_type || "Roof Replacement",
+    roofType:job.roof_type || "",
+    salesperson:job.salesperson || "",
+
+    squares:job.squares,
+    pitch:job.pitch,
+    layers:job.layers,
+    waste:job.waste,
+    profitMargin:job.profit_margin,
+    overhead:job.overhead,
+
+    shingleCost:job.shingle_cost,
+    starterCost:job.starter_cost,
+    ridgeCost:job.ridge_cost,
+    laborCost:job.labor_cost,
+    tearOffCost:job.tear_off_cost,
+    otherMaterial:job.other_material,
+    otherLabor:job.other_labor,
+    priceAdjustment:job.price_adjustment,
+
+    scopeOfWork:job.scope_of_work || "",
+    importantInfo:job.important_info || ""
+  };
+
+
+  Object.entries(fields).forEach(([id,value])=>{
+    if($(id)) $(id).value = value ?? "";
+  });
+
+
+  $("calculatorTitle").textContent =
+    `Edit Estimate ${job.estimate_number}`;
+
+  calculate();
+
+  go("calculator");
+}
+
+
+/* =====================================================
+   DELETE
+===================================================== */
+
+async function deleteJob(id){
+
+  const job =
+    estimates.find(e=>e.id === id);
+
+  if(!job) return;
+
+
+  const confirmed =
+    confirm(
+      `Delete ${job.customer_name || "this job"}?\n\nThis cannot be undone.`
+    );
+
+  if(!confirmed) return;
+
+
+  const {error} =
+    await supabaseClient
+      .from("estimates")
+      .delete()
+      .eq("id",id)
+      .eq("user_id",currentUser.id);
+
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+
+  estimates =
+    estimates.filter(e=>e.id !== id);
+
+  currentJob = null;
+
+  history.replaceState(
+    {},
+    "",
+    location.pathname
+  );
+
+  go("crm");
+}
+
+
+/* =====================================================
+   ESTIMATES TABLE
+===================================================== */
+
+function renderEstimates(){
+
+  const search =
+    $("estimateSearch")?.value.toLowerCase() || "";
+
+  const list =
+    estimates.filter(e=>
+      estimateMatchesSearch(e,search)
+    );
+
+
+  if(!list.length){
+
+    $("estimateTable").innerHTML = `
+      <div class="empty">
+        No estimates found.
+      </div>
+    `;
+
+    return;
+  }
+
+
+  $("estimateTable").innerHTML = `
 
     <div class="table-wrap">
 
-      <table class="table">
+      <table>
 
         <thead>
 
           <tr>
-
-            <th>
-              Estimate
-            </th>
-
-            <th>
-              Customer
-            </th>
-
-            <th>
-              Address
-            </th>
-
-            <th>
-              Phone
-            </th>
-
-            <th>
-              Status
-            </th>
-
-            <th>
-              Price
-            </th>
-
-            <th>
-              Updated
-            </th>
-
-            <th>
-            </th>
-
+            <th>Estimate</th>
+            <th>Customer</th>
+            <th>Status</th>
+            <th>Value</th>
+            <th>Profit</th>
+            <th></th>
           </tr>
 
         </thead>
 
         <tbody>
 
-          ${filtered.map(e => `
+          ${list.map(e=>`
 
             <tr>
 
               <td>
-                ${escapeHTML(
-                  e.estimate_number
-                )}
+                <strong>
+                  ${escapeHTML(e.estimate_number)}
+                </strong>
               </td>
 
               <td>
-                ${escapeHTML(
-                  e.customer_name
-                )}
+                ${escapeHTML(e.customer_name)}
               </td>
 
               <td>
-                ${escapeHTML(
-                  e.project_address
-                )}
+                ${statusBadge(e.status)}
               </td>
 
               <td>
-                ${escapeHTML(
-                  e.customer_phone
-                )}
+                ${money(e.selling_price)}
               </td>
 
               <td>
-                ${statusBadge(
-                  e.status
-                )}
-              </td>
-
-              <td>
-                ${money(
-                  e.selling_price
-                )}
-              </td>
-
-              <td>
-                ${formatDate(
-                  e.updated_at ||
-                  e.saved_at
-                )}
+                ${money(e.gross_profit)}
               </td>
 
               <td>
 
                 <button
-                  class="btn secondary"
-                  onclick="openEstimate('${e.id}')">
-                  Open
+                  class="secondary"
+                  onclick="openJob('${e.id}')">
+                  Open Job
                 </button>
 
               </td>
@@ -2637,1788 +4173,856 @@ function renderDashboard(){
     </div>
 
   `;
-
 }
 
 
 /* =====================================================
-DATE
-===================================================== */
-
-function formatDate(value){
-
-  if(!value)
-    return "";
-
-  const date =
-    new Date(value);
-
-  if(Number.isNaN(
-    date.getTime()
-  ))
-    return "";
-
-  return date.toLocaleDateString();
-
-}
-
-
-/* =====================================================
-STATUS BADGE
-===================================================== */
-
-function statusBadge(status){
-
-  const s =
-    status ||
-    "Lead";
-
-  let cls = "";
-
-  if(
-    s === "Sold" ||
-    s === "Completed"
-  ){
-
-    cls =
-      "green";
-
-  }
-
-
-  if(s === "Lost"){
-
-    cls =
-      "red";
-
-  }
-
-
-  if(s === "Estimated"){
-
-    cls =
-      "yellow";
-
-  }
-
-
-  return `
-
-    <span class="badge ${cls}">
-      ${escapeHTML(s)}
-    </span>
-
-  `;
-
-}
-
-
-/* =====================================================
-CALCULATOR
-===================================================== */
-
-function calculateEstimate(){
-
-  const n = id =>
-    Number(
-      $(id).value || 0
-    );
-
-
-  const squares =
-    n("cSquares");
-
-  const waste =
-    n("cWaste") /
-    100;
-
-  const pitch =
-    n("cPitch");
-
-  const layers =
-    n("cLayers");
-
-
-  const materialSquares =
-    squares *
-    (1 + waste);
-
-
-  const material =
-    materialSquares *
-    (
-      n("cShingle") +
-      n("cStarter") +
-      n("cRidge")
-    ) +
-
-    n("cOtherMaterial");
-
-
-  const labor =
-    squares *
-    n("cLabor") *
-    pitch
-
-    +
-
-    squares *
-    n("cTear") *
-    layers *
-    pitch
-
-    +
-
-    n("cOtherLabor");
-
-
-  const baseCost =
-    material +
-    labor;
-
-
-  const overhead =
-    baseCost *
-    n("cOverhead") /
-    100;
-
-
-  const totalCost =
-    baseCost +
-    overhead;
-
-
-  const margin =
-    n("cMargin") /
-    100;
-
-
-  let sellingPrice =
-    totalCost;
-
-
-  if(
-    margin >= 0 &&
-    margin < 1
-  ){
-
-    sellingPrice =
-      totalCost /
-      (1 - margin) +
-      n("cAdjustment");
-
-  }
-
-
-  const grossProfit =
-    sellingPrice -
-    totalCost;
-
-
-  const grossMargin =
-    sellingPrice
-      ? grossProfit /
-        sellingPrice *
-        100
-      : 0;
-
-
-  const pricePerSquare =
-    squares
-      ? sellingPrice /
-        squares
-      : 0;
-
-
-  lastCalculation = {
-
-    customer_name:
-      $("cCustomer").value,
-
-    customer_phone:
-      $("cPhone").value,
-
-    customer_email:
-      $("cEmail").value,
-
-    project_address:
-      $("cAddress").value,
-
-    squares,
-
-    pitch,
-
-    layers,
-
-    waste:
-      n("cWaste"),
-
-    shingle_cost:
-      n("cShingle"),
-
-    starter_cost:
-      n("cStarter"),
-
-    ridge_cost:
-      n("cRidge"),
-
-    labor_cost:
-      n("cLabor"),
-
-    tear_off_cost:
-      n("cTear"),
-
-    other_material:
-      n("cOtherMaterial"),
-
-    other_labor:
-      n("cOtherLabor"),
-
-    overhead:
-      n("cOverhead"),
-
-    profit_margin:
-      n("cMargin"),
-
-    price_adjustment:
-      n("cAdjustment"),
-
-    material_cost:
-      material,
-
-    labor_total:
-      labor,
-
-    total_cost:
-      totalCost,
-
-    selling_price:
-      sellingPrice,
-
-    gross_profit:
-      grossProfit,
-
-    gross_margin:
-      grossMargin,
-
-    price_per_square:
-      pricePerSquare,
-
-    material_squares:
-      materialSquares
-
-  };
-
-
-  $("calculatorResult").innerHTML = `
-
-    <div class="grid g4">
-
-      <div class="card stat">
-        <div class="small muted">
-          Material
-        </div>
-        <div class="number">
-          ${money(material)}
-        </div>
-      </div>
-
-      <div class="card stat">
-        <div class="small muted">
-          Labor
-        </div>
-        <div class="number">
-          ${money(labor)}
-        </div>
-      </div>
-
-      <div class="card stat">
-        <div class="small muted">
-          Total Cost
-        </div>
-        <div class="number">
-          ${money(totalCost)}
-        </div>
-      </div>
-
-      <div class="card stat">
-        <div class="small muted">
-          Selling Price
-        </div>
-        <div class="number">
-          ${money(sellingPrice)}
-        </div>
-      </div>
-
-      <div class="card stat">
-        <div class="small muted">
-          Gross Profit
-        </div>
-        <div class="number">
-          ${money(grossProfit)}
-        </div>
-      </div>
-
-      <div class="card stat">
-        <div class="small muted">
-          Gross Margin
-        </div>
-        <div class="number">
-          ${grossMargin.toFixed(1)}%
-        </div>
-      </div>
-
-      <div class="card stat">
-        <div class="small muted">
-          Price / Square
-        </div>
-        <div class="number">
-          ${money(pricePerSquare)}
-        </div>
-      </div>
-
-      <div class="card stat">
-        <div class="small muted">
-          Material Squares
-        </div>
-        <div class="number">
-          ${materialSquares.toFixed(1)}
-        </div>
-      </div>
-
-    </div>
-
-    <p class="small muted">
-      Planning quantities only. Verify actual takeoff before ordering materials.
-    </p>
-
-  `;
-
-}
-
-
-/* =====================================================
-SAVE ESTIMATE
-===================================================== */
-
-async function saveEstimate(){
-
-  if(!lastCalculation){
-
-    calculateEstimate();
-
-  }
-
-
-  const estimateNumber =
-    "RB-" +
-    Date.now()
-      .toString()
-      .slice(-8);
-
-
-  const payload = {
-
-    ...lastCalculation,
-
-    user_id:
-      currentUser.id,
-
-    estimate_number:
-      estimateNumber,
-
-    valid_days:
-      settings.default_valid_days,
-
-    scope_of_work:
-      settings.default_scope,
-
-    important_info:
-      settings.default_important_info,
-
-    status:
-      "Lead",
-
-    saved_at:
-      new Date().toISOString(),
-
-    updated_at:
-      new Date().toISOString()
-
-  };
-
-
-  const {error} =
-    await supabaseClient
-      .from("estimates")
-      .insert(payload);
-
-
-  if(error){
-
-    alert(
-      error.message
-    );
-
-    return;
-
-  }
-
-
-  await loadEstimates();
-
-
-  alert(
-    `Estimate ${estimateNumber} saved.`
-  );
-
-
-  go("estimates");
-
-}
-
-
-/* =====================================================
-ESTIMATE SEARCH
-===================================================== */
-
-function renderEstimates(){
-
-  const input =
-    $("estimateSearch");
-
-  const query =
-    input
-      ? input.value
-      : "";
-
-
-  const status =
-    $("estimateStatus")
-      ? $("estimateStatus").value
-      : "All";
-
-
-  let list =
-    estimates.filter(e => {
-
-      const matchesSearch =
-        estimateMatchesSearch(
-          e,
-          query
-        );
-
-
-      const matchesStatus =
-        status === "All" ||
-        String(
-          e.status || "Lead"
-        ) === status;
-
-
-      return (
-        matchesSearch &&
-        matchesStatus
-      );
-
-    });
-
-
-  const sort =
-    $("estimateSort")
-      ? $("estimateSort").value
-      : "newest";
-
-
-  list.sort(
-    (a,b) => {
-
-      if(sort === "highest"){
-
-        return Number(
-          b.selling_price || 0
-        ) -
-        Number(
-          a.selling_price || 0
-        );
-
-      }
-
-
-      if(sort === "lowest"){
-
-        return Number(
-          a.selling_price || 0
-        ) -
-        Number(
-          b.selling_price || 0
-        );
-
-      }
-
-
-      if(sort === "oldest"){
-
-        return new Date(
-          a.updated_at ||
-          a.saved_at ||
-          0
-        ) -
-        new Date(
-          b.updated_at ||
-          b.saved_at ||
-          0
-        );
-
-      }
-
-
-      return new Date(
-        b.updated_at ||
-        b.saved_at ||
-        0
-      ) -
-      new Date(
-        a.updated_at ||
-        a.saved_at ||
-        0
-      );
-
-    }
-  );
-
-
-  if(!list.length){
-
-    $("estimateTable").innerHTML = `
-
-      <div style="padding:20px 0">
-
-        <h3>
-          No estimates found
-        </h3>
-
-        <p class="muted">
-          Try another search or status.
-        </p>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-
-  $("estimateTable").innerHTML = `
-
-    <table class="table">
-
-      <thead>
-
-        <tr>
-
-          <th>
-            Estimate
-          </th>
-
-          <th>
-            Customer
-          </th>
-
-          <th>
-            Address
-          </th>
-
-          <th>
-            Status
-          </th>
-
-          <th>
-            Price
-          </th>
-
-          <th>
-            Updated
-          </th>
-
-          <th>
-          </th>
-
-        </tr>
-
-      </thead>
-
-      <tbody>
-
-        ${list.map(e => `
-
-          <tr>
-
-            <td>
-              ${escapeHTML(
-                e.estimate_number
-              )}
-            </td>
-
-            <td>
-              ${escapeHTML(
-                e.customer_name
-              )}
-            </td>
-
-            <td>
-              ${escapeHTML(
-                e.project_address
-              )}
-            </td>
-
-            <td>
-              ${statusBadge(
-                e.status
-              )}
-            </td>
-
-            <td>
-              ${money(
-                e.selling_price
-              )}
-            </td>
-
-            <td>
-              ${formatDate(
-                e.updated_at ||
-                e.saved_at
-              )}
-            </td>
-
-            <td>
-
-              <button
-                class="btn secondary"
-                onclick="openEstimate('${e.id}')">
-                Open
-              </button>
-
-            </td>
-
-          </tr>
-
-        `).join("")}
-
-      </tbody>
-
-    </table>
-
-  `;
-
-}
-
-
-/* =====================================================
-OPEN ESTIMATE
-===================================================== */
-
-function openEstimate(id){
-
-  const estimate =
-    estimates.find(
-      e => e.id === id
-    );
-
-
-  if(!estimate)
-    return;
-
-
-  const fields = {
-
-    cCustomer:
-      estimate.customer_name,
-
-    cPhone:
-      estimate.customer_phone,
-
-    cEmail:
-      estimate.customer_email,
-
-    cAddress:
-      estimate.project_address,
-
-    cSquares:
-      estimate.squares,
-
-    cPitch:
-      estimate.pitch,
-
-    cLayers:
-      estimate.layers,
-
-    cWaste:
-      estimate.waste,
-
-    cShingle:
-      estimate.shingle_cost,
-
-    cStarter:
-      estimate.starter_cost,
-
-    cRidge:
-      estimate.ridge_cost,
-
-    cLabor:
-      estimate.labor_cost,
-
-    cTear:
-      estimate.tear_off_cost,
-
-    cOtherMaterial:
-      estimate.other_material,
-
-    cOtherLabor:
-      estimate.other_labor,
-
-    cOverhead:
-      estimate.overhead,
-
-    cMargin:
-      estimate.profit_margin,
-
-    cAdjustment:
-      estimate.price_adjustment
-
-  };
-
-
-  Object.entries(fields)
-    .forEach(([id,value]) => {
-
-      if($(id)){
-
-        $(id).value =
-          value ?? 0;
-
-      }
-
-    });
-
-
-  go("calculator");
-
-  calculateEstimate();
-
-}
-
-
-/* =====================================================
-PIPELINE
+   PIPELINE
 ===================================================== */
 
 function renderPipeline(){
 
-  const statuses = [
-    "Lead",
-    "Estimated",
-    "Sold",
-    "Completed",
-    "Lost"
-  ];
+  const statuses =
+    ["Lead","Estimated","Sold","Completed","Lost"];
 
 
-  $("pipelineGrid").innerHTML =
-    statuses
-      .map(status => {
+  $("pipelineContent").innerHTML = `
+
+    <div style="
+      display:grid;
+      grid-template-columns:repeat(5,minmax(200px,1fr));
+      gap:13px;
+      overflow-x:auto;
+    ">
+
+      ${statuses.map(status=>{
 
         const jobs =
           estimates.filter(
-            e =>
-              (
-                e.status ||
-                "Lead"
-              ) === status
+            e=>(e.status||"Lead") === status
           );
 
+        const total =
+          jobs.reduce(
+            (sum,e)=>sum+Number(e.selling_price||0),
+            0
+          );
 
         return `
 
-          <div class="card">
+          <div class="card" style="margin:0;">
 
-            <h3>
-              ${status}
+            <div style="
+              display:flex;
+              justify-content:space-between;
+              align-items:center;
+              margin-bottom:12px;
+            ">
+
+              <strong>${status}</strong>
 
               <span class="badge">
                 ${jobs.length}
               </span>
-            </h3>
+
+            </div>
+
+            <div style="
+              font-size:20px;
+              font-weight:900;
+              margin-bottom:15px;
+            ">
+              ${money(total)}
+            </div>
 
             ${
-              jobs.length
-
-              ?
-
-              jobs.map(e => `
+              jobs.map(j=>`
 
                 <div
+                  onclick="openJob('${j.id}')"
                   style="
-                    padding:10px 0;
-                    border-bottom:1px solid var(--border)
+                    background:var(--surface2);
+                    border:1px solid var(--border);
+                    border-radius:11px;
+                    padding:12px;
+                    margin-bottom:8px;
+                    cursor:pointer;
                   ">
 
-                  <b>
-                    ${escapeHTML(
-                      e.customer_name ||
-                      "Unnamed"
-                    )}
-                  </b>
+                  <strong>
+                    ${escapeHTML(j.customer_name || "Customer")}
+                  </strong>
 
-                  <div class="small muted">
-
-                    ${escapeHTML(
-                      e.estimate_number
-                    )}
-
-                    ·
-
-                    ${money(
-                      e.selling_price
-                    )}
-
+                  <div style="
+                    color:var(--muted);
+                    font-size:12px;
+                    margin-top:4px;
+                  ">
+                    ${money(j.selling_price)}
                   </div>
 
                 </div>
 
               `).join("")
-
-              :
-
-              `
-                <p class="muted">
-                  Empty
-                </p>
-              `
-
             }
 
           </div>
 
         `;
 
-      })
-      .join("");
+      }).join("")}
 
+    </div>
+
+  `;
 }
 
 
 /* =====================================================
-SETTINGS
+   PURCHASE ORDERS
 ===================================================== */
 
-async function loadSettings(){
-
-  const result =
-    await supabaseClient
-      .from("user_settings")
-      .select("*")
-      .eq(
-        "user_id",
-        currentUser.id
-      )
-      .maybeSingle();
-
-
-  if(result.data){
-
-    settings = {
-
-      ...settings,
-
-      ...result.data
-
-    };
-
-  }
-
-
-  const company =
-    await supabaseClient
-      .from("company_profiles")
-      .select("*")
-      .eq(
-        "user_id",
-        currentUser.id
-      )
-      .maybeSingle();
-
-
-  settings.company =
-    company.data ||
-    {};
-
-
-  applyTheme(
-    settings.theme ||
-    "light"
-  );
-
-}
-
-
-function renderSettings(){
-
-  const company =
-    settings.company ||
-    {};
-
-
-  const values = {
-
-    sCompany:
-      company.company_name || "",
-
-    sPhone:
-      company.phone || "",
-
-    sEmail:
-      company.email ||
-      currentUser.email ||
-      "",
-
-    sWebsite:
-      company.website || "",
-
-    sAddress:
-      company.address || "",
-
-    sValidDays:
-      settings.default_valid_days,
-
-    sScope:
-      settings.default_scope,
-
-    sImportant:
-      settings.default_important_info,
-
-    sWaste:
-      settings.default_waste,
-
-    sMargin:
-      settings.default_profit_margin,
-
-    sOverhead:
-      settings.default_overhead,
-
-    sLayers:
-      settings.default_layers,
-
-    sPitch:
-      settings.default_pitch,
-
-    sShingle:
-      settings.default_shingle_cost,
-
-    sStarter:
-      settings.default_starter_cost,
-
-    sRidge:
-      settings.default_ridge_cost,
-
-    sLabor:
-      settings.default_labor_cost,
-
-    sTear:
-      settings.default_tear_off_cost
-
-  };
-
-
-  Object.entries(values)
-    .forEach(([id,value]) => {
-
-      if($(id)){
-
-        $(id).value =
-          value ?? "";
-
-      }
-
-    });
-
-
-  $("sShowPhone").checked =
-    settings.show_phone !== false;
-
-  $("sShowEmail").checked =
-    settings.show_email !== false;
-
-  $("sShowAddress").checked =
-    settings.show_address !== false;
-
-  $("sShowWebsite").checked =
-    settings.show_website !== false;
-
-
-  $("themeSelect").value =
-    settings.theme ||
-    "light";
-
-
-  $("settingsEmail").textContent =
-    currentUser.email;
-
-
-  const widgets = {
-
-    revenue:
-      "Projected Revenue",
-
-    profit:
-      "Projected Profit",
-
-    soldLost:
-      "Sold / Lost",
-
-    closeRate:
-      "Close Rate",
-
-    followups:
-      "Follow-Ups",
-
-    recent:
-      "Recent Estimates",
-
-    pipeline:
-      "Pipeline"
-
-  };
-
-
-  $("widgetSettings").innerHTML =
-    Object.entries(widgets)
-      .map(([key,label]) => `
-
-        <div class="toggle">
-
-          <span>
-            ${label}
-          </span>
-
-          <input
-            type="checkbox"
-            data-widget="${key}"
-            ${
-              settings.dashboard_widgets?.[key] !== false
-              ? "checked"
-              : ""
-            }>
-
-        </div>
-
-      `)
-      .join("");
-
-}
-
-
-async function saveSettings(){
-
-  const company = {
-
-    user_id:
-      currentUser.id,
-
-    company_name:
-      $("sCompany").value,
-
-    phone:
-      $("sPhone").value,
-
-    email:
-      $("sEmail").value,
-
-    address:
-      $("sAddress").value,
-
-    website:
-      $("sWebsite").value
-
-  };
-
-
-  let result =
-    await supabaseClient
-      .from("company_profiles")
-      .upsert(
-        company,
-        {
-          onConflict:"user_id"
-        }
-      );
-
-
-  if(result.error){
-
-    alert(
-      result.error.message
-    );
-
-    return;
-
-  }
-
-
-  const dashboardWidgets = {};
-
-
-  document
-    .querySelectorAll(
-      "[data-widget]"
-    )
-    .forEach(input => {
-
-      dashboardWidgets[
-        input.dataset.widget
-      ] =
-        input.checked;
-
-    });
-
-
-  const newSettings = {
-
-    user_id:
-      currentUser.id,
-
-    default_valid_days:
-      Number(
-        $("sValidDays").value
-      ),
-
-    default_waste:
-      Number(
-        $("sWaste").value
-      ),
-
-    default_profit_margin:
-      Number(
-        $("sMargin").value
-      ),
-
-    default_overhead:
-      Number(
-        $("sOverhead").value
-      ),
-
-    default_layers:
-      Number(
-        $("sLayers").value
-      ),
-
-    default_pitch:
-      Number(
-        $("sPitch").value
-      ),
-
-    default_shingle_cost:
-      Number(
-        $("sShingle").value
-      ),
-
-    default_starter_cost:
-      Number(
-        $("sStarter").value
-      ),
-
-    default_ridge_cost:
-      Number(
-        $("sRidge").value
-      ),
-
-    default_labor_cost:
-      Number(
-        $("sLabor").value
-      ),
-
-    default_tear_off_cost:
-      Number(
-        $("sTear").value
-      ),
-
-    default_scope:
-      $("sScope").value,
-
-    default_important_info:
-      $("sImportant").value,
-
-    show_phone:
-      $("sShowPhone").checked,
-
-    show_email:
-      $("sShowEmail").checked,
-
-    show_address:
-      $("sShowAddress").checked,
-
-    show_website:
-      $("sShowWebsite").checked,
-
-    theme:
-      $("themeSelect").value,
-
-    dashboard_widgets:
-      dashboardWidgets
-
-  };
-
-
-  result =
-    await supabaseClient
-      .from("user_settings")
-      .upsert(
-        newSettings,
-        {
-          onConflict:"user_id"
-        }
-      );
-
-
-  if(result.error){
-
-    alert(
-      result.error.message
-    );
-
-    return;
-
-  }
-
-
-  settings = {
-
-    ...settings,
-
-    ...newSettings,
-
-    company
-
-  };
-
-
-  applyTheme(
-    newSettings.theme
-  );
-
-
-  alert(
-    "Settings saved."
-  );
-
-}
-
-
-/* =====================================================
-THEME
-===================================================== */
-
-function changeTheme(theme){
-
-  settings.theme =
-    theme;
-
-  applyTheme(theme);
-
-}
-
-
-function applyTheme(theme){
-
-  document.body
-    .classList.toggle(
-      "dark",
-      theme === "dark"
-    );
-
-}
-
-
-/* =====================================================
-PASSWORD
-===================================================== */
-
-async function changePassword(){
-
-  const password =
-    prompt(
-      "Enter your new password:"
-    );
-
-
-  if(!password)
-    return;
-
-
-  if(password.length < 6){
-
-    alert(
-      "Password must be at least 6 characters."
-    );
-
-    return;
-
-  }
-
-
-  const {error} =
-    await supabaseClient
-      .auth
-      .updateUser({
-        password
-      });
-
-
-  alert(
-    error
-      ? error.message
-      : "Password changed."
-  );
-
-}
-
-
-/* =====================================================
-PURCHASE ORDERS
-===================================================== */
-
-async function loadPurchaseOrders(){
-
-  if(!currentUser)
-    return;
-
-
-  const {data,error} =
-    await supabaseClient
-      .from("purchase_orders")
-      .select("*")
-      .eq(
-        "user_id",
-        currentUser.id
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
-
-
-  if(error){
-
-    console.log(
-      "Purchase orders table not installed yet."
-    );
-
-    purchaseOrders = [];
-
-    renderPOs();
-
-    return;
-
-  }
-
-
-  purchaseOrders =
-    data || [];
-
-
-  renderPOs();
-
-}
-
-
-function renderPOs(){
-
-  if(!$("poTable"))
-    return;
-
+async function renderPOs(){
 
   const search =
-    $("poSearch")
-      ? $("poSearch")
-          .value
-          .toLowerCase()
-          .trim()
-      : "";
-
-
-  const status =
-    $("poStatus")
-      ? $("poStatus").value
-      : "All";
-
+    $("poSearch")?.value.toLowerCase() || "";
 
   const list =
-    purchaseOrders.filter(po => {
+    purchaseOrders.filter(p=>
 
-      const text = [
-
-        po.po_number,
-
-        po.vendor,
-
-        po.customer_name,
-
-        po.estimate_number,
-
-        po.materials_ordered,
-
-        po.notes
-
+      [
+        p.po_number,
+        p.vendor,
+        p.customer_name,
+        p.estimate_number,
+        p.materials_ordered,
+        p.status
       ]
+      .join(" ")
+      .toLowerCase()
+      .includes(search)
 
-        .join(" ")
-
-        .toLowerCase();
-
-
-      return (
-
-        text.includes(search)
-
-        &&
-
-        (
-          status === "All" ||
-          po.status === status
-        )
-
-      );
-
-    });
+    );
 
 
   if(!list.length){
 
     $("poTable").innerHTML = `
-
-      <p class="muted">
+      <div class="empty">
+        <div class="empty-icon">📦</div>
         No purchase orders found.
-      </p>
-
+      </div>
     `;
 
     return;
-
   }
 
 
   $("poTable").innerHTML = `
 
-    <table class="table">
+    <div class="table-wrap">
 
-      <thead>
+      <table>
 
-        <tr>
-
-          <th>
-            PO #
-          </th>
-
-          <th>
-            Job
-          </th>
-
-          <th>
-            Vendor
-          </th>
-
-          <th>
-            Total
-          </th>
-
-          <th>
-            Status
-          </th>
-
-          <th>
-            Delivery
-          </th>
-
-        </tr>
-
-      </thead>
-
-      <tbody>
-
-        ${list.map(po => `
+        <thead>
 
           <tr>
-
-            <td>
-              ${escapeHTML(
-                po.po_number
-              )}
-            </td>
-
-            <td>
-              ${escapeHTML(
-                po.customer_name ||
-                po.estimate_number ||
-                ""
-              )}
-            </td>
-
-            <td>
-              ${escapeHTML(
-                po.vendor
-              )}
-            </td>
-
-            <td>
-              ${money(
-                po.total
-              )}
-            </td>
-
-            <td>
-              ${statusBadge(
-                po.status
-              )}
-            </td>
-
-            <td>
-              ${escapeHTML(
-                po.expected_delivery ||
-                ""
-              )}
-            </td>
-
+            <th>PO #</th>
+            <th>Job</th>
+            <th>Vendor</th>
+            <th>Total</th>
+            <th>Delivery</th>
+            <th>Status</th>
           </tr>
 
-        `).join("")}
+        </thead>
 
-      </tbody>
+        <tbody>
 
-    </table>
+          ${list.map(p=>`
+
+            <tr>
+
+              <td>
+                <strong>${escapeHTML(p.po_number)}</strong>
+              </td>
+
+              <td>
+                ${
+                  p.estimate_id
+                  ? `<button
+                       class="secondary"
+                       onclick="openJob('${p.estimate_id}')">
+                       ${escapeHTML(p.estimate_number || "Open Job")}
+                     </button>`
+                  : escapeHTML(p.customer_name || "—")
+                }
+              </td>
+
+              <td>
+                ${escapeHTML(p.vendor || "—")}
+              </td>
+
+              <td>
+                ${money(p.total)}
+              </td>
+
+              <td>
+                ${formatDate(p.expected_delivery)}
+              </td>
+
+              <td>
+                ${escapeHTML(p.status)}
+              </td>
+
+            </tr>
+
+          `).join("")}
+
+        </tbody>
+
+      </table>
+
+    </div>
 
   `;
+}
+
+
+function newPO(estimateId=null){
+
+  const job =
+    estimateId
+    ? estimates.find(e=>e.id === estimateId)
+    : null;
+
+
+  showModal(
+    "Create Purchase Order",
+    `
+
+      <div class="form-grid">
+
+        <div class="field">
+          <label>PO #</label>
+          <input
+            id="poNumber"
+            value="PO-${new Date().getFullYear()}-${String(purchaseOrders.length+1).padStart(3,"0")}">
+        </div>
+
+        <div class="field">
+          <label>Vendor / Supplier</label>
+          <input id="poVendor" placeholder="ABC Supply">
+        </div>
+
+        <div class="field">
+          <label>Customer</label>
+          <input
+            id="poCustomer"
+            value="${escapeHTML(job?.customer_name || "")}">
+        </div>
+
+        <div class="field">
+          <label>Estimate #</label>
+          <input
+            id="poEstimateNumber"
+            value="${escapeHTML(job?.estimate_number || "")}">
+        </div>
+
+        <div class="field form-full">
+          <label>Materials Ordered</label>
+          <textarea
+            id="poMaterials"
+            placeholder="Shingles, starter, ridge, ice & water, drip edge..."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Total</label>
+          <input id="poTotal" type="number" value="0">
+        </div>
+
+        <div class="field">
+          <label>Order Date</label>
+          <input
+            id="poOrderDate"
+            type="date"
+            value="${new Date().toISOString().slice(0,10)}">
+        </div>
+
+        <div class="field">
+          <label>Expected Delivery</label>
+          <input id="poDelivery" type="date">
+        </div>
+
+        <div class="field">
+          <label>Status</label>
+
+          <select id="poStatus">
+            <option>Draft</option>
+            <option>Ordered</option>
+            <option>Partially Received</option>
+            <option>Received</option>
+            <option>Cancelled</option>
+          </select>
+
+        </div>
+
+        <div class="field form-full">
+          <label>Notes</label>
+          <textarea id="poNotes"></textarea>
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+
+        <button class="secondary" onclick="hideModal()">
+          Cancel
+        </button>
+
+        <button class="primary" onclick="savePO('${estimateId || ""}')">
+          Create PO
+        </button>
+
+      </div>
+
+    `
+  );
+}
+
+
+async function savePO(estimateId){
+
+  const {data,error} =
+    await supabaseClient
+      .from("purchase_orders")
+      .insert({
+
+        user_id:currentUser.id,
+
+        estimate_id:
+          estimateId || null,
+
+        po_number:$("poNumber").value,
+
+        vendor:$("poVendor").value,
+
+        customer_name:$("poCustomer").value,
+
+        estimate_number:$("poEstimateNumber").value,
+
+        materials_ordered:$("poMaterials").value,
+
+        total:num("poTotal"),
+
+        order_date:$("poOrderDate").value,
+
+        expected_delivery:
+          $("poDelivery").value || null,
+
+        status:$("poStatus").value,
+
+        notes:$("poNotes").value
+
+      })
+      .select()
+      .single();
+
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+
+  purchaseOrders.unshift(data);
+
+  if(estimateId){
+
+    await addActivity(
+      estimateId,
+      "Purchase Order Created",
+      `PO ${data.po_number} was created.`
+    );
+
+  }
+
+
+  hideModal();
+
+  renderPOs();
+
+  if(estimateId){
+
+    currentJob =
+      estimates.find(e=>e.id === estimateId);
+
+    await renderJobPage();
+
+  }
 
 }
 
 
-async function createPO(){
+/* =====================================================
+   DASHBOARD
+===================================================== */
 
-  const vendor =
-    prompt(
-      "Vendor / supplier:"
-    );
-
-
-  if(!vendor)
-    return;
-
-
-  const customer =
-    prompt(
-      "Customer / job:"
-    );
-
+function renderDashboard(){
 
   const total =
-    prompt(
-      "PO total:"
-    );
+    estimates.length;
+
+  const projectedRevenue =
+    estimates
+      .filter(e=>e.status !== "Lost")
+      .reduce(
+        (sum,e)=>sum+Number(e.selling_price||0),
+        0
+      );
+
+  const projectedProfit =
+    estimates
+      .filter(e=>e.status !== "Lost")
+      .reduce(
+        (sum,e)=>sum+Number(e.gross_profit||0),
+        0
+      );
+
+  const soldRevenue =
+    estimates
+      .filter(e=>e.status==="Sold" || e.status==="Completed")
+      .reduce(
+        (sum,e)=>sum+Number(e.selling_price||0),
+        0
+      );
+
+  const sold =
+    estimates.filter(
+      e=>e.status==="Sold" ||
+         e.status==="Completed"
+    ).length;
+
+  const closeRate =
+    total > 0
+      ? sold/total*100
+      : 0;
 
 
-  const po = {
+  $("dashboardStats").innerHTML = `
 
-    user_id:
-      currentUser.id,
+    <div class="stat">
+      <div class="stat-label">Total Jobs</div>
+      <div class="stat-value">${total}</div>
+      <div class="stat-note">All CRM jobs</div>
+    </div>
 
-    po_number:
-      "PO-" +
-      Date.now()
-        .toString()
-        .slice(-7),
+    <div class="stat">
+      <div class="stat-label">Projected Revenue</div>
+      <div class="stat-value">${money(projectedRevenue)}</div>
+      <div class="stat-note">Active opportunities</div>
+    </div>
 
-    vendor,
+    <div class="stat">
+      <div class="stat-label">Projected Profit</div>
+      <div class="stat-value">${money(projectedProfit)}</div>
+      <div class="stat-note">Before final adjustments</div>
+    </div>
 
-    customer_name:
-      customer || "",
+    <div class="stat">
+      <div class="stat-label">Sold Revenue</div>
+      <div class="stat-value">${money(soldRevenue)}</div>
+      <div class="stat-note">${closeRate.toFixed(1)}% close rate</div>
+    </div>
 
-    total:
-      Number(total || 0),
+  `;
 
-    status:
-      "Draft",
 
-    created_at:
-      new Date().toISOString()
+  const recent =
+    [...estimates]
+      .sort(
+        (a,b)=>
+          new Date(b.saved_at||0) -
+          new Date(a.saved_at||0)
+      )
+      .slice(0,6);
+
+
+  $("recentJobs").innerHTML =
+    recent.length
+    ? recent.map(e=>`
+
+      <div
+        onclick="openJob('${e.id}')"
+        style="
+          display:flex;
+          justify-content:space-between;
+          gap:10px;
+          padding:13px 0;
+          border-bottom:1px solid var(--border);
+          cursor:pointer;
+        ">
+
+        <div>
+
+          <strong>
+            ${escapeHTML(e.customer_name || "Customer")}
+          </strong>
+
+          <div style="
+            color:var(--muted);
+            font-size:12px;
+            margin-top:3px;
+          ">
+            ${escapeHTML(e.project_address || "No address")}
+          </div>
+
+        </div>
+
+        <div style="text-align:right;">
+
+          <strong>
+            ${money(e.selling_price)}
+          </strong>
+
+          <div style="margin-top:4px;">
+            ${statusBadge(e.status)}
+          </div>
+
+        </div>
+
+      </div>
+
+    `).join("")
+    : `
+      <div class="empty">
+        No jobs yet.
+      </div>
+    `;
+
+
+  const followups =
+    estimates
+      .filter(e=>e.follow_up_date)
+      .sort(
+        (a,b)=>
+          String(a.follow_up_date)
+          .localeCompare(
+            String(b.follow_up_date)
+          )
+      )
+      .slice(0,6);
+
+
+  $("dashboardFollowups").innerHTML =
+    followups.length
+    ? followups.map(e=>`
+
+      <div
+        onclick="openJob('${e.id}')"
+        style="
+          padding:13px 0;
+          border-bottom:1px solid var(--border);
+          cursor:pointer;
+        ">
+
+        <div style="
+          display:flex;
+          justify-content:space-between;
+        ">
+
+          <strong>
+            ${escapeHTML(e.customer_name || "Customer")}
+          </strong>
+
+          <span style="
+            color:var(--primary);
+            font-weight:800;
+            font-size:12px;
+          ">
+            ${formatDate(e.follow_up_date)}
+          </span>
+
+        </div>
+
+        <div style="
+          color:var(--muted);
+          font-size:12px;
+          margin-top:3px;
+        ">
+          ${escapeHTML(e.follow_up_notes || "Follow-up scheduled")}
+        </div>
+
+      </div>
+
+    `).join("")
+    : `
+      <div class="empty">
+        No follow-ups scheduled.
+      </div>
+    `;
+}
+
+
+/* =====================================================
+   SETTINGS
+===================================================== */
+
+async function loadSettings(){
+
+  if(!currentUser) return;
+
+
+  const {data:company} =
+    await supabaseClient
+      .from("company_profiles")
+      .select("*")
+      .eq("user_id",currentUser.id)
+      .maybeSingle();
+
+
+  if(company){
+
+    $("companyName").value =
+      company.company_name || "";
+
+    $("companyPhone").value =
+      company.phone || "";
+
+    $("companyEmail").value =
+      company.email || "";
+
+    $("companyWebsite").value =
+      company.website || "";
+
+    $("companyAddress").value =
+      company.address || "";
+
+  }
+
+
+  const {data:settings} =
+    await supabaseClient
+      .from("user_settings")
+      .select("*")
+      .eq("user_id",currentUser.id)
+      .maybeSingle();
+
+
+  if(settings){
+
+    $("settingWaste").value =
+      settings.default_waste ?? 10;
+
+    $("settingMargin").value =
+      settings.default_profit_margin ?? 30;
+
+    $("settingOverhead").value =
+      settings.default_overhead ?? 0;
+
+    $("settingShingle").value =
+      settings.default_shingle_cost ?? 110;
+
+    $("settingStarter").value =
+      settings.default_starter_cost ?? 35;
+
+    $("settingRidge").value =
+      settings.default_ridge_cost ?? 35;
+
+    $("settingLabor").value =
+      settings.default_labor_cost ?? 90;
+
+    $("settingTearOff").value =
+      settings.default_tear_off_cost ?? 35;
+
+    $("themeSetting").value =
+      settings.theme || "light";
+
+    applyTheme(settings.theme || "light");
+
+  }else{
+
+    applyTheme("light");
+
+  }
+
+}
+
+
+async function saveCompanyProfile(){
+
+  const payload = {
+
+    user_id:currentUser.id,
+
+    company_name:$("companyName").value,
+
+    phone:$("companyPhone").value,
+
+    email:$("companyEmail").value,
+
+    website:$("companyWebsite").value,
+
+    address:$("companyAddress").value
 
   };
 
 
   const {error} =
     await supabaseClient
-      .from("purchase_orders")
-      .insert(po);
-
-
-  if(error){
-
-    alert(
-      "Purchase Orders table is not installed yet. Run the PO SQL from the previous message."
-    );
-
-    return;
-
-  }
-
-
-  await loadPurchaseOrders();
-
-}
-
-
-/* =====================================================
-HOMEOWNER
-===================================================== */
-
-async function loadHomeownerProposals(){
-
-  if(!currentUser)
-    return;
-
-
-  const {data,error} =
-    await supabaseClient
-      .from("public_proposals")
-      .select("*")
-      .eq(
-        "homeowner_user_id",
-        currentUser.id
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
+      .from("company_profiles")
+      .upsert(
+        payload,
+        {onConflict:"user_id"}
       );
 
 
   if(error){
-
-    $("homeownerProposals").innerHTML =
-      `<p class="muted">
-        ${escapeHTML(
-          error.message
-        )}
-      </p>`;
-
+    alert(error.message);
     return;
-
   }
 
-
-  if(!data?.length){
-
-    $("homeownerProposals").innerHTML =
-      `<p class="muted">
-        No connected proposals yet.
-      </p>`;
-
-    return;
-
-  }
-
-
-  $("homeownerProposals").innerHTML =
-    data.map(p => `
-
-      <div class="card">
-
-        <h3>
-          ${escapeHTML(
-            p.estimate_number
-          )}
-        </h3>
-
-        <p>
-          ${escapeHTML(
-            p.company_name
-          )}
-        </p>
-
-        <p>
-          ${escapeHTML(
-            p.project_address
-          )}
-        </p>
-
-        <h2>
-          ${money(
-            p.selling_price
-          )}
-        </h2>
-
-        ${statusBadge(
-          p.status
-        )}
-
-      </div>
-
-    `).join("");
-
+  alert("Company profile saved.");
 }
 
 
-/* =====================================================
-LOGOUT
-===================================================== */
+async function saveSettings(){
 
-async function logout(){
+  const payload = {
+
+    user_id:currentUser.id,
+
+    default_waste:num("settingWaste"),
+
+    default_profit_margin:
+      num("settingMargin"),
+
+    default_overhead:
+      num("settingOverhead"),
+
+    default_shingle_cost:
+      num("settingShingle"),
+
+    default_starter_cost:
+      num("settingStarter"),
+
+    default_ridge_cost:
+      num("settingRidge"),
+
+    default_labor_cost:
+      num("settingLabor"),
+
+    default_tear_off_cost:
+      num("settingTearOff")
+
+  };
+
+
+  const {error} =
+    await supabaseClient
+      .from("user_settings")
+      .upsert(
+        payload,
+        {onConflict:"user_id"}
+      );
+
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  alert("Estimating defaults saved.");
+}
+
+
+async function saveTheme(){
+
+  const theme =
+    $("themeSetting").value;
+
+  applyTheme(theme);
+
 
   await supabaseClient
-    .auth
-    .signOut();
+    .from("user_settings")
+    .upsert(
+      {
+        user_id:currentUser.id,
+        theme
+      },
+      {onConflict:"user_id"}
+    );
+}
 
-  location.reload();
+
+function applyTheme(theme){
+
+  document.body.classList.toggle(
+    "dark",
+    theme === "dark"
+  );
 
 }
 
 
 /* =====================================================
-STARTUP
+   MODALS
+===================================================== */
+
+function showModal(title,body){
+
+  $("modalTitle").textContent = title;
+  $("modalBody").innerHTML = body;
+
+  $("modalBackdrop").classList.add("show");
+}
+
+
+function hideModal(){
+
+  $("modalBackdrop")
+    .classList.remove("show");
+
+}
+
+
+function closeModal(event){
+
+  if(event.target === $("modalBackdrop")){
+    hideModal();
+  }
+
+}
+
+
+/* =====================================================
+   STARTUP
 ===================================================== */
 
 (async function(){
 
   const {data} =
-    await supabaseClient
-      .auth
-      .getSession();
+    await supabaseClient.auth.getSession();
 
+  if(data?.session){
 
-  if(data.session){
+    currentUser = data.session.user;
 
-    currentUser =
-      data.session.user;
+    $("authScreen").classList.add("hidden");
+    $("app").classList.remove("hidden");
 
-    isHomeowner =
-      currentUser.user_metadata?.role ===
-      "homeowner";
+    $("userEmail").textContent =
+      currentUser.email || "";
 
-    await startApplication();
+    $("avatar").textContent =
+      initials(currentUser.email);
 
-  }else{
-
-    setAuthMode(
-      "contractor"
-    );
+    await initializeApp();
 
   }
 
 })();
-
 </script>
 
 </body>
