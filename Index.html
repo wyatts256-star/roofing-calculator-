@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Roofing Estimating Calculator</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    margin: 0;
+    padding: 20px;
+    color: #222;
+}
+
+.container {
+    max-width: 800px;
+    margin: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,.1);
+}
+
+h1 {
+    margin-top: 0;
+    color: #17365d;
+}
+
+.input-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 6px;
+}
+
+input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px;
+    background: #17365d;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0f2744;
+}
+
+.results {
+    margin-top: 25px;
+    padding: 20px;
+    background: #eef3f8;
+    border-radius: 8px;
+}
+
+.result-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+}
+
+.result-row:last-child {
+    border-bottom: none;
+}
+
+.big {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+@media (max-width: 600px) {
+    .input-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Roofing Estimating Calculator</h1>
+
+<div class="input-grid">
+
+<div>
+<label>Roof Squares</label>
+<input type="number" id="squares" value="25" min="0">
+</div>
+
+<div>
+<label>Labor / Square ($)</label>
+<input type="number" id="labor" value="90" min="0">
+</div>
+
+<div>
+<label>Shingles / Square ($)</label>
+<input type="number" id="shingles" value="110" min="0">
+</div>
+
+<div>
+<label>Tear-Off / Square ($)</label>
+<input type="number" id="tearoff" value="25" min="0">
+</div>
+
+<div>
+<label>Other Materials ($)</label>
+<input type="number" id="materials" value="600" min="0">
+</div>
+
+<div>
+<label>Dumpster / Disposal ($)</label>
+<input type="number" id="dumpster" value="400" min="0">
+</div>
+
+<div>
+<label>Overhead (%)</label>
+<input type="number" id="overhead" value="10" min="0">
+</div>
+
+<div>
+<label>Desired Profit (%)</label>
+<input type="number" id="profit" value="30" min="0" max="99">
+</div>
+
+</div>
+
+<button onclick="calculate()">Calculate Estimate</button>
+
+<div class="results">
+
+<div class="result-row">
+<span>Shingle Cost</span>
+<strong id="shingleCost">$0.00</strong>
+</div>
+
+<div class="result-row">
+<span>Labor</span>
+<strong id="laborCost">$0.00</strong>
+</div>
+
+<div class="result-row">
+<span>Total Job Cost</span>
+<strong id="totalCost">$0.00</strong>
+</div>
+
+<div class="result-row">
+<span>Recommended Selling Price</span>
+<strong id="sellingPrice" class="big">$0.00</strong>
+</div>
+
+<div class="result-row">
+<span>Estimated Profit</span>
+<strong id="estimatedProfit">$0.00</strong>
+</div>
+
+<div class="result-row">
+<span>Selling Price / Square</span>
+<strong id="pricePerSquare">$0.00</strong>
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function money(value) {
+    return "$" + value.toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+}
+
+function calculate() {
+
+    const squares = Number(document.getElementById("squares").value) || 0;
+    const labor = Number(document.getElementById("labor").value) || 0;
+    const shingles = Number(document.getElementById("shingles").value) || 0;
+    const tearoff = Number(document.getElementById("tearoff").value) || 0;
+    const materials = Number(document.getElementById("materials").value) || 0;
+    const dumpster = Number(document.getElementById("dumpster").value) || 0;
+    const overheadPercent = Number(document.getElementById("overhead").value) || 0;
+    const profitPercent = Number(document.getElementById("profit").value) || 0;
+
+    const shingleCost = squares * shingles;
+    const laborCost = squares * labor;
+    const tearoffCost = squares * tearoff;
+
+    const directCost =
+        shingleCost +
+        laborCost +
+        tearoffCost +
+        materials +
+        dumpster;
+
+    const overheadCost =
+        directCost * (overheadPercent / 100);
+
+    const totalCost =
+        directCost + overheadCost;
+
+    const sellingPrice =
+        totalCost / (1 - profitPercent / 100);
+
+    const estimatedProfit =
+        sellingPrice - totalCost;
+
+    const pricePerSquare =
+        squares > 0 ? sellingPrice / squares : 0;
+
+    document.getElementById("shingleCost").textContent =
+        money(shingleCost);
+
+    document.getElementById("laborCost").textContent =
+        money(laborCost);
+
+    document.getElementById("totalCost").textContent =
+        money(totalCost);
+
+    document.getElementById("sellingPrice").textContent =
+        money(sellingPrice);
+
+    document.getElementById("estimatedProfit").textContent =
+        money(estimatedProfit);
+
+    document.getElementById("pricePerSquare").textContent =
+        money(pricePerSquare);
+}
+
+calculate();
+
+</script>
+
+</body>
+</html>
