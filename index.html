@@ -3,96 +3,243 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Roofing Estimating Calculator</title>
+
+<title>RoofBidder | Roofing Estimate Calculator</title>
 
 <style>
+:root {
+  --blue: #1267a5;
+  --navy: #102a43;
+  --bg: #eef3f7;
+  --green: #16834b;
+  --red: #b42318;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
-    margin: 0;
-    padding: 20px;
-    color: #222;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: #17202a;
 }
 
 .container {
-    max-width: 800px;
-    margin: auto;
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,.1);
+  max-width: 1000px;
+  margin: auto;
+  padding: 16px;
 }
 
-h1 {
-    margin-top: 0;
-    color: #17365d;
+header {
+  background: linear-gradient(135deg, #102a43, #1267a5);
+  color: white;
+  padding: 24px;
+  border-radius: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,.12);
 }
 
-.input-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+.brand {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: .5px;
+}
+
+header p {
+  margin: 6px 0 0;
+  opacity: .9;
+}
+
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 3px 14px rgba(0,0,0,.07);
+}
+
+h2 {
+  font-size: 19px;
+  margin: 0 0 14px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
 }
 
 label {
-    font-weight: bold;
-    display: block;
-    margin-bottom: 6px;
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 5px;
 }
 
 input {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 16px;
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #cbd5df;
+  border-radius: 9px;
+  font-size: 16px;
+}
+
+input:focus {
+  outline: 2px solid #9dcef3;
+  border-color: var(--blue);
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.metric {
+  background: #f4f7fa;
+  border-radius: 10px;
+  padding: 13px;
+}
+
+.metric span {
+  display: block;
+  font-size: 12px;
+  color: #596773;
+}
+
+.metric strong {
+  display: block;
+  font-size: 21px;
+  margin-top: 5px;
+}
+
+.total {
+  background: #e9f7ef;
+  border: 1px solid #b7e0c8;
+}
+
+.total strong {
+  color: var(--green);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 9px;
+  border-bottom: 1px solid #e5e9ed;
+}
+
+th {
+  font-size: 12px;
+  color: #596773;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 button {
-    width: 100%;
-    margin-top: 20px;
-    padding: 14px;
-    background: #17365d;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
+  border: 0;
+  border-radius: 9px;
+  padding: 11px 15px;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
 }
 
-button:hover {
-    background: #0f2744;
+.primary {
+  background: var(--blue);
+  color: white;
 }
 
-.results {
-    margin-top: 25px;
-    padding: 20px;
-    background: #eef3f8;
-    border-radius: 8px;
+.green {
+  background: var(--green);
+  color: white;
 }
 
-.result-row {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px 0;
-    border-bottom: 1px solid #ccc;
+.dark {
+  background: var(--navy);
+  color: white;
 }
 
-.result-row:last-child {
-    border-bottom: none;
+.light {
+  background: #e8edf2;
+  color: #17202a;
 }
 
-.big {
-    font-size: 22px;
-    font-weight: bold;
+.danger {
+  background: var(--red);
+  color: white;
 }
 
-@media (max-width: 600px) {
-    .input-grid {
-        grid-template-columns: 1fr;
-    }
+.small {
+  font-size: 12px;
+  color: #66737e;
+}
+
+.saved {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e5e9ed;
+}
+
+@media (max-width: 700px) {
+  .grid,
+  .grid3,
+  .summary {
+    grid-template-columns: 1fr;
+  }
+
+  .container {
+    padding: 10px;
+  }
+
+  .brand {
+    font-size: 25px;
+  }
+}
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .container {
+    max-width: none;
+    padding: 0;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .card {
+    box-shadow: none;
+    border: 1px solid #ddd;
+    break-inside: avoid;
+  }
+
+  header {
+    box-shadow: none;
+  }
 }
 </style>
 </head>
@@ -101,156 +248,659 @@ button:hover {
 
 <div class="container">
 
-<h1>Roofing Estimating Calculator</h1>
+<header>
+  <div class="brand">ROOFBIDDER</div>
+  <p>Roofing estimates. Built for profit.</p>
+</header>
 
-<div class="input-grid">
+<div class="card">
+
+<h2>1. Customer & Contractor</h2>
+
+<div class="grid">
+
+<div>
+<label>Contractor / Company</label>
+<input id="company" placeholder="Your company name">
+</div>
+
+<div>
+<label>Estimator</label>
+<input id="estimator" placeholder="Your name">
+</div>
+
+<div>
+<label>Customer Name</label>
+<input id="customer" placeholder="Customer name">
+</div>
+
+<div>
+<label>Customer Phone</label>
+<input id="phone" placeholder="Phone">
+</div>
+
+<div>
+<label>Property Address</label>
+<input id="address" placeholder="Property address">
+</div>
+
+<div>
+<label>Estimate #</label>
+<input id="estimateNo" placeholder="EST-001">
+</div>
+
+</div>
+</div>
+
+
+<div class="card">
+
+<h2>2. Roof Measurements</h2>
+
+<div class="grid3">
 
 <div>
 <label>Roof Squares</label>
-<input type="number" id="squares" value="25" min="0">
+<input id="squares" type="number" min="0" step=".1" value="25">
+</div>
+
+<div>
+<label>Pitch</label>
+<input id="pitch" placeholder="6/12">
+</div>
+
+<div>
+<label>Tear-off Layers</label>
+<input id="layers" type="number" min="0" step="1" value="1">
+</div>
+
+</div>
+</div>
+
+
+<div class="card">
+
+<h2>3. Materials & Production</h2>
+
+<div class="grid3">
+
+<div>
+<label>Shingles / Square ($)</label>
+<input id="shingle" type="number" step=".01" value="110">
 </div>
 
 <div>
 <label>Labor / Square ($)</label>
-<input type="number" id="labor" value="90" min="0">
+<input id="labor" type="number" step=".01" value="90">
 </div>
 
 <div>
-<label>Shingles / Square ($)</label>
-<input type="number" id="shingles" value="110" min="0">
+<label>Tear-off / Square ($)</label>
+<input id="tearoff" type="number" step=".01" value="25">
 </div>
 
 <div>
-<label>Tear-Off / Square ($)</label>
-<input type="number" id="tearoff" value="25" min="0">
+<label>Starter / Square ($)</label>
+<input id="starter" type="number" step=".01" value="8">
+</div>
+
+<div>
+<label>Ridge Cap / Square ($)</label>
+<input id="ridge" type="number" step=".01" value="18">
+</div>
+
+<div>
+<label>Underlayment ($)</label>
+<input id="underlay" type="number" step=".01" value="150">
+</div>
+
+<div>
+<label>Ice & Water Shield ($)</label>
+<input id="ice" type="number" step=".01" value="100">
+</div>
+
+<div>
+<label>Drip Edge / Flashing ($)</label>
+<input id="drip" type="number" step=".01" value="150">
+</div>
+
+<div>
+<label>Pipe Boots / Vents ($)</label>
+<input id="boots" type="number" step=".01" value="150">
 </div>
 
 <div>
 <label>Other Materials ($)</label>
-<input type="number" id="materials" value="600" min="0">
+<input id="other" type="number" step=".01" value="600">
 </div>
 
 <div>
 <label>Dumpster / Disposal ($)</label>
-<input type="number" id="dumpster" value="400" min="0">
+<input id="dumpster" type="number" step=".01" value="400">
 </div>
+
+<div>
+<label>Other Labor ($)</label>
+<input id="otherLabor" type="number" step=".01" value="0">
+</div>
+
+</div>
+</div>
+
+
+<div class="card">
+
+<h2>4. Pricing</h2>
+
+<div class="grid3">
 
 <div>
 <label>Overhead (%)</label>
-<input type="number" id="overhead" value="10" min="0">
+<input id="overhead" type="number" step=".1" value="10">
 </div>
 
 <div>
-<label>Desired Profit (%)</label>
-<input type="number" id="profit" value="30" min="0" max="99">
+<label>Desired Profit Margin (%)</label>
+<input id="profit" type="number" step=".1" value="30">
+</div>
+
+<div>
+<label>Sales / Discount Adjustment ($)</label>
+<input id="adjustment" type="number" step=".01" value="0">
 </div>
 
 </div>
 
-<button onclick="calculate()">Calculate Estimate</button>
+<p class="small">
+Profit margin is the estimated portion of the final selling price remaining after job cost and overhead.
+</p>
 
-<div class="results">
-
-<div class="result-row">
-<span>Shingle Cost</span>
-<strong id="shingleCost">$0.00</strong>
 </div>
 
-<div class="result-row">
-<span>Labor</span>
-<strong id="laborCost">$0.00</strong>
+
+<div class="card">
+
+<h2>5. Estimate Summary</h2>
+
+<div class="summary">
+
+<div class="metric">
+<span>Material Cost</span>
+<strong id="materialOut">$0</strong>
 </div>
 
-<div class="result-row">
-<span>Total Job Cost</span>
-<strong id="totalCost">$0.00</strong>
+<div class="metric">
+<span>Labor Cost</span>
+<strong id="laborOut">$0</strong>
 </div>
 
-<div class="result-row">
+<div class="metric">
+<span>Total Cost + Overhead</span>
+<strong id="costOut">$0</strong>
+</div>
+
+<div class="metric total">
 <span>Recommended Selling Price</span>
-<strong id="sellingPrice" class="big">$0.00</strong>
-</div>
-
-<div class="result-row">
-<span>Estimated Profit</span>
-<strong id="estimatedProfit">$0.00</strong>
-</div>
-
-<div class="result-row">
-<span>Selling Price / Square</span>
-<strong id="pricePerSquare">$0.00</strong>
+<strong id="priceOut">$0</strong>
 </div>
 
 </div>
 
+<br>
+
+<table>
+
+<thead>
+<tr>
+<th>Detail</th>
+<th>Amount</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr>
+<td>Base production cost</td>
+<td id="baseOut">$0</td>
+</tr>
+
+<tr>
+<td>Overhead</td>
+<td id="overheadOut">$0</td>
+</tr>
+
+<tr>
+<td>Target gross profit</td>
+<td id="profitOut">$0</td>
+</tr>
+
+<tr>
+<td>Price per square</td>
+<td id="perSquareOut">$0</td>
+</tr>
+
+</tbody>
+
+</table>
+
 </div>
+
+
+<div class="card no-print">
+
+<h2>6. Actions</h2>
+
+<div class="row">
+
+<button class="primary" onclick="calculate()">
+Recalculate
+</button>
+
+<button class="green" onclick="saveEstimate()">
+Save Estimate
+</button>
+
+<button class="dark" onclick="window.print()">
+Print / Save PDF
+</button>
+
+<button class="light" onclick="newEstimate()">
+New Estimate
+</button>
+
+</div>
+
+</div>
+
+
+<div class="card no-print">
+
+<h2>Saved Estimates</h2>
+
+<div id="savedList">
+<p class="small">No saved estimates yet.</p>
+</div>
+
+</div>
+
+</div>
+
 
 <script>
 
-function money(value) {
-    return "$" + value.toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
+const ids = [
+"company",
+"estimator",
+"customer",
+"phone",
+"address",
+"estimateNo",
+"squares",
+"pitch",
+"layers",
+"shingle",
+"labor",
+"tearoff",
+"starter",
+"ridge",
+"underlay",
+"ice",
+"drip",
+"boots",
+"other",
+"dumpster",
+"otherLabor",
+"overhead",
+"profit",
+"adjustment"
+];
+
+const $ = id => document.getElementById(id);
+
+const money = n =>
+n.toLocaleString("en-US", {
+style:"currency",
+currency:"USD"
+});
+
+function num(id) {
+return parseFloat($(id).value) || 0;
 }
+
 
 function calculate() {
 
-    const squares = Number(document.getElementById("squares").value) || 0;
-    const labor = Number(document.getElementById("labor").value) || 0;
-    const shingles = Number(document.getElementById("shingles").value) || 0;
-    const tearoff = Number(document.getElementById("tearoff").value) || 0;
-    const materials = Number(document.getElementById("materials").value) || 0;
-    const dumpster = Number(document.getElementById("dumpster").value) || 0;
-    const overheadPercent = Number(document.getElementById("overhead").value) || 0;
-    const profitPercent = Number(document.getElementById("profit").value) || 0;
+const s = num("squares");
 
-    const shingleCost = squares * shingles;
-    const laborCost = squares * labor;
-    const tearoffCost = squares * tearoff;
+const material =
+s * (
+num("shingle") +
+num("starter") +
+num("ridge")
+)
++
+num("underlay")
++
+num("ice")
++
+num("drip")
++
+num("boots")
++
+num("other")
++
+num("dumpster");
 
-    const directCost =
-        shingleCost +
-        laborCost +
-        tearoffCost +
-        materials +
-        dumpster;
+const labor =
+s * (
+num("labor") +
+num("tearoff")
+)
++
+num("otherLabor");
 
-    const overheadCost =
-        directCost * (overheadPercent / 100);
+const base = material + labor;
 
-    const totalCost =
-        directCost + overheadCost;
+const overhead =
+base * (num("overhead") / 100);
 
-    const sellingPrice =
-        totalCost / (1 - profitPercent / 100);
+const cost =
+base + overhead;
 
-    const estimatedProfit =
-        sellingPrice - totalCost;
+const margin =
+Math.min(
+Math.max(num("profit") / 100, 0),
+0.99
+);
 
-    const pricePerSquare =
-        squares > 0 ? sellingPrice / squares : 0;
+const adjustment =
+num("adjustment");
 
-    document.getElementById("shingleCost").textContent =
-        money(shingleCost);
+const price =
+Math.max(
+0,
+cost / (1 - margin) + adjustment
+);
 
-    document.getElementById("laborCost").textContent =
-        money(laborCost);
+const profit =
+Math.max(
+0,
+price - adjustment - cost
+);
 
-    document.getElementById("totalCost").textContent =
-        money(totalCost);
 
-    document.getElementById("sellingPrice").textContent =
-        money(sellingPrice);
+$("materialOut").textContent =
+money(material);
 
-    document.getElementById("estimatedProfit").textContent =
-        money(estimatedProfit);
+$("laborOut").textContent =
+money(labor);
 
-    document.getElementById("pricePerSquare").textContent =
-        money(pricePerSquare);
+$("costOut").textContent =
+money(cost);
+
+$("priceOut").textContent =
+money(price);
+
+$("baseOut").textContent =
+money(base);
+
+$("overheadOut").textContent =
+money(overhead);
+
+$("profitOut").textContent =
+money(profit);
+
+$("perSquareOut").textContent =
+s ? money(price / s) : money(0);
+
+return {
+material,
+labor,
+base,
+overhead,
+cost,
+price,
+profit
+};
+
 }
 
+
+function getData() {
+
+const data = {};
+
+ids.forEach(id => {
+data[id] = $(id).value;
+});
+
+data.savedAt =
+new Date().toLocaleString();
+
+data.calc =
 calculate();
+
+return data;
+
+}
+
+
+function loadData(data) {
+
+ids.forEach(id => {
+
+if (data[id] !== undefined) {
+$(id).value = data[id];
+}
+
+});
+
+calculate();
+
+}
+
+
+function saveEstimate() {
+
+const data =
+getData();
+
+const key =
+data.estimateNo ||
+("EST-" + Date.now().toString().slice(-6));
+
+let saved =
+JSON.parse(
+localStorage.getItem("roofingEstimates") || "[]"
+);
+
+saved.unshift({
+key,
+data
+});
+
+saved =
+saved.slice(0,20);
+
+localStorage.setItem(
+"roofingEstimates",
+JSON.stringify(saved)
+);
+
+renderSaved();
+
+alert(
+"Estimate saved on this device."
+);
+
+}
+
+
+function renderSaved() {
+
+const saved =
+JSON.parse(
+localStorage.getItem("roofingEstimates") || "[]"
+);
+
+const box =
+$("savedList");
+
+if (!saved.length) {
+
+box.innerHTML =
+'<p class="small">No saved estimates yet.</p>';
+
+return;
+
+}
+
+box.innerHTML =
+saved.map((x,i) =>
+
+'<div class="saved">' +
+
+'<div>' +
+
+'<strong>' +
+escapeHtml(x.key) +
+'</strong>' +
+
+'<br>' +
+
+'<span class="small">' +
+
+escapeHtml(
+x.data.customer || "No customer"
+) +
+
+" • " +
+
+escapeHtml(
+x.data.savedAt || ""
+) +
+
+'</span>' +
+
+'</div>' +
+
+'<div class="row">' +
+
+'<button class="light" onclick="loadSaved(' +
+i +
+')">Load</button>' +
+
+'<button class="danger" onclick="deleteSaved(' +
+i +
+')">Delete</button>' +
+
+'</div>' +
+
+'</div>'
+
+).join("");
+
+}
+
+
+function loadSaved(i) {
+
+const saved =
+JSON.parse(
+localStorage.getItem("roofingEstimates") || "[]"
+);
+
+loadData(
+saved[i].data
+);
+
+}
+
+
+function deleteSaved(i) {
+
+let saved =
+JSON.parse(
+localStorage.getItem("roofingEstimates") || "[]"
+);
+
+saved.splice(i,1);
+
+localStorage.setItem(
+"roofingEstimates",
+JSON.stringify(saved)
+);
+
+renderSaved();
+
+}
+
+
+function newEstimate() {
+
+ids.forEach(id => {
+$(id).value = "";
+});
+
+$("squares").value = 25;
+$("layers").value = 1;
+
+$("shingle").value = 110;
+$("labor").value = 90;
+$("tearoff").value = 25;
+
+$("starter").value = 8;
+$("ridge").value = 18;
+
+$("underlay").value = 150;
+$("ice").value = 100;
+
+$("drip").value = 150;
+$("boots").value = 150;
+
+$("other").value = 600;
+$("dumpster").value = 400;
+
+$("otherLabor").value = 0;
+
+$("overhead").value = 10;
+$("profit").value = 30;
+$("adjustment").value = 0;
+
+calculate();
+
+}
+
+
+function escapeHtml(v) {
+
+return String(v).replace(
+/[&<>"']/g,
+m => ({
+"&":"&amp;",
+"<":"&lt;",
+">":"&gt;",
+'"':"&quot;",
+"'":"&#039;"
+}[m])
+);
+
+}
+
+
+ids.forEach(id => {
+
+$(id).addEventListener(
+"input",
+calculate
+);
+
+});
+
+
+calculate();
+
+renderSaved();
 
 </script>
 
