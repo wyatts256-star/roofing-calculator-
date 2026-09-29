@@ -3,306 +3,402 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RoofBidder | Roofing Estimates Built for Profit</title>
+<title>RoofBidder</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
   margin:0;
   font-family:Arial,Helvetica,sans-serif;
-  background:#f4f6f8;
-  color:#1f2937;
+  background:#f3f4f6;
+  color:#111827;
 }
 
 header{
   background:#111827;
   color:white;
-  padding:18px;
-  text-align:center;
+  padding:18px 16px;
+  position:sticky;
+  top:0;
+  z-index:20;
 }
 
-header h1{
-  margin:0;
-  font-size:28px;
-  letter-spacing:1px;
+.header-inner{
+  max-width:1200px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
 }
 
-header p{
-  margin:5px 0 0;
+.logo{
+  font-size:24px;
+  font-weight:900;
+  letter-spacing:.5px;
+}
+
+.tagline{
+  font-size:11px;
   color:#cbd5e1;
+  margin-top:2px;
+}
+
+.user-area{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+.user-email{
+  font-size:12px;
+  color:#cbd5e1;
+  max-width:220px;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
 
 .container{
   max-width:1200px;
   margin:auto;
-  padding:20px;
+  padding:18px;
+}
+
+.tabs{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding-bottom:12px;
+  margin-bottom:15px;
+}
+
+.tab{
+  border:0;
+  background:white;
+  padding:12px 16px;
+  border-radius:9px;
+  font-weight:700;
+  cursor:pointer;
+  white-space:nowrap;
+  border:1px solid #e5e7eb;
+}
+
+.tab.active{
+  background:#2563eb;
+  color:white;
+  border-color:#2563eb;
+}
+
+.page{
+  display:none;
+}
+
+.page.active{
+  display:block;
 }
 
 .card{
   background:white;
   border-radius:12px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 2px 10px rgba(0,0,0,.08);
+  padding:18px;
+  margin-bottom:16px;
+  border:1px solid #e5e7eb;
 }
 
-h2,h3{
+h1,h2,h3{
   margin-top:0;
 }
 
 .grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:14px;
+}
+
+.grid-3{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+}
+
+.field{
+  margin-bottom:10px;
 }
 
 label{
   display:block;
-  font-weight:bold;
+  font-weight:700;
+  font-size:13px;
   margin-bottom:5px;
 }
 
 input,select,textarea{
   width:100%;
   padding:11px;
-  border:1px solid #cbd5e1;
-  border-radius:7px;
-  font-size:15px;
+  border:1px solid #d1d5db;
+  border-radius:8px;
+  font-size:16px;
+  background:white;
 }
 
 textarea{
-  min-height:90px;
+  min-height:100px;
   resize:vertical;
 }
 
 button{
   border:0;
-  border-radius:7px;
+  border-radius:8px;
   padding:11px 15px;
-  font-weight:bold;
+  font-weight:700;
   cursor:pointer;
-  margin:4px;
 }
 
-.primary{
+.btn{
   background:#2563eb;
   color:white;
 }
 
-.success{
-  background:#16a34a;
-  color:white;
+.btn:hover{
+  background:#1d4ed8;
 }
 
-.warning{
-  background:#d97706;
-  color:white;
-}
-
-.danger{
-  background:#dc2626;
-  color:white;
-}
-
-.dark{
-  background:#111827;
-  color:white;
-}
-
-.light{
+.btn-secondary{
   background:#e5e7eb;
   color:#111827;
 }
 
-.stats{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(170px,1fr));
-  gap:12px;
+.btn-success{
+  background:#16a34a;
+  color:white;
+}
+
+.btn-danger{
+  background:#dc2626;
+  color:white;
+}
+
+.btn-dark{
+  background:#111827;
+  color:white;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:12px;
 }
 
 .stat{
-  background:#111827;
-  color:white;
-  padding:18px;
-  border-radius:10px;
+  background:white;
+  border:1px solid #e5e7eb;
+  border-radius:12px;
+  padding:16px;
 }
 
-.stat small{
-  color:#cbd5e1;
+.stat-label{
+  font-size:12px;
+  color:#6b7280;
+  font-weight:700;
 }
 
-.stat strong{
-  display:block;
+.stat-value{
   font-size:25px;
+  font-weight:900;
   margin-top:5px;
 }
 
 .result-grid{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  grid-template-columns:repeat(3,minmax(0,1fr));
   gap:12px;
 }
 
 .result{
   background:#f8fafc;
-  border:1px solid #e2e8f0;
-  border-radius:9px;
-  padding:15px;
+  border:1px solid #e5e7eb;
+  border-radius:10px;
+  padding:14px;
 }
 
-.result strong{
-  display:block;
+.result-label{
+  color:#6b7280;
+  font-size:12px;
+  font-weight:700;
+}
+
+.result-value{
   font-size:21px;
-  margin-top:5px;
+  font-weight:900;
+  margin-top:4px;
 }
 
-.private{
-  background:#fff7ed;
-  border:2px solid #fb923c;
+.highlight{
+  background:#eff6ff;
+  border-color:#bfdbfe;
+}
+
+.notice{
+  padding:12px;
+  border-radius:8px;
+  margin-bottom:12px;
+  background:#eff6ff;
+  border:1px solid #bfdbfe;
+}
+
+.error{
+  background:#fef2f2;
+  border-color:#fecaca;
+  color:#991b1b;
+}
+
+.success{
+  background:#f0fdf4;
+  border-color:#bbf7d0;
+  color:#166534;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+th,td{
+  padding:10px;
+  border-bottom:1px solid #e5e7eb;
+  text-align:left;
+  vertical-align:top;
+}
+
+th{
+  font-size:12px;
+  color:#6b7280;
+}
+
+.status{
+  display:inline-block;
+  padding:5px 8px;
+  border-radius:999px;
+  font-size:11px;
+  font-weight:800;
+}
+
+.status-Lead{background:#e0f2fe;color:#075985}
+.status-Estimated{background:#fef3c7;color:#92400e}
+.status-Sold{background:#dcfce7;color:#166534}
+.status-Completed{background:#d1fae5;color:#065f46}
+.status-Lost{background:#fee2e2;color:#991b1b}
+
+.small{
+  font-size:12px;
+  color:#6b7280;
+}
+
+.auth-wrap{
+  max-width:500px;
+  margin:40px auto;
+}
+
+.proposal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.65);
+  z-index:100;
+  display:none;
+  overflow:auto;
+  padding:20px;
 }
 
 .proposal{
   background:white;
-  padding:35px;
+  max-width:850px;
+  margin:auto;
+  padding:40px;
   border-radius:10px;
-  border:1px solid #ddd;
 }
 
 .proposal-header{
-  display:flex;
-  justify-content:space-between;
-  gap:20px;
   border-bottom:2px solid #111827;
   padding-bottom:15px;
-  margin-bottom:20px;
+  margin-bottom:25px;
 }
 
-.estimate-row{
-  border:1px solid #dbe1e8;
-  border-radius:10px;
-  padding:15px;
-  margin-bottom:12px;
-  background:#fff;
+.proposal-total{
+  font-size:30px;
+  font-weight:900;
 }
 
-.estimate-top{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  flex-wrap:wrap;
+.loading{
+  opacity:.6;
+  pointer-events:none;
 }
 
-.badge{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:bold;
-}
+@media(max-width:800px){
+  .grid,.grid-3,.result-grid{
+    grid-template-columns:1fr;
+  }
 
-.lead{
-  background:#dbeafe;
-  color:#1d4ed8;
-}
+  .header-inner{
+    align-items:flex-start;
+    flex-direction:column;
+  }
 
-.estimated{
-  background:#fef3c7;
-  color:#92400e;
-}
+  .user-area{
+    justify-content:flex-start;
+  }
 
-.sold{
-  background:#dcfce7;
-  color:#166534;
-}
-
-.completed{
-  background:#bbf7d0;
-  color:#166534;
-}
-
-.lost{
-  background:#fee2e2;
-  color:#991b1b;
-}
-
-.overdue{
-  background:#fee2e2;
-  border:2px solid #ef4444;
-}
-
-.due{
-  background:#fef3c7;
-  border:2px solid #f59e0b;
-}
-
-.good{
-  color:#15803d;
-  font-weight:bold;
-}
-
-.bad{
-  color:#dc2626;
-  font-weight:bold;
-}
-
-.muted{
-  color:#64748b;
-}
-
-.hidden{
-  display:none;
-}
-
-hr{
-  border:0;
-  border-top:1px solid #e5e7eb;
-  margin:20px 0;
-}
-
-@media(max-width:600px){
   .container{
-    padding:10px;
+    padding:12px;
   }
 
   .card{
-    padding:15px;
+    padding:14px;
+  }
+
+  table{
+    font-size:13px;
+  }
+
+  .table-wrap{
+    overflow-x:auto;
   }
 
   .proposal{
-    padding:20px;
-  }
-
-  .proposal-header{
-    display:block;
-  }
-
-  button{
-    width:100%;
-    margin:4px 0;
+    padding:22px;
   }
 }
 
 @media print{
-  body{
+  body *{
+    visibility:hidden;
+  }
+
+  #proposalContent,
+  #proposalContent *{
+    visibility:visible;
+  }
+
+  #proposalContent{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+  }
+
+  .proposal-overlay{
+    position:absolute;
     background:white;
-  }
-
-  header,
-  .no-print{
-    display:none!important;
-  }
-
-  .container{
-    max-width:none;
     padding:0;
   }
 
-  .proposal{
-    border:0;
-    box-shadow:none;
+  .no-print{
+    display:none!important;
   }
 }
 </style>
@@ -311,360 +407,513 @@ hr{
 <body>
 
 <header>
-  <h1>ROOFBIDDER</h1>
-  <p>Roofing estimates. Built for profit.</p>
+  <div class="header-inner">
+    <div>
+      <div class="logo">ROOFBIDDER</div>
+      <div class="tagline">Roofing estimates. Built for profit.</div>
+    </div>
+
+    <div class="user-area">
+      <span id="userEmail" class="user-email">Not logged in</span>
+      <button id="logoutBtn" class="btn-secondary" style="display:none">Log Out</button>
+    </div>
+  </div>
 </header>
 
 <div class="container">
 
-<!-- DASHBOARD -->
-<div class="card">
-  <h2>📊 Business Dashboard</h2>
+  <!-- AUTH -->
+  <div id="authPage">
 
-  <div class="stats">
+    <div class="auth-wrap">
 
-    <div class="stat">
-      <small>Total Estimates</small>
-      <strong id="statEstimates">0</strong>
-    </div>
+      <div class="card">
+        <h2>RoofBidder Login</h2>
+        <p class="small">
+          Log in to access your cloud estimates and customer pipeline.
+        </p>
 
-    <div class="stat">
-      <small>Projected Revenue</small>
-      <strong id="statRevenue">$0</strong>
-    </div>
+        <div id="authMessage" class="notice" style="display:none"></div>
 
-    <div class="stat">
-      <small>Projected Profit</small>
-      <strong id="statProfit">$0</strong>
-    </div>
+        <div class="field">
+          <label>Email</label>
+          <input id="authEmail" type="email" placeholder="you@company.com">
+        </div>
 
-    <div class="stat">
-      <small>Sold Revenue</small>
-      <strong id="statSold">$0</strong>
-    </div>
+        <div class="field">
+          <label>Password</label>
+          <input id="authPassword" type="password" placeholder="Password">
+        </div>
 
-    <div class="stat">
-      <small>Lost Revenue</small>
-      <strong id="statLost">$0</strong>
-    </div>
+        <div class="actions">
+          <button id="loginBtn" class="btn">Log In</button>
+          <button id="signupBtn" class="btn-secondary">Create Account</button>
+        </div>
+      </div>
 
-    <div class="stat">
-      <small>Close Rate</small>
-      <strong id="statCloseRate">0%</strong>
     </div>
 
   </div>
 
-  <br>
+  <!-- APP -->
+  <div id="appPage" style="display:none">
 
-  <div id="followupAlert"></div>
-</div>
-
-
-<!-- CUSTOMER -->
-<div class="card">
-  <h2>👤 Customer & Job Information</h2>
-
-  <div class="grid">
-
-    <div>
-      <label>Customer Name</label>
-      <input id="customerName" placeholder="John Smith">
+    <div class="tabs">
+      <button class="tab active" data-page="dashboardPage">Dashboard</button>
+      <button class="tab" data-page="calculatorPage">🧮 Calculator</button>
+      <button class="tab" data-page="estimatesPage">Estimates</button>
+      <button class="tab" data-page="pipelinePage">Pipeline</button>
     </div>
 
-    <div>
-      <label>Phone</label>
-      <input id="customerPhone" placeholder="555-555-5555">
-    </div>
+    <!-- DASHBOARD -->
+    <section id="dashboardPage" class="page active">
 
-    <div>
-      <label>Email</label>
-      <input id="customerEmail" placeholder="customer@email.com">
-    </div>
+      <div class="card">
+        <h2>Dashboard</h2>
+        <p class="small">Your RoofBidder business snapshot.</p>
+      </div>
 
-    <div>
-      <label>Project Address</label>
-      <input id="projectAddress" placeholder="123 Main St, Union, MO">
-    </div>
+      <div class="grid-3">
 
-    <div>
-      <label>Estimate Number</label>
-      <input id="estimateNumber">
-    </div>
+        <div class="stat">
+          <div class="stat-label">TOTAL ESTIMATES</div>
+          <div id="dashEstimates" class="stat-value">0</div>
+        </div>
 
-    <div>
-      <label>Estimate Valid For</label>
-      <input id="validDays" type="number" value="30">
-    </div>
+        <div class="stat">
+          <div class="stat-label">PROJECTED REVENUE</div>
+          <div id="dashRevenue" class="stat-value">$0.00</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">PROJECTED PROFIT</div>
+          <div id="dashProfit" class="stat-value">$0.00</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">SOLD REVENUE</div>
+          <div id="dashSold" class="stat-value">$0.00</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">LOST REVENUE</div>
+          <div id="dashLost" class="stat-value">$0.00</div>
+        </div>
+
+        <div class="stat">
+          <div class="stat-label">CLOSE RATE</div>
+          <div id="dashClose" class="stat-value">0%</div>
+        </div>
+
+      </div>
+
+      <div class="card">
+        <h3>Follow-Ups</h3>
+        <div id="dashboardFollowups"></div>
+      </div>
+
+    </section>
+
+    <!-- CALCULATOR -->
+    <section id="calculatorPage" class="page">
+
+      <div class="card">
+        <h2>Roofing Calculator</h2>
+        <p class="small">
+          Build a bid, check your costs, and make sure the job actually makes money.
+        </p>
+      </div>
+
+      <div class="card">
+
+        <h3>Customer & Job</h3>
+
+        <div class="grid">
+
+          <div class="field">
+            <label>Customer Name</label>
+            <input id="customerName">
+          </div>
+
+          <div class="field">
+            <label>Customer Phone</label>
+            <input id="customerPhone">
+          </div>
+
+          <div class="field">
+            <label>Customer Email</label>
+            <input id="customerEmail" type="email">
+          </div>
+
+          <div class="field">
+            <label>Project Address</label>
+            <input id="projectAddress">
+          </div>
+
+          <div class="field">
+            <label>Estimate Number</label>
+            <input id="estimateNumber">
+          </div>
+
+          <div class="field">
+            <label>Valid For (Days)</label>
+            <input id="validDays" type="number" value="30">
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Roof Measurements</h3>
+
+        <div class="grid-3">
+
+          <div class="field">
+            <label>Roof Squares</label>
+            <input id="squares" type="number" step="0.1" value="20">
+          </div>
+
+          <div class="field">
+            <label>Pitch</label>
+            <select id="pitch">
+              <option value="1">Flat / 1-3</option>
+              <option value="1.05">4/12</option>
+              <option value="1.10" selected>6/12</option>
+              <option value="1.15">7/12</option>
+              <option value="1.20">8/12</option>
+              <option value="1.25">9/12</option>
+              <option value="1.30">10/12</option>
+              <option value="1.40">11/12</option>
+              <option value="1.50">12/12+</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Layers To Tear Off</label>
+            <input id="layers" type="number" min="0" value="1">
+          </div>
+
+          <div class="field">
+            <label>Waste %</label>
+            <input id="waste" type="number" value="10">
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Material Costs</h3>
+
+        <div class="grid-3">
+
+          <div class="field">
+            <label>Shingles / Square</label>
+            <input id="shingleCost" type="number" step="0.01" value="110">
+          </div>
+
+          <div class="field">
+            <label>Starter / Square</label>
+            <input id="starterCost" type="number" step="0.01" value="12">
+          </div>
+
+          <div class="field">
+            <label>Ridge / Square</label>
+            <input id="ridgeCost" type="number" step="0.01" value="15">
+          </div>
+
+          <div class="field">
+            <label>Other Materials</label>
+            <input id="otherMaterial" type="number" step="0.01" value="0">
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Labor Costs</h3>
+
+        <div class="grid-3">
+
+          <div class="field">
+            <label>Install Labor / Square</label>
+            <input id="laborCost" type="number" step="0.01" value="90">
+          </div>
+
+          <div class="field">
+            <label>Tear-Off / Square / Layer</label>
+            <input id="tearOffCost" type="number" step="0.01" value="35">
+          </div>
+
+          <div class="field">
+            <label>Other Labor</label>
+            <input id="otherLabor" type="number" step="0.01" value="0">
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Profit Settings</h3>
+
+        <div class="grid-3">
+
+          <div class="field">
+            <label>Overhead %</label>
+            <input id="overhead" type="number" value="10">
+          </div>
+
+          <div class="field">
+            <label>Target Profit Margin %</label>
+            <input id="profitMargin" type="number" value="30">
+          </div>
+
+          <div class="field">
+            <label>Price Adjustment</label>
+            <input id="priceAdjustment" type="number" value="0">
+          </div>
+
+        </div>
+
+        <div class="actions">
+          <button id="calculateBtn" class="btn">Calculate Bid</button>
+          <button id="saveEstimateBtn" class="btn-success">Save Estimate</button>
+          <button id="newEstimateBtn" class="btn-secondary">New Estimate</button>
+        </div>
+
+      </div>
+
+      <div id="calculatorResults" class="card" style="display:none">
+
+        <h3>Bid Results</h3>
+
+        <div class="result-grid">
+
+          <div class="result">
+            <div class="result-label">MATERIAL COST</div>
+            <div id="resultMaterial" class="result-value">$0.00</div>
+          </div>
+
+          <div class="result">
+            <div class="result-label">LABOR COST</div>
+            <div id="resultLabor" class="result-value">$0.00</div>
+          </div>
+
+          <div class="result">
+            <div class="result-label">TOTAL COST + OVERHEAD</div>
+            <div id="resultTotal" class="result-value">$0.00</div>
+          </div>
+
+          <div class="result highlight">
+            <div class="result-label">SELLING PRICE</div>
+            <div id="resultPrice" class="result-value">$0.00</div>
+          </div>
+
+          <div class="result highlight">
+            <div class="result-label">GROSS PROFIT</div>
+            <div id="resultProfit" class="result-value">$0.00</div>
+          </div>
+
+          <div class="result highlight">
+            <div class="result-label">GROSS MARGIN</div>
+            <div id="resultMargin" class="result-value">0%</div>
+          </div>
+
+          <div class="result">
+            <div class="result-label">PRICE / SQUARE</div>
+            <div id="resultPerSquare" class="result-value">$0.00</div>
+          </div>
+
+          <div class="result">
+            <div class="result-label">MATERIAL SQUARES</div>
+            <div id="resultMaterialSquares" class="result-value">0</div>
+          </div>
+
+        </div>
+
+        <div class="notice" style="margin-top:15px">
+          Material quantities are planning estimates only. Verify actual takeoffs, manufacturer requirements, local code, and job conditions before ordering materials.
+        </div>
+
+        <h3>Material Planning</h3>
+
+        <div class="grid-3">
+
+          <div class="result">
+            <div class="result-label">SHINGLE BUNDLES</div>
+            <div id="qtyShingles" class="result-value">0</div>
+          </div>
+
+          <div class="result">
+            <div class="result-label">STARTER BUNDLES</div>
+            <div id="qtyStarter" class="result-value">0</div>
+          </div>
+
+          <div class="result">
+            <div class="result-label">RIDGE BUNDLES</div>
+            <div id="qtyRidge" class="result-value">0</div>
+          </div>
+
+          <div class="result">
+            <div class="result-label">UNDERLAYMENT ROLLS</div>
+            <div id="qtyUnderlayment" class="result-value">0</div>
+          </div>
+
+          <div class="result">
+            <div class="result-label">ICE/WATER ROLLS</div>
+            <div id="qtyIce" class="result-value">0</div>
+          </div>
+
+          <div class="result">
+            <div class="result-label">DRIP EDGE PIECES</div>
+            <div id="qtyDrip" class="result-value">0</div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <h3>Scope & Notes</h3>
+
+        <div class="field">
+          <label>Scope of Work</label>
+          <textarea id="scopeOfWork" placeholder="Example: Tear off existing shingles, install synthetic underlayment, ice & water shield, architectural shingles, starter, ridge cap and drip edge."></textarea>
+        </div>
+
+        <div class="field">
+          <label>Important Information</label>
+          <textarea id="importantInfo" placeholder="Insurance details, homeowner requests, access issues, special conditions, etc."></textarea>
+        </div>
+
+        <div class="grid">
+
+          <div class="field">
+            <label>Follow-Up Date</label>
+            <input id="followUpDate" type="date">
+          </div>
+
+          <div class="field">
+            <label>Follow-Up Status</label>
+            <select id="followUpStatus">
+              <option>Not Scheduled</option>
+              <option>Scheduled</option>
+              <option>Completed</option>
+            </select>
+          </div>
+
+        </div>
+
+        <div class="field">
+          <label>Follow-Up Notes</label>
+          <textarea id="followUpNotes"></textarea>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ESTIMATES -->
+    <section id="estimatesPage" class="page">
+
+      <div class="card">
+
+        <h2>Estimates</h2>
+
+        <div class="grid">
+
+          <div class="field">
+            <label>Search</label>
+            <input id="estimateSearch" placeholder="Search customer, address, estimate #">
+          </div>
+
+          <div class="field">
+            <label>Status</label>
+            <select id="estimateFilter">
+              <option value="All">All</option>
+              <option>Lead</option>
+              <option>Estimated</option>
+              <option>Sold</option>
+              <option>Completed</option>
+              <option>Lost</option>
+            </select>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div class="card">
+        <div id="estimateTable" class="table-wrap"></div>
+      </div>
+
+    </section>
+
+    <!-- PIPELINE -->
+    <section id="pipelinePage" class="page">
+
+      <div class="card">
+        <h2>Job Pipeline</h2>
+        <p class="small">
+          Move each opportunity from lead to completed job.
+        </p>
+      </div>
+
+      <div id="pipelineContainer"></div>
+
+    </section>
 
   </div>
 </div>
-
-
-<!-- FOLLOW UP -->
-<div class="card">
-  <h2>📞 Follow-Up</h2>
-
-  <div class="grid">
-
-    <div>
-      <label>Follow-Up Date</label>
-      <input id="followUpDate" type="date">
-    </div>
-
-    <div>
-      <label>Follow-Up Status</label>
-      <select id="followUpStatus">
-        <option value="Not Scheduled">Not Scheduled</option>
-        <option value="Scheduled">Scheduled</option>
-        <option value="Contacted">Contacted</option>
-        <option value="No Answer">No Answer</option>
-        <option value="Reschedule">Reschedule</option>
-      </select>
-    </div>
-
-  </div>
-
-  <br>
-
-  <label>Follow-Up Notes</label>
-  <textarea id="followUpNotes" placeholder="Example: Call Thursday afternoon. Customer wants to discuss color options with wife."></textarea>
-</div>
-
-
-<!-- ROOF -->
-<div class="card">
-  <h2>🏠 Roof Information</h2>
-
-  <div class="grid">
-
-    <div>
-      <label>Roof Squares</label>
-      <input id="squares" type="number" step="0.1" value="20">
-    </div>
-
-    <div>
-      <label>Pitch</label>
-      <select id="pitch">
-        <option value="1">4/12 or less</option>
-        <option value="1.05">5/12</option>
-        <option value="1.10" selected>6/12</option>
-        <option value="1.15">7/12</option>
-        <option value="1.20">8/12</option>
-        <option value="1.25">9/12</option>
-        <option value="1.30">10/12+</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Tear-Off Layers</label>
-      <select id="layers">
-        <option value="0">0</option>
-        <option value="1" selected>1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-      </select>
-    </div>
-
-    <div>
-      <label>Waste %</label>
-      <input id="waste" type="number" value="10">
-    </div>
-
-  </div>
-</div>
-
-
-<!-- PRICING -->
-<div class="card">
-  <h2>💰 Pricing</h2>
-
-  <div class="grid">
-
-    <div>
-      <label>Shingles / Square</label>
-      <input id="shingleCost" type="number" value="110">
-    </div>
-
-    <div>
-      <label>Starter / Square</label>
-      <input id="starterCost" type="number" value="15">
-    </div>
-
-    <div>
-      <label>Ridge / Square</label>
-      <input id="ridgeCost" type="number" value="20">
-    </div>
-
-    <div>
-      <label>Install Labor / Square</label>
-      <input id="laborCost" type="number" value="90">
-    </div>
-
-    <div>
-      <label>Tear-Off / Square / Layer</label>
-      <input id="tearOffCost" type="number" value="35">
-    </div>
-
-    <div>
-      <label>Other Material Cost</label>
-      <input id="otherMaterial" type="number" value="500">
-    </div>
-
-    <div>
-      <label>Other Labor Cost</label>
-      <input id="otherLabor" type="number" value="0">
-    </div>
-
-    <div>
-      <label>Overhead %</label>
-      <input id="overhead" type="number" value="10">
-    </div>
-
-    <div>
-      <label>Desired Profit Margin %</label>
-      <input id="profitMargin" type="number" value="30">
-    </div>
-
-    <div>
-      <label>Price Adjustment</label>
-      <input id="priceAdjustment" type="number" value="0">
-    </div>
-
-  </div>
-
-  <br>
-
-  <button class="primary" onclick="calculate()">CALCULATE ESTIMATE</button>
-  <button class="light" onclick="newEstimate()">NEW ESTIMATE</button>
-</div>
-
-
-<!-- RESULTS -->
-<div class="card">
-  <h2>📐 Estimate Results</h2>
-
-  <div class="result-grid">
-
-    <div class="result">
-      Material Cost
-      <strong id="materialResult">$0</strong>
-    </div>
-
-    <div class="result">
-      Labor Cost
-      <strong id="laborResult">$0</strong>
-    </div>
-
-    <div class="result">
-      Total Cost + Overhead
-      <strong id="totalCostResult">$0</strong>
-    </div>
-
-    <div class="result private">
-      Selling Price
-      <strong id="sellingPriceResult">$0</strong>
-    </div>
-
-    <div class="result private">
-      Gross Profit
-      <strong id="profitResult">$0</strong>
-    </div>
-
-    <div class="result private">
-      Gross Margin
-      <strong id="marginResult">0%</strong>
-    </div>
-
-    <div class="result">
-      Price / Square
-      <strong id="priceSquareResult">$0</strong>
-    </div>
-
-  </div>
-
-  <br>
-
-  <h3>Estimated Materials</h3>
-
-  <div id="materialsList" class="result">
-    Calculate an estimate to see material quantities.
-  </div>
-</div>
-
-
-<!-- SCOPE -->
-<div class="card">
-  <h2>📝 Scope of Work</h2>
-
-  <textarea id="scopeOfWork" placeholder="Example: Tear off existing shingles, install new architectural shingles, replace damaged decking as needed, install new synthetic underlayment, ice & water shield, starter, ridge cap and drip edge."></textarea>
-
-  <br>
-
-  <label>Important Information</label>
-  <textarea id="importantInfo" placeholder="Example: Customer responsible for moving patio furniture. Final price subject to hidden decking damage."></textarea>
-</div>
-
-
-<!-- SAVE -->
-<div class="card">
-  <button class="success" onclick="saveEstimate()">💾 SAVE ESTIMATE</button>
-  <button class="dark" onclick="generateProposal()">📄 GENERATE PROPOSAL</button>
-</div>
-
-
-<!-- ESTIMATE MANAGER -->
-<div class="card">
-  <h2>📋 Estimate & Customer Manager</h2>
-
-  <div class="grid">
-
-    <div>
-      <label>Search</label>
-      <input id="searchBox" oninput="renderEstimates()" placeholder="Search customer, address, estimate #">
-    </div>
-
-    <div>
-      <label>Filter Status</label>
-      <select id="filterStatus" onchange="renderEstimates()">
-        <option value="All">All</option>
-        <option value="Lead">Lead</option>
-        <option value="Estimated">Estimated</option>
-        <option value="Sold">Sold</option>
-        <option value="Completed">Completed</option>
-        <option value="Lost">Lost</option>
-      </select>
-    </div>
-
-  </div>
-
-  <br>
-
-  <div id="estimateList"></div>
-</div>
-
 
 <!-- PROPOSAL -->
-<div id="proposalSection" class="card hidden">
+<div id="proposalOverlay" class="proposal-overlay">
 
-  <div class="no-print">
-    <button class="primary" onclick="printProposal()">🖨️ PRINT / SAVE PDF</button>
-    <button class="light" onclick="closeProposal()">CLOSE PROPOSAL</button>
+  <div class="proposal">
+
+    <div class="no-print actions" style="justify-content:flex-end">
+      <button class="btn" onclick="window.print()">Print / Save PDF</button>
+      <button class="btn-secondary" onclick="closeProposal()">Close</button>
+    </div>
+
+    <div id="proposalContent"></div>
+
   </div>
 
-  <div id="proposalContent" class="proposal"></div>
-
 </div>
-
-</div>
-
 
 <script>
+/* =========================================================
+   ROOFBIDDER V7
+   ========================================================= */
 
-const STORAGE_KEY = "roofbidder_estimates";
+const SUPABASE_URL = "https://ovuirmlmdpbqumriakcm.supabase.co";
 
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_79QIWXKGoCtpUwF3t4KTRw_A9lAuao3";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+let currentUser = null;
+let estimates = [];
 let currentResult = null;
+let editingId = null;
 
+/* =========================================================
+   BASIC HELPERS
+   ========================================================= */
 
 function money(value){
   return Number(value || 0).toLocaleString("en-US",{
@@ -673,163 +922,526 @@ function money(value){
   });
 }
 
+function num(id){
+  return Number(document.getElementById(id).value || 0);
+}
+
+function text(id){
+  return document.getElementById(id).value || "";
+}
 
 function escapeHtml(value){
   return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
 }
-
-
-function getEstimates(){
-  return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-}
-
-
-function setEstimates(data){
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(data));
-}
-
 
 function generateEstimateNumber(){
-  return "RB-" + Date.now().toString().slice(-6);
+  const now = new Date();
+
+  return "RB-" +
+    now.getFullYear() +
+    String(now.getMonth()+1).padStart(2,"0") +
+    String(now.getDate()).padStart(2,"0") +
+    "-" +
+    String(Date.now()).slice(-5);
 }
 
+function showAuthMessage(message,error=false){
+  const box = document.getElementById("authMessage");
 
-function newEstimate(){
+  box.textContent = message;
+  box.className = "notice " + (error ? "error" : "success");
+  box.style.display = "block";
+}
 
-  document.querySelectorAll("input").forEach(input=>{
-    if(input.id !== "validDays"){
-      if(input.type !== "date"){
-        input.value="";
+/* =========================================================
+   AUTH
+   ========================================================= */
+
+async function login(){
+
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+
+  if(!email || !password){
+    showAuthMessage("Enter your email and password.",true);
+    return;
+  }
+
+  document.getElementById("loginBtn").disabled = true;
+
+  const {error} =
+    await supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
+
+  document.getElementById("loginBtn").disabled = false;
+
+  if(error){
+    showAuthMessage(error.message,true);
+  }
+}
+
+async function signup(){
+
+  const email = document.getElementById("authEmail").value.trim();
+  const password = document.getElementById("authPassword").value;
+
+  if(!email || !password){
+    showAuthMessage("Enter an email and password.",true);
+    return;
+  }
+
+  if(password.length < 6){
+    showAuthMessage("Password must be at least 6 characters.",true);
+    return;
+  }
+
+  document.getElementById("signupBtn").disabled = true;
+
+  const {data,error} =
+    await supabaseClient.auth.signUp({
+      email,
+      password
+    });
+
+  document.getElementById("signupBtn").disabled = false;
+
+  if(error){
+    showAuthMessage(error.message,true);
+    return;
+  }
+
+  if(data.session){
+    showAuthMessage("Account created. You're logged in.");
+  }else{
+    showAuthMessage(
+      "Account created. Check your email if Supabase requires email confirmation."
+    );
+  }
+}
+
+async function logout(){
+
+  await supabaseClient.auth.signOut();
+
+  currentUser = null;
+  estimates = [];
+  currentResult = null;
+  editingId = null;
+
+  document.getElementById("appPage").style.display = "none";
+  document.getElementById("authPage").style.display = "block";
+  document.getElementById("userEmail").textContent = "Not logged in";
+  document.getElementById("logoutBtn").style.display = "none";
+
+  renderEstimates();
+  updateDashboard();
+  renderPipeline();
+}
+
+async function handleAuth(){
+
+  const {
+    data:{session}
+  } = await supabaseClient.auth.getSession();
+
+  if(session){
+    currentUser = session.user;
+    await enterApp();
+  }else{
+    showAuthScreen();
+  }
+
+  supabaseClient.auth.onAuthStateChange(
+    async (_event,session) => {
+
+      if(session){
+        currentUser = session.user;
+        await enterApp();
+      }else{
+        currentUser = null;
       }
+
     }
-  });
-
-  document.getElementById("estimateNumber").value=generateEstimateNumber();
-
-  document.getElementById("validDays").value=30;
-  document.getElementById("squares").value=20;
-  document.getElementById("waste").value=10;
-  document.getElementById("layers").value=1;
-  document.getElementById("pitch").value=1.10;
-
-  document.getElementById("shingleCost").value=110;
-  document.getElementById("starterCost").value=15;
-  document.getElementById("ridgeCost").value=20;
-  document.getElementById("laborCost").value=90;
-  document.getElementById("tearOffCost").value=35;
-  document.getElementById("otherMaterial").value=500;
-  document.getElementById("otherLabor").value=0;
-  document.getElementById("overhead").value=10;
-  document.getElementById("profitMargin").value=30;
-  document.getElementById("priceAdjustment").value=0;
-
-  document.getElementById("followUpDate").value="";
-  document.getElementById("followUpStatus").value="Not Scheduled";
-  document.getElementById("followUpNotes").value="";
-  document.getElementById("scopeOfWork").value="";
-  document.getElementById("importantInfo").value="";
-
-  currentResult=null;
-
-  document.getElementById("materialResult").textContent="$0";
-  document.getElementById("laborResult").textContent="$0";
-  document.getElementById("totalCostResult").textContent="$0";
-  document.getElementById("sellingPriceResult").textContent="$0";
-  document.getElementById("profitResult").textContent="$0";
-  document.getElementById("marginResult").textContent="0%";
-  document.getElementById("priceSquareResult").textContent="$0";
-
-  document.getElementById("materialsList").innerHTML=
-    "Calculate an estimate to see material quantities.";
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+  );
 }
 
+function showAuthScreen(){
+
+  document.getElementById("authPage").style.display = "block";
+  document.getElementById("appPage").style.display = "none";
+
+  document.getElementById("userEmail").textContent =
+    "Not logged in";
+
+  document.getElementById("logoutBtn").style.display = "none";
+}
+
+async function enterApp(){
+
+  document.getElementById("authPage").style.display = "none";
+  document.getElementById("appPage").style.display = "block";
+
+  document.getElementById("userEmail").textContent =
+    currentUser.email;
+
+  document.getElementById("logoutBtn").style.display = "block";
+
+  await loadEstimates();
+
+  resetCalculator();
+}
+
+/* =========================================================
+   DATABASE
+   ========================================================= */
+
+function dbObjectFromEstimate(e){
+
+  return {
+    user_id: currentUser.id,
+
+    customer_name: e.customerName,
+    customer_phone: e.customerPhone,
+    customer_email: e.customerEmail,
+    project_address: e.projectAddress,
+
+    estimate_number: e.estimateNumber,
+    valid_days: e.validDays,
+
+    follow_up_date: e.followUpDate || null,
+    follow_up_status: e.followUpStatus,
+    follow_up_notes: e.followUpNotes,
+
+    squares: e.squares,
+    pitch: e.pitch,
+    layers: e.layers,
+    waste: e.waste,
+
+    shingle_cost: e.shingleCost,
+    starter_cost: e.starterCost,
+    ridge_cost: e.ridgeCost,
+    labor_cost: e.laborCost,
+    tear_off_cost: e.tearOffCost,
+    other_material: e.otherMaterial,
+    other_labor: e.otherLabor,
+
+    overhead: e.overhead,
+    profit_margin: e.profitMargin,
+    price_adjustment: e.priceAdjustment,
+
+    scope_of_work: e.scopeOfWork,
+    important_info: e.importantInfo,
+
+    material_cost: e.materialCost,
+    labor_total: e.laborTotal,
+    total_cost: e.totalCost,
+    selling_price: e.sellingPrice,
+    gross_profit: e.grossProfit,
+    gross_margin: e.grossMargin,
+    price_per_square: e.pricePerSquare,
+    material_squares: e.materialSquares,
+
+    status: e.status || "Lead",
+
+    updated_at: new Date().toISOString()
+  };
+}
+
+function localObjectFromDb(r){
+
+  return {
+    id:r.id,
+
+    customerName:r.customer_name || "",
+    customerPhone:r.customer_phone || "",
+    customerEmail:r.customer_email || "",
+    projectAddress:r.project_address || "",
+
+    estimateNumber:r.estimate_number || "",
+    validDays:r.valid_days ?? 30,
+
+    followUpDate:r.follow_up_date || "",
+    followUpStatus:r.follow_up_status || "Not Scheduled",
+    followUpNotes:r.follow_up_notes || "",
+
+    squares:Number(r.squares || 0),
+    pitch:Number(r.pitch || 1),
+    layers:Number(r.layers || 1),
+    waste:Number(r.waste || 10),
+
+    shingleCost:Number(r.shingle_cost || 0),
+    starterCost:Number(r.starter_cost || 0),
+    ridgeCost:Number(r.ridge_cost || 0),
+    laborCost:Number(r.labor_cost || 0),
+    tearOffCost:Number(r.tear_off_cost || 0),
+    otherMaterial:Number(r.other_material || 0),
+    otherLabor:Number(r.other_labor || 0),
+
+    overhead:Number(r.overhead || 0),
+    profitMargin:Number(r.profit_margin || 30),
+    priceAdjustment:Number(r.price_adjustment || 0),
+
+    scopeOfWork:r.scope_of_work || "",
+    importantInfo:r.important_info || "",
+
+    materialCost:Number(r.material_cost || 0),
+    laborTotal:Number(r.labor_total || 0),
+    totalCost:Number(r.total_cost || 0),
+    sellingPrice:Number(r.selling_price || 0),
+    grossProfit:Number(r.gross_profit || 0),
+    grossMargin:Number(r.gross_margin || 0),
+    pricePerSquare:Number(r.price_per_square || 0),
+    materialSquares:Number(r.material_squares || 0),
+
+    status:r.status || "Lead"
+  };
+}
+
+async function loadEstimates(){
+
+  if(!currentUser) return;
+
+  const {data,error} =
+    await supabaseClient
+      .from("estimates")
+      .select("*")
+      .eq("user_id",currentUser.id)
+      .order("updated_at",{ascending:false});
+
+  if(error){
+    alert("Could not load estimates: " + error.message);
+    return;
+  }
+
+  estimates = (data || []).map(localObjectFromDb);
+
+  renderEstimates();
+  renderPipeline();
+  updateDashboard();
+}
+
+async function saveEstimateToCloud(e){
+
+  if(!currentUser){
+    alert("Please log in first.");
+    return false;
+  }
+
+  const payload = dbObjectFromEstimate(e);
+
+  let response;
+
+  if(e.id){
+
+    response =
+      await supabaseClient
+        .from("estimates")
+        .update(payload)
+        .eq("id",e.id)
+        .eq("user_id",currentUser.id)
+        .select()
+        .single();
+
+  }else{
+
+    response =
+      await supabaseClient
+        .from("estimates")
+        .insert(payload)
+        .select()
+        .single();
+
+  }
+
+  if(response.error){
+
+    if(response.error.code === "23505"){
+      alert(
+        "That estimate number already exists. Generate a new estimate number."
+      );
+    }else{
+      alert("Save failed: " + response.error.message);
+    }
+
+    return false;
+  }
+
+  const saved = localObjectFromDb(response.data);
+
+  const index =
+    estimates.findIndex(x => x.id === saved.id);
+
+  if(index >= 0){
+    estimates[index] = saved;
+  }else{
+    estimates.unshift(saved);
+  }
+
+  editingId = saved.id;
+
+  renderEstimates();
+  renderPipeline();
+  updateDashboard();
+
+  return true;
+}
+
+async function deleteEstimate(id){
+
+  if(!confirm("Delete this estimate permanently?")){
+    return;
+  }
+
+  const {error} =
+    await supabaseClient
+      .from("estimates")
+      .delete()
+      .eq("id",id)
+      .eq("user_id",currentUser.id);
+
+  if(error){
+    alert("Delete failed: " + error.message);
+    return;
+  }
+
+  estimates =
+    estimates.filter(e => e.id !== id);
+
+  renderEstimates();
+  renderPipeline();
+  updateDashboard();
+}
+
+async function updateEstimateStatus(id,status){
+
+  const {error} =
+    await supabaseClient
+      .from("estimates")
+      .update({
+        status,
+        updated_at:new Date().toISOString()
+      })
+      .eq("id",id)
+      .eq("user_id",currentUser.id);
+
+  if(error){
+    alert("Status update failed: " + error.message);
+    return;
+  }
+
+  const e =
+    estimates.find(x => x.id === id);
+
+  if(e){
+    e.status = status;
+  }
+
+  renderEstimates();
+  renderPipeline();
+  updateDashboard();
+}
+
+/* =========================================================
+   CALCULATOR
+   ========================================================= */
 
 function calculate(){
 
-  const squares=Number(document.getElementById("squares").value)||0;
-  const pitchMultiplier=Number(document.getElementById("pitch").value)||1;
-  const layers=Number(document.getElementById("layers").value)||0;
-  const waste=Number(document.getElementById("waste").value)||0;
+  const squares = Math.max(0,num("squares"));
+  const pitchMultiplier = Math.max(.5,num("pitch"));
+  const layers = Math.max(0,num("layers"));
+  const waste = Math.max(0,num("waste")) / 100;
 
-  const shingleCost=Number(document.getElementById("shingleCost").value)||0;
-  const starterCost=Number(document.getElementById("starterCost").value)||0;
-  const ridgeCost=Number(document.getElementById("ridgeCost").value)||0;
+  const shingleCost = Math.max(0,num("shingleCost"));
+  const starterCost = Math.max(0,num("starterCost"));
+  const ridgeCost = Math.max(0,num("ridgeCost"));
 
-  const laborCost=Number(document.getElementById("laborCost").value)||0;
-  const tearOffCost=Number(document.getElementById("tearOffCost").value)||0;
+  const laborCost = Math.max(0,num("laborCost"));
+  const tearOffCost = Math.max(0,num("tearOffCost"));
 
-  const otherMaterial=Number(document.getElementById("otherMaterial").value)||0;
-  const otherLabor=Number(document.getElementById("otherLabor").value)||0;
+  const otherMaterial = Math.max(0,num("otherMaterial"));
+  const otherLabor = Math.max(0,num("otherLabor"));
 
-  const overheadPct=Number(document.getElementById("overhead").value)||0;
-  const profitMargin=Number(document.getElementById("profitMargin").value)||0;
+  const overheadPercent =
+    Math.max(0,num("overhead")) / 100;
 
-  const priceAdjustment=Number(document.getElementById("priceAdjustment").value)||0;
+  const profitMargin =
+    Math.min(99,Math.max(0,num("profitMargin"))) / 100;
 
-  if(squares<=0){
-    alert("Enter the roof squares first.");
-    return;
-  }
+  const priceAdjustment =
+    num("priceAdjustment");
 
-  if(profitMargin>=100){
-    alert("Profit margin must be below 100%.");
-    return;
-  }
+  const materialSquares =
+    squares * (1 + waste);
 
-  const materialSquares=squares*(1+waste/100);
+  const materialCost =
+    materialSquares *
+    (shingleCost + starterCost + ridgeCost) +
+    otherMaterial;
 
-  const materialCost=
-    materialSquares*(shingleCost+starterCost+ridgeCost)
-    +otherMaterial;
+  const installLabor =
+    squares *
+    laborCost *
+    pitchMultiplier;
 
-  const installLabor=
-    squares*laborCost*pitchMultiplier;
+  const tearOffLabor =
+    squares *
+    tearOffCost *
+    layers *
+    pitchMultiplier;
 
-  const tearOffLabor=
-    squares*tearOffCost*layers*pitchMultiplier;
-
-  const laborTotal=
-    installLabor+
-    tearOffLabor+
+  const laborTotal =
+    installLabor +
+    tearOffLabor +
     otherLabor;
 
-  const baseCost=
-    materialCost+
+  const baseCost =
+    materialCost +
     laborTotal;
 
-  const overheadCost=
-    baseCost*(overheadPct/100);
+  const overheadAmount =
+    baseCost *
+    overheadPercent;
 
-  const totalCost=
-    baseCost+
-    overheadCost;
+  const totalCost =
+    baseCost +
+    overheadAmount;
 
-  const sellingPrice=
-    totalCost/(1-profitMargin/100)
-    +priceAdjustment;
+  let sellingPrice;
 
-  const grossProfit=
-    sellingPrice-totalCost;
+  if(profitMargin >= .99){
+    sellingPrice =
+      totalCost + priceAdjustment;
+  }else{
+    sellingPrice =
+      totalCost / (1 - profitMargin) +
+      priceAdjustment;
+  }
 
-  const grossMargin=
-    sellingPrice>0
-      ? grossProfit/sellingPrice*100
+  sellingPrice =
+    Math.max(0,sellingPrice);
+
+  const grossProfit =
+    sellingPrice - totalCost;
+
+  const grossMargin =
+    sellingPrice > 0
+      ? grossProfit / sellingPrice
       : 0;
 
-  const pricePerSquare=
-    sellingPrice/squares;
+  const pricePerSquare =
+    squares > 0
+      ? sellingPrice / squares
+      : 0;
 
-  currentResult={
+  currentResult = {
     materialCost,
     laborTotal,
     totalCost,
@@ -840,658 +1452,753 @@ function calculate(){
     materialSquares
   };
 
-  document.getElementById("materialResult").textContent=money(materialCost);
-  document.getElementById("laborResult").textContent=money(laborTotal);
-  document.getElementById("totalCostResult").textContent=money(totalCost);
-  document.getElementById("sellingPriceResult").textContent=money(sellingPrice);
-  document.getElementById("profitResult").textContent=money(grossProfit);
-  document.getElementById("marginResult").textContent=grossMargin.toFixed(1)+"%";
-  document.getElementById("priceSquareResult").textContent=money(pricePerSquare);
+  document.getElementById("calculatorResults").style.display = "block";
 
-  const shingles=Math.ceil(materialSquares*3);
-  const starter=Math.ceil(materialSquares);
-  const ridge=Math.ceil(materialSquares/1.5);
-  const underlayment=Math.ceil(materialSquares/2);
-  const ice=Math.ceil(materialSquares/2);
-  const drip=Math.ceil(squares);
+  document.getElementById("resultMaterial").textContent =
+    money(materialCost);
 
-  document.getElementById("materialsList").innerHTML=`
-    <strong>Approximate Planning Quantities</strong><br><br>
-    Architectural Shingle Bundles: ${shingles}<br>
-    Starter Bundles: ${starter}<br>
-    Ridge Cap Bundles: ${ridge}<br>
-    Synthetic Underlayment Rolls: ${underlayment}<br>
-    Ice & Water Shield Rolls: ${ice}<br>
-    Drip Edge Pieces: ${drip}<br><br>
-    <span class="muted">
-    These quantities are rough planning estimates and should be verified against the actual roof takeoff and manufacturer packaging.
-    </span>
-  `;
+  document.getElementById("resultLabor").textContent =
+    money(laborTotal);
+
+  document.getElementById("resultTotal").textContent =
+    money(totalCost);
+
+  document.getElementById("resultPrice").textContent =
+    money(sellingPrice);
+
+  document.getElementById("resultProfit").textContent =
+    money(grossProfit);
+
+  document.getElementById("resultMargin").textContent =
+    (grossMargin * 100).toFixed(1) + "%";
+
+  document.getElementById("resultPerSquare").textContent =
+    money(pricePerSquare);
+
+  document.getElementById("resultMaterialSquares").textContent =
+    materialSquares.toFixed(1);
+
+  document.getElementById("qtyShingles").textContent =
+    Math.ceil(materialSquares * 3);
+
+  document.getElementById("qtyStarter").textContent =
+    Math.ceil(materialSquares);
+
+  document.getElementById("qtyRidge").textContent =
+    Math.ceil(materialSquares / 1.5);
+
+  document.getElementById("qtyUnderlayment").textContent =
+    Math.ceil(materialSquares / 2);
+
+  document.getElementById("qtyIce").textContent =
+    Math.ceil(materialSquares / 2);
+
+  document.getElementById("qtyDrip").textContent =
+    Math.ceil(squares);
+
+  return currentResult;
 }
 
+function collectEstimate(){
 
-function collectForm(){
+  if(!currentResult){
+    calculate();
+  }
+
+  const r = currentResult;
 
   return {
 
-    customerName:document.getElementById("customerName").value,
-    customerPhone:document.getElementById("customerPhone").value,
-    customerEmail:document.getElementById("customerEmail").value,
-    projectAddress:document.getElementById("projectAddress").value,
-    estimateNumber:document.getElementById("estimateNumber").value,
+    id:editingId,
 
-    validDays:document.getElementById("validDays").value,
+    customerName:text("customerName"),
+    customerPhone:text("customerPhone"),
+    customerEmail:text("customerEmail"),
+    projectAddress:text("projectAddress"),
 
-    followUpDate:document.getElementById("followUpDate").value,
-    followUpStatus:document.getElementById("followUpStatus").value,
-    followUpNotes:document.getElementById("followUpNotes").value,
+    estimateNumber:text("estimateNumber") || generateEstimateNumber(),
+    validDays:num("validDays") || 30,
 
-    squares:document.getElementById("squares").value,
-    pitch:document.getElementById("pitch").value,
-    layers:document.getElementById("layers").value,
-    waste:document.getElementById("waste").value,
+    followUpDate:text("followUpDate"),
+    followUpStatus:text("followUpStatus"),
+    followUpNotes:text("followUpNotes"),
 
-    shingleCost:document.getElementById("shingleCost").value,
-    starterCost:document.getElementById("starterCost").value,
-    ridgeCost:document.getElementById("ridgeCost").value,
+    squares:num("squares"),
+    pitch:num("pitch"),
+    layers:num("layers"),
+    waste:num("waste"),
 
-    laborCost:document.getElementById("laborCost").value,
-    tearOffCost:document.getElementById("tearOffCost").value,
+    shingleCost:num("shingleCost"),
+    starterCost:num("starterCost"),
+    ridgeCost:num("ridgeCost"),
+    laborCost:num("laborCost"),
+    tearOffCost:num("tearOffCost"),
+    otherMaterial:num("otherMaterial"),
+    otherLabor:num("otherLabor"),
 
-    otherMaterial:document.getElementById("otherMaterial").value,
-    otherLabor:document.getElementById("otherLabor").value,
+    overhead:num("overhead"),
+    profitMargin:num("profitMargin"),
+    priceAdjustment:num("priceAdjustment"),
 
-    overhead:document.getElementById("overhead").value,
-    profitMargin:document.getElementById("profitMargin").value,
-    priceAdjustment:document.getElementById("priceAdjustment").value,
+    scopeOfWork:text("scopeOfWork"),
+    importantInfo:text("importantInfo"),
 
-    scopeOfWork:document.getElementById("scopeOfWork").value,
-    importantInfo:document.getElementById("importantInfo").value
+    materialCost:r.materialCost,
+    laborTotal:r.laborTotal,
+    totalCost:r.totalCost,
+    sellingPrice:r.sellingPrice,
+    grossProfit:r.grossProfit,
+    grossMargin:r.grossMargin,
+    pricePerSquare:r.pricePerSquare,
+    materialSquares:r.materialSquares,
+
+    status:
+      editingId
+        ? (estimates.find(e=>e.id===editingId)?.status || "Lead")
+        : "Lead"
   };
 }
 
+async function saveCurrentEstimate(){
 
-function saveEstimate(){
-
-  if(!currentResult){
-    calculate();
-  }
-
-  if(!currentResult){
+  if(!currentUser){
+    alert("Please log in first.");
     return;
   }
 
-  const form=collectForm();
+  const estimate = collectEstimate();
 
-  if(!form.customerName){
-    alert("Enter the customer name first.");
-    return;
-  }
-
-  if(!form.estimateNumber){
-    form.estimateNumber=generateEstimateNumber();
-    document.getElementById("estimateNumber").value=form.estimateNumber;
-  }
-
-  let estimates=getEstimates();
-
-  const existingIndex=estimates.findIndex(
-    x=>x.estimateNumber===form.estimateNumber
-  );
-
-  const record={
-    ...form,
-    ...currentResult,
-    status:existingIndex>=0
-      ? estimates[existingIndex].status
-      : "Lead",
-    savedAt:new Date().toISOString()
-  };
-
-  if(existingIndex>=0){
-    estimates[existingIndex]=record;
-    alert("Estimate updated.");
-  }else{
-    estimates.unshift(record);
-    alert("Estimate saved.");
-  }
-
-  setEstimates(estimates);
-
-  renderEstimates();
-  updateDashboard();
-}
-
-
-function loadEstimate(index){
-
-  const job=getEstimates()[index];
-
-  if(!job){
-    return;
-  }
-
-  const fields=[
-    "customerName",
-    "customerPhone",
-    "customerEmail",
-    "projectAddress",
-    "estimateNumber",
-    "validDays",
-    "followUpDate",
-    "followUpStatus",
-    "followUpNotes",
-    "squares",
-    "pitch",
-    "layers",
-    "waste",
-    "shingleCost",
-    "starterCost",
-    "ridgeCost",
-    "laborCost",
-    "tearOffCost",
-    "otherMaterial",
-    "otherLabor",
-    "overhead",
-    "profitMargin",
-    "priceAdjustment",
-    "scopeOfWork",
-    "importantInfo"
-  ];
-
-  fields.forEach(id=>{
-    const element=document.getElementById(id);
-
-    if(element){
-      element.value=job[id] ?? "";
+  if(!estimate.customerName){
+    if(!confirm("Customer name is blank. Save anyway?")){
+      return;
     }
+  }
+
+  const success =
+    await saveEstimateToCloud(estimate);
+
+  if(success){
+    alert(
+      estimate.id
+        ? "Estimate updated successfully."
+        : "Estimate saved successfully."
+    );
+
+    switchPage("estimatesPage");
+  }
+}
+
+function loadEstimate(id){
+
+  const e =
+    estimates.find(x => x.id === id);
+
+  if(!e){
+    alert("Estimate not found.");
+    return;
+  }
+
+  editingId = e.id;
+
+  const fields = {
+    customerName:e.customerName,
+    customerPhone:e.customerPhone,
+    customerEmail:e.customerEmail,
+    projectAddress:e.projectAddress,
+    estimateNumber:e.estimateNumber,
+    validDays:e.validDays,
+    followUpDate:e.followUpDate,
+    followUpStatus:e.followUpStatus,
+    followUpNotes:e.followUpNotes,
+    squares:e.squares,
+    pitch:e.pitch,
+    layers:e.layers,
+    waste:e.waste,
+    shingleCost:e.shingleCost,
+    starterCost:e.starterCost,
+    ridgeCost:e.ridgeCost,
+    laborCost:e.laborCost,
+    tearOffCost:e.tearOffCost,
+    otherMaterial:e.otherMaterial,
+    otherLabor:e.otherLabor,
+    overhead:e.overhead,
+    profitMargin:e.profitMargin,
+    priceAdjustment:e.priceAdjustment,
+    scopeOfWork:e.scopeOfWork,
+    importantInfo:e.importantInfo
+  };
+
+  Object.entries(fields).forEach(([id,value])=>{
+    const el = document.getElementById(id);
+    if(el) el.value = value ?? "";
   });
+
+  currentResult = {
+    materialCost:e.materialCost,
+    laborTotal:e.laborTotal,
+    totalCost:e.totalCost,
+    sellingPrice:e.sellingPrice,
+    grossProfit:e.grossProfit,
+    grossMargin:e.grossMargin,
+    pricePerSquare:e.pricePerSquare,
+    materialSquares:e.materialSquares
+  };
 
   calculate();
 
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+  switchPage("calculatorPage");
 }
 
+async function duplicateEstimate(id){
 
-function duplicateEstimate(index){
+  const original =
+    estimates.find(e => e.id === id);
 
-  const estimates=getEstimates();
-  const job=estimates[index];
+  if(!original) return;
 
-  if(!job){
-    return;
-  }
-
-  const copy={
-    ...job,
+  const copy = {
+    ...original,
+    id:null,
     estimateNumber:generateEstimateNumber(),
     status:"Lead",
-    savedAt:new Date().toISOString()
+    followUpDate:"",
+    followUpStatus:"Not Scheduled",
+    followUpNotes:""
   };
 
-  estimates.unshift(copy);
-  setEstimates(estimates);
+  delete copy.created_at;
 
-  renderEstimates();
-  updateDashboard();
+  const success =
+    await saveEstimateToCloud(copy);
 
-  alert("Estimate duplicated as "+copy.estimateNumber);
+  if(success){
+    alert("Estimate duplicated.");
+  }
 }
 
+function resetCalculator(){
 
-function deleteEstimate(index){
+  editingId = null;
+  currentResult = null;
 
-  const estimates=getEstimates();
+  document.getElementById("customerName").value = "";
+  document.getElementById("customerPhone").value = "";
+  document.getElementById("customerEmail").value = "";
+  document.getElementById("projectAddress").value = "";
+  document.getElementById("estimateNumber").value =
+    generateEstimateNumber();
 
-  if(!estimates[index]){
-    return;
-  }
+  document.getElementById("validDays").value = 30;
 
-  if(!confirm("Delete this estimate?")){
-    return;
-  }
+  document.getElementById("squares").value = 20;
+  document.getElementById("pitch").value = 1.10;
+  document.getElementById("layers").value = 1;
+  document.getElementById("waste").value = 10;
 
-  estimates.splice(index,1);
+  document.getElementById("shingleCost").value = 110;
+  document.getElementById("starterCost").value = 12;
+  document.getElementById("ridgeCost").value = 15;
+  document.getElementById("laborCost").value = 90;
+  document.getElementById("tearOffCost").value = 35;
+  document.getElementById("otherMaterial").value = 0;
+  document.getElementById("otherLabor").value = 0;
 
-  setEstimates(estimates);
+  document.getElementById("overhead").value = 10;
+  document.getElementById("profitMargin").value = 30;
+  document.getElementById("priceAdjustment").value = 0;
 
-  renderEstimates();
-  updateDashboard();
+  document.getElementById("scopeOfWork").value = "";
+  document.getElementById("importantInfo").value = "";
+  document.getElementById("followUpDate").value = "";
+  document.getElementById("followUpStatus").value =
+    "Not Scheduled";
+  document.getElementById("followUpNotes").value = "";
+
+  document.getElementById("calculatorResults").style.display =
+    "none";
 }
 
-
-function updateStatus(index,status){
-
-  const estimates=getEstimates();
-
-  if(!estimates[index]){
-    return;
-  }
-
-  estimates[index].status=status;
-
-  setEstimates(estimates);
-
-  renderEstimates();
-  updateDashboard();
-}
-
-
-function markFollowUpComplete(index){
-
-  const estimates=getEstimates();
-
-  if(!estimates[index]){
-    return;
-  }
-
-  estimates[index].followUpStatus="Contacted";
-  estimates[index].followUpDate="";
-
-  setEstimates(estimates);
-
-  renderEstimates();
-  updateDashboard();
-}
-
-
-function isFollowUpOverdue(job){
-
-  if(!job.followUpDate){
-    return false;
-  }
-
-  if(job.followUpStatus==="Contacted"){
-    return false;
-  }
-
-  const today=new Date();
-  today.setHours(0,0,0,0);
-
-  const due=new Date(job.followUpDate+"T00:00:00");
-
-  return due<today;
-}
-
-
-function isFollowUpDueSoon(job){
-
-  if(!job.followUpDate){
-    return false;
-  }
-
-  if(job.followUpStatus==="Contacted"){
-    return false;
-  }
-
-  const today=new Date();
-  today.setHours(0,0,0,0);
-
-  const due=new Date(job.followUpDate+"T00:00:00");
-
-  const diff=(due-today)/(1000*60*60*24);
-
-  return diff>=0 && diff<=2;
-}
-
+/* =========================================================
+   ESTIMATE TABLE
+   ========================================================= */
 
 function renderEstimates(){
 
-  const container=document.getElementById("estimateList");
+  const container =
+    document.getElementById("estimateTable");
 
-  const search=
-    document.getElementById("searchBox").value
-      .toLowerCase()
-      .trim();
+  if(!estimates.length){
 
-  const filter=
-    document.getElementById("filterStatus").value;
-
-  const estimates=getEstimates();
-
-  const filtered=estimates
-    .map((job,index)=>({job,index}))
-    .filter(({job})=>{
-
-      const text=(
-        job.customerName+
-        " "+
-        job.projectAddress+
-        " "+
-        job.estimateNumber
-      ).toLowerCase();
-
-      const searchMatch=!search || text.includes(search);
-
-      const statusMatch=
-        filter==="All" ||
-        job.status===filter;
-
-      return searchMatch && statusMatch;
-    });
-
-  if(filtered.length===0){
-
-    container.innerHTML=`
-      <p class="muted">
-        No estimates found.
-      </p>
-    `;
+    container.innerHTML =
+      `<div class="notice">
+        No estimates yet. Go to the Calculator tab and build your first bid.
+      </div>`;
 
     return;
   }
 
-  container.innerHTML=filtered.map(({job,index})=>{
+  const search =
+    document.getElementById("estimateSearch")
+      ?.value
+      .toLowerCase()
+      .trim() || "";
 
-    let followClass="";
+  const filter =
+    document.getElementById("estimateFilter")
+      ?.value || "All";
 
-    if(isFollowUpOverdue(job)){
-      followClass="overdue";
-    }else if(isFollowUpDueSoon(job)){
-      followClass="due";
-    }
+  let filtered =
+    estimates.filter(e => {
 
-    return `
+      const matchesSearch =
+        !search ||
+        e.customerName.toLowerCase().includes(search) ||
+        e.projectAddress.toLowerCase().includes(search) ||
+        e.estimateNumber.toLowerCase().includes(search);
 
-      <div class="estimate-row ${followClass}">
+      const matchesFilter =
+        filter === "All" ||
+        e.status === filter;
 
-        <div class="estimate-top">
+      return matchesSearch && matchesFilter;
+    });
 
-          <div>
-            <strong>
-              ${escapeHtml(job.customerName || "Unnamed Customer")}
-            </strong>
+  if(!filtered.length){
 
-            <br>
+    container.innerHTML =
+      `<div class="notice">No matching estimates.</div>`;
 
-            <span class="muted">
-              ${escapeHtml(job.projectAddress || "No address")}
-            </span>
+    return;
+  }
 
-            <br>
+  let html = `
+  <table>
+    <thead>
+      <tr>
+        <th>Estimate</th>
+        <th>Customer</th>
+        <th>Status</th>
+        <th>Price</th>
+        <th>Profit</th>
+        <th>Follow-Up</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+  `;
 
-            <small>
-              ${escapeHtml(job.estimateNumber || "")}
-            </small>
+  filtered.forEach(e=>{
+
+    html += `
+      <tr>
+
+        <td>
+          <strong>${escapeHtml(e.estimateNumber)}</strong>
+          <div class="small">
+            ${escapeHtml(e.projectAddress)}
+          </div>
+        </td>
+
+        <td>
+          ${escapeHtml(e.customerName)}
+          <div class="small">
+            ${escapeHtml(e.customerPhone)}
+          </div>
+        </td>
+
+        <td>
+          <span class="status status-${escapeHtml(e.status)}">
+            ${escapeHtml(e.status)}
+          </span>
+        </td>
+
+        <td>${money(e.sellingPrice)}</td>
+
+        <td>${money(e.grossProfit)}</td>
+
+        <td>
+          ${e.followUpDate
+            ? escapeHtml(e.followUpDate)
+            : "—"}
+        </td>
+
+        <td>
+
+          <div class="actions">
+
+            <button
+              class="btn"
+              onclick="loadEstimate('${e.id}')">
+              Edit
+            </button>
+
+            <button
+              class="btn-secondary"
+              onclick="generateProposal('${e.id}')">
+              Proposal
+            </button>
+
+            <button
+              class="btn-secondary"
+              onclick="duplicateEstimate('${e.id}')">
+              Duplicate
+            </button>
+
+            <button
+              class="btn-danger"
+              onclick="deleteEstimate('${e.id}')">
+              Delete
+            </button>
+
           </div>
 
-          <div>
+        </td>
 
-            <span class="badge ${job.status.toLowerCase()}">
-              ${escapeHtml(job.status)}
-            </span>
-
-          </div>
-
-        </div>
-
-        <hr>
-
-        <div class="grid">
-
-          <div>
-            <strong>Estimate</strong><br>
-            ${money(job.sellingPrice)}
-          </div>
-
-          <div>
-            <strong>Profit</strong><br>
-            ${money(job.grossProfit)}
-          </div>
-
-          <div>
-            <strong>Squares</strong><br>
-            ${job.squares}
-          </div>
-
-          <div>
-            <strong>Follow-Up</strong><br>
-            ${
-              job.followUpDate
-              ? escapeHtml(job.followUpDate)
-              : "Not scheduled"
-            }
-          </div>
-
-        </div>
-
-        ${
-          job.followUpNotes
-          ? `
-            <p>
-              <strong>Follow-Up Notes:</strong>
-              ${escapeHtml(job.followUpNotes)}
-            </p>
-          `
-          :""
-        }
-
-        <div>
-
-          <button
-            class="primary"
-            onclick="loadEstimate(${index})">
-            Load
-          </button>
-
-          <button
-            class="success"
-            onclick="loadAndProposal(${index})">
-            Proposal
-          </button>
-
-          <button
-            class="light"
-            onclick="duplicateEstimate(${index})">
-            Duplicate
-          </button>
-
-          <button
-            class="warning"
-            onclick="markFollowUpComplete(${index})">
-            Follow-Up Done
-          </button>
-
-          <button
-            class="danger"
-            onclick="deleteEstimate(${index})">
-            Delete
-          </button>
-
-        </div>
-
-        <div>
-
-          <label>Change Status</label>
-
-          <select
-            onchange="updateStatus(${index},this.value)">
-
-            <option
-              ${job.status==="Lead"?"selected":""}>
-              Lead
-            </option>
-
-            <option
-              ${job.status==="Estimated"?"selected":""}>
-              Estimated
-            </option>
-
-            <option
-              ${job.status==="Sold"?"selected":""}>
-              Sold
-            </option>
-
-            <option
-              ${job.status==="Completed"?"selected":""}>
-              Completed
-            </option>
-
-            <option
-              ${job.status==="Lost"?"selected":""}>
-              Lost
-            </option>
-
-          </select>
-
-        </div>
-
-      </div>
-
+      </tr>
     `;
+  });
 
-  }).join("");
+  html += `
+    </tbody>
+  </table>
+  `;
+
+  container.innerHTML = html;
 }
 
+/* =========================================================
+   DASHBOARD
+   ========================================================= */
 
 function updateDashboard(){
 
-  const estimates=getEstimates();
+  const total =
+    estimates.length;
 
-  const totalEstimates=estimates.length;
+  const nonLost =
+    estimates.filter(e=>e.status !== "Lost");
 
-  const projectedRevenue=estimates
-    .filter(x=>x.status!=="Lost")
-    .reduce((sum,x)=>sum+Number(x.sellingPrice||0),0);
+  const projectedRevenue =
+    nonLost.reduce(
+      (sum,e)=>sum + Number(e.sellingPrice || 0),
+      0
+    );
 
-  const projectedProfit=estimates
-    .filter(x=>x.status!=="Lost")
-    .reduce((sum,x)=>sum+Number(x.grossProfit||0),0);
+  const projectedProfit =
+    nonLost.reduce(
+      (sum,e)=>sum + Number(e.grossProfit || 0),
+      0
+    );
 
-  const soldRevenue=estimates
-    .filter(x=>x.status==="Sold" || x.status==="Completed")
-    .reduce((sum,x)=>sum+Number(x.sellingPrice||0),0);
+  const sold =
+    estimates.filter(
+      e => e.status === "Sold" ||
+           e.status === "Completed"
+    );
 
-  const lostRevenue=estimates
-    .filter(x=>x.status==="Lost")
-    .reduce((sum,x)=>sum+Number(x.sellingPrice||0),0);
+  const soldRevenue =
+    sold.reduce(
+      (sum,e)=>sum + Number(e.sellingPrice || 0),
+      0
+    );
 
-  const decisions=estimates.filter(
-    x=>["Sold","Lost"].includes(x.status)
-  ).length;
+  const lost =
+    estimates.filter(e=>e.status === "Lost");
 
-  const sold=estimates.filter(
-    x=>["Sold","Completed"].includes(x.status)
-  ).length;
+  const lostRevenue =
+    lost.reduce(
+      (sum,e)=>sum + Number(e.sellingPrice || 0),
+      0
+    );
 
-  const closeRate=
-    decisions>0
-      ? sold/decisions*100
+  const closedCount =
+    sold.length + lost.length;
+
+  const closeRate =
+    closedCount > 0
+      ? sold.length / closedCount * 100
       : 0;
 
-  document.getElementById("statEstimates").textContent=
-    totalEstimates;
+  document.getElementById("dashEstimates").textContent =
+    total;
 
-  document.getElementById("statRevenue").textContent=
+  document.getElementById("dashRevenue").textContent =
     money(projectedRevenue);
 
-  document.getElementById("statProfit").textContent=
+  document.getElementById("dashProfit").textContent =
     money(projectedProfit);
 
-  document.getElementById("statSold").textContent=
+  document.getElementById("dashSold").textContent =
     money(soldRevenue);
 
-  document.getElementById("statLost").textContent=
+  document.getElementById("dashLost").textContent =
     money(lostRevenue);
 
-  document.getElementById("statCloseRate").textContent=
-    closeRate.toFixed(1)+"%";
+  document.getElementById("dashClose").textContent =
+    closeRate.toFixed(1) + "%";
 
-
-  const overdue=estimates.filter(isFollowUpOverdue);
-  const dueSoon=estimates.filter(isFollowUpDueSoon);
-
-  let html="";
-
-  if(overdue.length>0){
-
-    html+=`
-      <div class="card overdue">
-        <strong>🔴 ${overdue.length} overdue follow-up${overdue.length>1?"s":""}</strong>
-        <br>
-        ${overdue.slice(0,5).map(x=>
-          escapeHtml(x.customerName || "Unnamed Customer")
-        ).join(", ")}
-      </div>
-    `;
-  }
-
-  if(dueSoon.length>0){
-
-    html+=`
-      <div class="card due">
-        <strong>🟡 ${dueSoon.length} follow-up${dueSoon.length>1?"s":""} due soon</strong>
-        <br>
-        ${dueSoon.slice(0,5).map(x=>
-          escapeHtml(x.customerName || "Unnamed Customer")
-        ).join(", ")}
-      </div>
-    `;
-  }
-
-  if(!html){
-
-    html=`
-      <div class="card">
-        <strong>🟢 Follow-ups are clear.</strong>
-        <br>
-        <span class="muted">
-          No overdue follow-ups currently showing.
-        </span>
-      </div>
-    `;
-  }
-
-  document.getElementById("followupAlert").innerHTML=html;
+  renderDashboardFollowups();
 }
 
+function isOverdue(date){
 
-function generateProposal(){
+  if(!date) return false;
 
-  if(!currentResult){
-    calculate();
-  }
+  const today =
+    new Date().toISOString().slice(0,10);
 
-  if(!currentResult){
+  return date < today;
+}
+
+function renderDashboardFollowups(){
+
+  const container =
+    document.getElementById("dashboardFollowups");
+
+  const upcoming =
+    estimates
+      .filter(e =>
+        e.followUpDate &&
+        e.followUpStatus !== "Completed"
+      )
+      .sort((a,b)=>
+        a.followUpDate.localeCompare(b.followUpDate)
+      )
+      .slice(0,10);
+
+  if(!upcoming.length){
+
+    container.innerHTML =
+      `<div class="small">
+        No scheduled follow-ups.
+      </div>`;
+
     return;
   }
 
-  const name=document.getElementById("customerName").value || "Homeowner";
-  const phone=document.getElementById("customerPhone").value;
-  const email=document.getElementById("customerEmail").value;
-  const address=document.getElementById("projectAddress").value;
-  const estimateNumber=document.getElementById("estimateNumber").value;
-  const validDays=document.getElementById("validDays").value || 30;
+  let html = "";
 
-  const scope=document.getElementById("scopeOfWork").value ||
-    "Roofing project as discussed with homeowner.";
+  upcoming.forEach(e=>{
 
-  const important=document.getElementById("importantInfo").value;
+    const overdue =
+      isOverdue(e.followUpDate);
 
-  const today=new Date();
+    html += `
+      <div class="notice ${overdue ? "error" : ""}">
 
-  const expiration=new Date();
+        <strong>
+          ${escapeHtml(e.customerName || "Unnamed Customer")}
+        </strong>
+
+        <div>
+          Follow-up:
+          <strong>${escapeHtml(e.followUpDate)}</strong>
+        </div>
+
+        <div class="small">
+          ${escapeHtml(e.followUpNotes || "")}
+        </div>
+
+        <div class="actions">
+
+          <button
+            class="btn"
+            onclick="loadEstimate('${e.id}')">
+            Open Estimate
+          </button>
+
+          <button
+            class="btn-success"
+            onclick="completeFollowUp('${e.id}')">
+            Mark Complete
+          </button>
+
+        </div>
+
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+async function completeFollowUp(id){
+
+  const {error} =
+    await supabaseClient
+      .from("estimates")
+      .update({
+        follow_up_status:"Completed",
+        updated_at:new Date().toISOString()
+      })
+      .eq("id",id)
+      .eq("user_id",currentUser.id);
+
+  if(error){
+    alert(error.message);
+    return;
+  }
+
+  const e =
+    estimates.find(x=>x.id===id);
+
+  if(e){
+    e.followUpStatus = "Completed";
+  }
+
+  renderEstimates();
+  renderPipeline();
+  updateDashboard();
+}
+
+/* =========================================================
+   PIPELINE
+   ========================================================= */
+
+function renderPipeline(){
+
+  const container =
+    document.getElementById("pipelineContainer");
+
+  const statuses =
+    ["Lead","Estimated","Sold","Completed","Lost"];
+
+  let html = "";
+
+  statuses.forEach(status=>{
+
+    const jobs =
+      estimates.filter(e=>e.status===status);
+
+    const revenue =
+      jobs.reduce(
+        (sum,e)=>sum + Number(e.sellingPrice || 0),
+        0
+      );
+
+    html += `
+      <div class="card">
+
+        <h3>
+          ${status}
+          <span class="small">
+            (${jobs.length})
+          </span>
+        </h3>
+
+        <div class="small">
+          ${money(revenue)}
+        </div>
+
+        <div style="margin-top:12px">
+    `;
+
+    if(!jobs.length){
+
+      html += `
+        <div class="small">
+          No jobs in this stage.
+        </div>
+      `;
+
+    }else{
+
+      jobs.forEach(e=>{
+
+        html += `
+          <div class="result" style="margin-bottom:10px">
+
+            <strong>
+              ${escapeHtml(e.customerName || "Unnamed")}
+            </strong>
+
+            <div class="small">
+              ${escapeHtml(e.estimateNumber)}
+            </div>
+
+            <div style="margin-top:6px">
+              ${money(e.sellingPrice)}
+            </div>
+
+            <div class="actions">
+
+              <button
+                class="btn"
+                onclick="loadEstimate('${e.id}')">
+                Open
+              </button>
+
+              <select
+                onchange="updateEstimateStatus('${e.id}',this.value)"
+                style="max-width:160px">
+
+                ${["Lead","Estimated","Sold","Completed","Lost"]
+                  .map(s =>
+                    `<option ${s===e.status ? "selected":""}>
+                      ${s}
+                    </option>`
+                  ).join("")}
+
+              </select>
+
+            </div>
+
+          </div>
+        `;
+      });
+    }
+
+    html += `
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+}
+
+/* =========================================================
+   PROPOSAL
+   ========================================================= */
+
+function generateProposal(id){
+
+  const e =
+    estimates.find(x=>x.id===id);
+
+  if(!e){
+    alert("Estimate not found.");
+    return;
+  }
+
+  const expiration =
+    new Date();
 
   expiration.setDate(
-    expiration.getDate()+Number(validDays)
+    expiration.getDate() +
+    Number(e.validDays || 30)
   );
 
-  document.getElementById("proposalContent").innerHTML=`
+  const expirationText =
+    expiration.toLocaleDateString();
+
+  const proposal =
+    document.getElementById("proposalContent");
+
+  proposal.innerHTML = `
 
     <div class="proposal-header">
 
-      <div>
-        <h1>ROOFBIDDER</h1>
-        <p>Roofing estimates. Built for profit.</p>
-      </div>
+      <h1>ROOFBIDDER</h1>
 
-      <div>
-        <strong>ESTIMATE</strong><br>
-        ${escapeHtml(estimateNumber)}
-      </div>
+      <p>
+        Roofing estimates. Built for profit.
+      </p>
+
+      <p>
+        <strong>Estimate #:</strong>
+        ${escapeHtml(e.estimateNumber)}
+      </p>
 
     </div>
 
@@ -1499,62 +2206,55 @@ function generateProposal(){
 
     <p>
       <strong>Prepared For:</strong><br>
-      ${escapeHtml(name)}<br>
-      ${escapeHtml(address)}
+      ${escapeHtml(e.customerName || "")}<br>
+      ${escapeHtml(e.projectAddress || "")}<br>
+      ${escapeHtml(e.customerPhone || "")}<br>
+      ${escapeHtml(e.customerEmail || "")}
+    </p>
+
+    <hr>
+
+    <h3>Scope of Work</h3>
+
+    <p>
+      ${escapeHtml(e.scopeOfWork || "Roofing work as discussed with homeowner.")}
     </p>
 
     ${
-      phone || email
+      e.importantInfo
       ? `
-        <p>
-          ${escapeHtml(phone)}<br>
-          ${escapeHtml(email)}
-        </p>
+        <h3>Important Information</h3>
+        <p>${escapeHtml(e.importantInfo)}</p>
       `
-      :""
+      : ""
     }
 
     <hr>
 
-    <h3>Project Scope</h3>
+    <h2>Project Investment</h2>
 
-    <p>
-      ${escapeHtml(scope).replace(/\n/g,"<br>")}
-    </p>
-
-    <h3>Project Investment</h3>
-
-    <div class="result">
-
-      <small>Total Project Investment</small>
-
-      <strong>
-        ${money(currentResult.sellingPrice)}
-      </strong>
-
+    <div class="proposal-total">
+      ${money(e.sellingPrice)}
     </div>
 
-    <h3>Important Information</h3>
-
     <p>
-      ${
-        escapeHtml(
-          important ||
-          "Final project conditions will be confirmed before work begins."
-        ).replace(/\n/g,"<br>")
-      }
+      This proposal is valid through
+      <strong>${expirationText}</strong>.
     </p>
 
     <p>
-      This proposal is valid for ${validDays} days,
-      through ${expiration.toLocaleDateString()}.
+      Final pricing may be subject to changes resulting from
+      concealed conditions, customer-requested changes,
+      code requirements, or work outside the stated scope.
     </p>
 
-    <hr>
+    <br>
+
+    <h3>Acceptance</h3>
 
     <p>
-      By signing below, the homeowner acknowledges the proposed
-      scope of work and project investment.
+      By signing below, the customer acknowledges the scope
+      of work and project investment described in this proposal.
     </p>
 
     <br><br>
@@ -1562,85 +2262,114 @@ function generateProposal(){
     <div class="grid">
 
       <div>
-        Homeowner Signature
-        <br><br>
-        ______________________________
+        __________________________________<br>
+        Customer Signature
       </div>
 
       <div>
+        __________________________________<br>
         Date
-        <br><br>
-        ______________________________
-      </div>
-
-      <div>
-        Contractor Signature
-        <br><br>
-        ______________________________
-      </div>
-
-      <div>
-        Date
-        <br><br>
-        ______________________________
       </div>
 
     </div>
 
-    <br><br>
-
-    <p class="muted">
-      Thank you for the opportunity to earn your business.
-    </p>
-
   `;
 
-  document.getElementById("proposalSection")
-    .classList.remove("hidden");
-
-  document.getElementById("proposalSection")
-    .scrollIntoView({
-      behavior:"smooth"
-    });
+  document.getElementById("proposalOverlay").style.display =
+    "block";
 }
-
-
-function loadAndProposal(index){
-
-  loadEstimate(index);
-
-  setTimeout(()=>{
-    generateProposal();
-  },300);
-}
-
-
-function printProposal(){
-
-  window.print();
-}
-
 
 function closeProposal(){
 
-  document.getElementById("proposalSection")
-    .classList.add("hidden");
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
+  document.getElementById("proposalOverlay").style.display =
+    "none";
 }
 
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
 
-/* INITIALIZE */
+function switchPage(pageId){
 
-document.getElementById("estimateNumber").value=
-  generateEstimateNumber();
+  document.querySelectorAll(".page")
+    .forEach(page=>{
+      page.classList.remove("active");
+    });
 
-renderEstimates();
-updateDashboard();
+  document.querySelectorAll(".tab")
+    .forEach(tab=>{
+      tab.classList.remove("active");
+    });
 
+  document.getElementById(pageId)
+    .classList.add("active");
+
+  const tab =
+    document.querySelector(
+      `.tab[data-page="${pageId}"]`
+    );
+
+  if(tab){
+    tab.classList.add("active");
+  }
+
+  if(pageId === "dashboardPage"){
+    updateDashboard();
+  }
+
+  if(pageId === "estimatesPage"){
+    renderEstimates();
+  }
+
+  if(pageId === "pipelinePage"){
+    renderPipeline();
+  }
+}
+
+/* =========================================================
+   EVENTS
+   ========================================================= */
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+  document.querySelectorAll(".tab")
+    .forEach(tab=>{
+
+      tab.addEventListener("click",()=>{
+        switchPage(tab.dataset.page);
+      });
+
+    });
+
+  document.getElementById("loginBtn")
+    .addEventListener("click",login);
+
+  document.getElementById("signupBtn")
+    .addEventListener("click",signup);
+
+  document.getElementById("logoutBtn")
+    .addEventListener("click",logout);
+
+  document.getElementById("calculateBtn")
+    .addEventListener("click",calculate);
+
+  document.getElementById("saveEstimateBtn")
+    .addEventListener("click",saveCurrentEstimate);
+
+  document.getElementById("newEstimateBtn")
+    .addEventListener("click",()=>{
+      resetCalculator();
+    });
+
+  document.getElementById("estimateSearch")
+    .addEventListener("input",renderEstimates);
+
+  document.getElementById("estimateFilter")
+    .addEventListener("change",renderEstimates);
+
+  handleAuth();
+
+});
 </script>
 
 </body>
