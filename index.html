@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>RoofBidder | Roofing Estimate & Proposal</title>
+<title>RoofBidder | Roofing Estimating & Job Management</title>
 
 <style>
 
@@ -39,7 +39,7 @@ header {
 }
 
 .container {
-    max-width: 1100px;
+    max-width: 1150px;
     margin: 25px auto;
     padding: 0 15px;
 }
@@ -161,6 +161,68 @@ button:hover {
     color: white;
 }
 
+.purple {
+    background: #7c3aed;
+    color: white;
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.dashboard-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 17px;
+}
+
+.dashboard-box span {
+    display: block;
+    color: #64748b;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+.dashboard-box strong {
+    font-size: 24px;
+}
+
+
+/* =========================
+   PIPELINE
+========================= */
+
+.pipeline {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+}
+
+.pipeline-box {
+    text-align: center;
+    padding: 14px 8px;
+    border-radius: 9px;
+    background: #f1f5f9;
+}
+
+.pipeline-box strong {
+    display: block;
+    font-size: 20px;
+}
+
+.pipeline-box span {
+    color: #64748b;
+    font-size: 11px;
+}
+
 
 /* =========================
    PRIVATE RESULTS
@@ -249,36 +311,106 @@ button:hover {
 
 
 /* =========================
-   SAVED ESTIMATES
+   ESTIMATE MANAGER
 ========================= */
 
-.saved-list {
-    margin-top: 15px;
+.search-box {
+    margin-bottom: 15px;
 }
 
-.saved-item {
-    border: 1px solid #e2e8f0;
-    padding: 12px;
-    border-radius: 9px;
-    margin-bottom: 8px;
+.search-box input {
+    font-size: 16px;
+}
+
+.estimate-list {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
     gap: 10px;
 }
 
-.saved-item small {
-    color: #64748b;
+.estimate-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 11px;
+    padding: 15px;
+    background: white;
 }
 
-.saved-actions {
+.estimate-main {
     display: flex;
-    gap: 5px;
+    justify-content: space-between;
+    gap: 15px;
 }
 
-.saved-actions button {
-    padding: 8px 10px;
+.estimate-info strong {
+    font-size: 16px;
+}
+
+.estimate-info small {
+    display: block;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.estimate-money {
+    text-align: right;
+}
+
+.estimate-money strong {
+    font-size: 18px;
+}
+
+.estimate-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 12px;
+}
+
+.estimate-actions button {
+    padding: 8px 11px;
     font-size: 12px;
+}
+
+.status-select {
+    padding: 7px;
+    border-radius: 7px;
+    border: 1px solid #cbd5e1;
+    font-size: 12px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+    margin-top: 7px;
+    background: #e5e7eb;
+}
+
+.status-lead {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-estimated {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-sold {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-completed {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-lost {
+    background: #fee2e2;
+    color: #991b1b;
 }
 
 
@@ -411,10 +543,25 @@ button:hover {
    MOBILE
 ========================= */
 
+@media (max-width: 800px) {
+
+    .dashboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .pipeline {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
 @media (max-width: 700px) {
 
-    .grid,
-    .summary-grid {
+    .grid {
         grid-template-columns: 1fr;
     }
 
@@ -426,9 +573,12 @@ button:hover {
         font-size: 27px;
     }
 
-    .saved-item {
+    .estimate-main {
         flex-direction: column;
-        align-items: flex-start;
+    }
+
+    .estimate-money {
+        text-align: left;
     }
 
     .proposal {
@@ -453,7 +603,7 @@ button:hover {
 
 
 /* =========================
-   PRINT PROPOSAL
+   PRINT
 ========================= */
 
 @media print {
@@ -465,7 +615,8 @@ button:hover {
     header,
     form,
     .results,
-    .saved-card,
+    .dashboard-card,
+    .manager-card,
     .no-print {
         display: none !important;
     }
@@ -503,6 +654,163 @@ button:hover {
 <div class="container">
 
 
+<!-- =========================
+     DASHBOARD
+========================= -->
+
+<div class="card dashboard-card no-print">
+
+    <h2>
+        Business Dashboard
+    </h2>
+
+    <div class="dashboard">
+
+
+        <div class="dashboard-box">
+
+            <span>
+                TOTAL ESTIMATES
+            </span>
+
+            <strong id="dashEstimates">
+                0
+            </strong>
+
+        </div>
+
+
+        <div class="dashboard-box">
+
+            <span>
+                PROJECTED REVENUE
+            </span>
+
+            <strong id="dashRevenue">
+                $0
+            </strong>
+
+        </div>
+
+
+        <div class="dashboard-box">
+
+            <span>
+                PROJECTED PROFIT
+            </span>
+
+            <strong
+                id="dashProfit"
+                style="color:#16a34a;">
+
+                $0
+
+            </strong>
+
+        </div>
+
+
+        <div class="dashboard-box">
+
+            <span>
+                SOLD REVENUE
+            </span>
+
+            <strong id="dashSold">
+                $0
+            </strong>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     PIPELINE
+========================= -->
+
+<div class="card no-print">
+
+    <h2>
+        Job Pipeline
+    </h2>
+
+    <div class="pipeline">
+
+
+        <div class="pipeline-box">
+
+            <strong id="countLead">
+                0
+            </strong>
+
+            <span>
+                LEADS
+            </span>
+
+        </div>
+
+
+        <div class="pipeline-box">
+
+            <strong id="countEstimated">
+                0
+            </strong>
+
+            <span>
+                ESTIMATED
+            </span>
+
+        </div>
+
+
+        <div class="pipeline-box">
+
+            <strong id="countSold">
+                0
+            </strong>
+
+            <span>
+                SOLD
+            </span>
+
+        </div>
+
+
+        <div class="pipeline-box">
+
+            <strong id="countCompleted">
+                0
+            </strong>
+
+            <span>
+                COMPLETED
+            </span>
+
+        </div>
+
+
+        <div class="pipeline-box">
+
+            <strong id="countLost">
+                0
+            </strong>
+
+            <span>
+                LOST
+            </span>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
 <form id="estimateForm">
 
 
@@ -512,7 +820,9 @@ button:hover {
 
 <div class="card">
 
-    <h2>1. Customer & Contractor</h2>
+    <h2>
+        1. Customer & Contractor
+    </h2>
 
     <div class="grid">
 
@@ -623,6 +933,39 @@ button:hover {
         <div class="field">
 
             <label>
+                Job Status
+            </label>
+
+            <select id="jobStatus">
+
+                <option value="Lead">
+                    Lead
+                </option>
+
+                <option value="Estimated" selected>
+                    Estimated
+                </option>
+
+                <option value="Sold">
+                    Sold
+                </option>
+
+                <option value="Completed">
+                    Completed
+                </option>
+
+                <option value="Lost">
+                    Lost
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
                 Estimate Valid For
             </label>
 
@@ -645,7 +988,8 @@ button:hover {
         </div>
 
 
-</div>
+    </div>
+
 </div>
 
 
@@ -655,10 +999,12 @@ button:hover {
 
 <div class="card">
 
-    <h2>2. Roof Measurements</h2>
+    <h2>
+        2. Roof Measurements
+    </h2>
 
     <p class="note">
-        Enter the actual roof squares. Waste, pitch and tear-off layers affect the estimate.
+        Enter actual roof squares. Waste, pitch and tear-off layers affect the estimate.
     </p>
 
 
@@ -767,12 +1113,9 @@ button:hover {
 
 <div class="card">
 
-    <h2>3. Material Costs</h2>
-
-    <p class="note">
-        Enter your actual costs. Per-square items are multiplied by the material quantity including waste.
-    </p>
-
+    <h2>
+        3. Material Costs
+    </h2>
 
     <div class="grid">
 
@@ -932,8 +1275,9 @@ button:hover {
 
 <div class="card">
 
-    <h2>4. Production Costs</h2>
-
+    <h2>
+        4. Production Costs
+    </h2>
 
     <div class="grid">
 
@@ -997,8 +1341,9 @@ button:hover {
 
 <div class="card">
 
-    <h2>5. Pricing & Profit</h2>
-
+    <h2>
+        5. Pricing & Profit
+    </h2>
 
     <div class="grid">
 
@@ -1063,38 +1408,28 @@ button:hover {
 
 <div class="card">
 
-    <h2>6. Proposal Scope of Work</h2>
+    <h2>
+        6. Proposal Scope of Work
+    </h2>
 
-    <p class="note">
-        This information appears on the homeowner proposal.
-    </p>
-
-
-    <div class="field">
-
-        <label>
-            Scope of Work
-        </label>
-
-        <textarea id="scope">Remove existing roofing materials and dispose of jobsite debris.
+    <textarea id="scope">Remove existing roofing materials and dispose of jobsite debris.
 Install new roofing system according to manufacturer specifications.
 Install underlayment and required ice & water protection.
 Install drip edge and specified flashing.
 Install required roofing ventilation components.
 Perform final cleanup and magnetic sweep of the work area.</textarea>
 
-    </div>
-
 </div>
 
 
 <!-- =========================
-     ACTIONS
+     BUTTONS
 ========================= -->
 
 <div class="card no-print">
 
     <div class="button-row">
+
 
         <button
             type="button"
@@ -1131,7 +1466,7 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
             class="dark"
             onclick="printProposal()">
 
-            Print / Save Proposal PDF
+            Print / Save PDF
 
         </button>
 
@@ -1144,6 +1479,7 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
             New Estimate
 
         </button>
+
 
     </div>
 
@@ -1164,8 +1500,7 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
 
     <div class="private-banner">
 
-        🔒 CONTRACTOR ONLY —
-        Your cost, profit and margin are private and will NOT appear on the homeowner proposal.
+        🔒 CONTRACTOR ONLY — Cost, profit and margin are private.
 
     </div>
 
@@ -1310,30 +1645,13 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
 
     <table class="material-table">
 
-        <thead>
-
-            <tr>
-
-                <th>
-                    Material
-                </th>
-
-                <th>
-                    Quantity
-                </th>
-
-            </tr>
-
-        </thead>
-
-
         <tbody>
 
 
             <tr>
 
                 <td>
-                    Roof Squares Including Waste
+                    Material Squares
                 </td>
 
                 <td id="qtySquares">
@@ -1426,108 +1744,37 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
     </table>
 
 
-    <h3 style="margin-top:25px;">
-        Private Estimate Breakdown
-    </h3>
-
-
-    <table class="material-table">
-
-        <tbody>
-
-
-            <tr>
-
-                <td>
-                    Base Production Cost
-                </td>
-
-                <td id="outBase">
-                    $0.00
-                </td>
-
-            </tr>
-
-
-            <tr>
-
-                <td>
-                    Overhead
-                </td>
-
-                <td id="outOverhead">
-                    $0.00
-                </td>
-
-            </tr>
-
-
-            <tr>
-
-                <td>
-                    Gross Profit
-                </td>
-
-                <td id="outTargetProfit">
-                    $0.00
-                </td>
-
-            </tr>
-
-
-            <tr>
-
-                <td>
-                    Sales Adjustment
-                </td>
-
-                <td id="outAdjustment">
-                    $0.00
-                </td>
-
-            </tr>
-
-
-            <tr>
-
-                <td>
-                    <strong>
-                        Recommended Selling Price
-                    </strong>
-                </td>
-
-                <td>
-
-                    <strong id="outFinalPrice">
-                        $0.00
-                    </strong>
-
-                </td>
-
-            </tr>
-
-
-        </tbody>
-
-    </table>
-
-
 </div>
 
 
 <!-- =========================
-     SAVED ESTIMATES
+     ESTIMATE MANAGER
 ========================= -->
 
-<div class="card saved-card no-print">
+<div class="card manager-card no-print">
 
     <h2>
-        Saved Estimates
+        Estimate & Customer Manager
     </h2>
 
+    <p class="note">
+        Your estimates are currently stored locally in this browser.
+    </p>
+
+
+    <div class="search-box">
+
+        <input
+            id="searchEstimates"
+            placeholder="Search customer, address or estimate #..."
+            oninput="renderEstimates()">
+
+    </div>
+
+
     <div
-        id="savedEstimates"
-        class="saved-list">
+        id="estimateList"
+        class="estimate-list">
 
         No saved estimates yet.
 
@@ -1537,7 +1784,7 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
 
 
 <!-- =========================
-     HOMEOWNER PROPOSAL
+     PROPOSAL
 ========================= -->
 
 <div
@@ -1578,11 +1825,9 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
         <div class="proposal-meta">
 
             <div>
-
                 <strong>
                     Estimate #
                 </strong>
-
             </div>
 
             <div id="proposalNumber">
@@ -1591,11 +1836,9 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
 
 
             <div style="margin-top:8px;">
-
                 <strong>
                     Date
                 </strong>
-
             </div>
 
             <div id="proposalDate">
@@ -1604,11 +1847,9 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
 
 
             <div style="margin-top:8px;">
-
                 <strong>
                     Valid Until
                 </strong>
-
             </div>
 
             <div id="proposalValid">
@@ -1622,7 +1863,6 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
 
 
     <div class="proposal-section">
-
 
         <h3>
             Prepared For
@@ -1639,24 +1879,20 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
             <div
                 id="proposalPhone"
                 style="margin-top:5px;">
-
             </div>
 
 
             <div
                 id="proposalAddress"
                 style="margin-top:5px;">
-
             </div>
 
         </div>
-
 
     </div>
 
 
     <div class="proposal-section">
-
 
         <h3>
             Project Details
@@ -1666,7 +1902,6 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
         <table class="material-table">
 
             <tbody>
-
 
                 <tr>
 
@@ -1719,17 +1954,14 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
 
                 </tr>
 
-
             </tbody>
 
         </table>
-
 
     </div>
 
 
     <div class="proposal-section">
-
 
         <h3>
             Scope of Work
@@ -1739,20 +1971,15 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
         <ul
             id="proposalScope"
             class="scope-list">
-
         </ul>
-
 
     </div>
 
 
     <div class="proposal-price">
 
-
         <div class="proposal-price-label">
-
             TOTAL PROJECT INVESTMENT
-
         </div>
 
 
@@ -1764,12 +1991,10 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
 
         </div>
 
-
     </div>
 
 
     <div class="proposal-section">
-
 
         <h3>
             Important Information
@@ -1782,24 +2007,19 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
             Final project conditions may require additional work if concealed damage or
             unforeseen conditions are discovered after work begins.
 
-
             <br><br>
-
 
             Pricing is valid until
             <strong id="proposalValidText">
                 —
             </strong>.
 
-
             <br><br>
-
 
             Any changes to the scope of work should be approved by the customer and
             contractor before additional work is performed.
 
         </div>
-
 
     </div>
 
@@ -1812,9 +2032,7 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
             <div class="signature-line"></div>
 
             <div class="signature-label">
-
                 Customer Signature
-
             </div>
 
         </div>
@@ -1825,9 +2043,7 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
             <div class="signature-line"></div>
 
             <div class="signature-label">
-
                 Date
-
             </div>
 
         </div>
@@ -1838,9 +2054,7 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
             <div class="signature-line"></div>
 
             <div class="signature-label">
-
                 Contractor / Authorized Representative
-
             </div>
 
         </div>
@@ -1851,9 +2065,7 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
             <div class="signature-line"></div>
 
             <div class="signature-label">
-
                 Date
-
             </div>
 
         </div>
@@ -1885,18 +2097,19 @@ Perform final cleanup and magnetic sweep of the work area.</textarea>
 
 
 /* =========================
-   BASIC HELPERS
+   HELPERS
 ========================= */
 
 function money(value) {
 
-    return "$" + Number(value).toLocaleString(
-        "en-US",
-        {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }
-    );
+    return "$" +
+        Number(value).toLocaleString(
+            "en-US",
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }
+        );
 
 }
 
@@ -1910,10 +2123,6 @@ function num(id) {
 }
 
 
-/* =========================
-   PITCH NAME
-========================= */
-
 function getPitchName() {
 
     const value =
@@ -1922,21 +2131,10 @@ function getPitchName() {
         );
 
 
-    if (value === 0) {
-        return "2/12 - 4/12";
-    }
-
-    if (value === 0.03) {
-        return "5/12 - 6/12";
-    }
-
-    if (value === 0.06) {
-        return "7/12 - 8/12";
-    }
-
-    if (value === 0.10) {
-        return "9/12 - 10/12";
-    }
+    if (value === 0) return "2/12 - 4/12";
+    if (value === 0.03) return "5/12 - 6/12";
+    if (value === 0.06) return "7/12 - 8/12";
+    if (value === 0.10) return "9/12 - 10/12";
 
     return "11/12+";
 
@@ -1981,18 +2179,10 @@ function calculateEstimate() {
         num("waste");
 
 
-    /*
-        Material quantity including waste.
-    */
-
     const materialSquares =
         squares *
         (1 + wastePercent / 100);
 
-
-    /*
-        Pitch increases labor.
-    */
 
     const pitchLaborMultiplier =
         1 + pitchAdjustment;
@@ -2069,7 +2259,7 @@ function calculateEstimate() {
         overheadAmount;
 
 
-    /* PROFIT */
+    /* PRICE */
 
     const desiredMargin =
         num("profitMargin") / 100;
@@ -2107,12 +2297,15 @@ function calculateEstimate() {
 
     const actualMargin =
         sellingPrice > 0
-        ? (grossProfit / sellingPrice) * 100
+        ? grossProfit /
+          sellingPrice *
+          100
         : 0;
 
 
     const pricePerSquare =
-        sellingPrice / squares;
+        sellingPrice /
+        squares;
 
 
     /* QUANTITIES */
@@ -2149,15 +2342,16 @@ function calculateEstimate() {
 
     const dripPieces =
         Math.ceil(
-            (squares * 10) / 10
+            squares
         );
 
 
-    /* RESULTS */
+    /* OUTPUT */
 
     document.getElementById(
         "results"
-    ).style.display = "block";
+    ).style.display =
+        "block";
 
 
     document.getElementById(
@@ -2191,12 +2385,6 @@ function calculateEstimate() {
 
 
     document.getElementById(
-        "outFinalPrice"
-    ).textContent =
-        money(sellingPrice);
-
-
-    document.getElementById(
         "outCost"
     ).textContent =
         money(totalCost);
@@ -2211,7 +2399,8 @@ function calculateEstimate() {
     document.getElementById(
         "outMargin"
     ).textContent =
-        actualMargin.toFixed(1) + "%";
+        actualMargin.toFixed(1) +
+        "%";
 
 
     document.getElementById(
@@ -2230,30 +2419,6 @@ function calculateEstimate() {
         "outLabor"
     ).textContent =
         money(laborCost);
-
-
-    document.getElementById(
-        "outBase"
-    ).textContent =
-        money(baseCost);
-
-
-    document.getElementById(
-        "outOverhead"
-    ).textContent =
-        money(overheadAmount);
-
-
-    document.getElementById(
-        "outTargetProfit"
-    ).textContent =
-        money(grossProfit);
-
-
-    document.getElementById(
-        "outAdjustment"
-    ).textContent =
-        money(adjustment);
 
 
     document.getElementById(
@@ -2325,323 +2490,7 @@ function calculateEstimate() {
 
 
 /* =========================
-   GENERATE PROPOSAL
-========================= */
-
-function generateProposal() {
-
-
-    const calculation =
-        calculateEstimate();
-
-
-    if (!calculation) {
-        return;
-    }
-
-
-    const company =
-        document.getElementById(
-            "company"
-        ).value.trim();
-
-
-    const companyPhone =
-        document.getElementById(
-            "companyPhone"
-        ).value.trim();
-
-
-    const companyEmail =
-        document.getElementById(
-            "companyEmail"
-        ).value.trim();
-
-
-    const customer =
-        document.getElementById(
-            "customer"
-        ).value.trim();
-
-
-    const customerPhone =
-        document.getElementById(
-            "phone"
-        ).value.trim();
-
-
-    const address =
-        document.getElementById(
-            "address"
-        ).value.trim();
-
-
-    const estimateNumber =
-        document.getElementById(
-            "estimateNumber"
-        ).value;
-
-
-    const validDays =
-        parseInt(
-            document.getElementById(
-                "validDays"
-            ).value
-        ) || 30;
-
-
-    const scope =
-        document.getElementById(
-            "scope"
-        ).value;
-
-
-    /* DATE */
-
-    const today =
-        new Date();
-
-
-    const validDate =
-        new Date();
-
-
-    validDate.setDate(
-        today.getDate() +
-        validDays
-    );
-
-
-    const dateString =
-        today.toLocaleDateString(
-            "en-US"
-        );
-
-
-    const validDateString =
-        validDate.toLocaleDateString(
-            "en-US"
-        );
-
-
-    /* COMPANY */
-
-    document.getElementById(
-        "proposalCompany"
-    ).textContent =
-        company ||
-        "ROOFBIDDER";
-
-
-    let contactText = "";
-
-
-    if (companyPhone) {
-        contactText +=
-            companyPhone;
-    }
-
-
-    if (
-        companyPhone &&
-        companyEmail
-    ) {
-        contactText +=
-            " • ";
-    }
-
-
-    if (companyEmail) {
-        contactText +=
-            companyEmail;
-    }
-
-
-    document.getElementById(
-        "proposalCompanyContact"
-    ).textContent =
-        contactText;
-
-
-    /* META */
-
-    document.getElementById(
-        "proposalNumber"
-    ).textContent =
-        estimateNumber ||
-        "—";
-
-
-    document.getElementById(
-        "proposalDate"
-    ).textContent =
-        dateString;
-
-
-    document.getElementById(
-        "proposalValid"
-    ).textContent =
-        validDateString;
-
-
-    document.getElementById(
-        "proposalValidText"
-    ).textContent =
-        validDateString;
-
-
-    /* CUSTOMER */
-
-    document.getElementById(
-        "proposalCustomer"
-    ).textContent =
-        customer ||
-        "Customer";
-
-
-    document.getElementById(
-        "proposalPhone"
-    ).textContent =
-        customerPhone ||
-        "";
-
-
-    document.getElementById(
-        "proposalAddress"
-    ).textContent =
-        address ||
-        "Property address not provided";
-
-
-    /* PROJECT */
-
-    document.getElementById(
-        "proposalSquares"
-    ).textContent =
-        calculation.squares.toFixed(1) +
-        " squares";
-
-
-    document.getElementById(
-        "proposalPitch"
-    ).textContent =
-        getPitchName();
-
-
-    document.getElementById(
-        "proposalLayers"
-    ).textContent =
-        calculation.layers +
-        (
-            calculation.layers === 1
-            ? " layer"
-            : " layers"
-        );
-
-
-    /* PRICE */
-
-    document.getElementById(
-        "proposalPrice"
-    ).textContent =
-        money(
-            calculation.sellingPrice
-        );
-
-
-    /* SCOPE */
-
-    const scopeList =
-        document.getElementById(
-            "proposalScope"
-        );
-
-
-    scopeList.innerHTML = "";
-
-
-    const scopeLines =
-        scope
-        .split("\n")
-        .map(line => line.trim())
-        .filter(line => line.length > 0);
-
-
-    scopeLines.forEach(line => {
-
-        const li =
-            document.createElement(
-                "li"
-            );
-
-
-        li.textContent =
-            line;
-
-
-        scopeList.appendChild(
-            li
-        );
-
-    });
-
-
-    /* SHOW */
-
-    const proposal =
-        document.getElementById(
-            "proposal"
-        );
-
-
-    proposal.style.display =
-        "block";
-
-
-    proposal.scrollIntoView({
-        behavior: "smooth"
-    });
-
-}
-
-
-/* =========================
-   PRINT PROPOSAL
-========================= */
-
-function printProposal() {
-
-
-    const proposal =
-        document.getElementById(
-            "proposal"
-        );
-
-
-    if (
-        proposal.style.display !==
-        "block"
-    ) {
-
-        generateProposal();
-
-    }
-
-
-    setTimeout(
-        function() {
-
-            window.print();
-
-        },
-        300
-    );
-
-}
-
-
-/* =========================
-   SAVE ESTIMATE
+   SAVE
 ========================= */
 
 function saveEstimate() {
@@ -2696,6 +2545,11 @@ function saveEstimate() {
         estimateNumber:
             document.getElementById(
                 "estimateNumber"
+            ).value,
+
+        jobStatus:
+            document.getElementById(
+                "jobStatus"
             ).value,
 
         validDays:
@@ -2803,6 +2657,15 @@ function saveEstimate() {
                 "scope"
             ).value,
 
+        sellingPrice:
+            calculation.sellingPrice,
+
+        totalCost:
+            calculation.totalCost,
+
+        grossProfit:
+            calculation.grossProfit,
+
         savedAt:
             new Date().toLocaleString()
 
@@ -2817,9 +2680,32 @@ function saveEstimate() {
         );
 
 
-    estimates.push(
-        data
-    );
+    /*
+       If an estimate number already exists,
+       update that estimate instead of creating
+       a duplicate.
+    */
+
+    const existingIndex =
+        estimates.findIndex(
+            item =>
+                item.estimateNumber ===
+                data.estimateNumber
+        );
+
+
+    if (existingIndex >= 0) {
+
+        estimates[existingIndex] =
+            data;
+
+    } else {
+
+        estimates.push(
+            data
+        );
+
+    }
 
 
     localStorage.setItem(
@@ -2830,7 +2716,9 @@ function saveEstimate() {
     );
 
 
-    renderSavedEstimates();
+    renderEstimates();
+
+    updateDashboard();
 
 
     alert(
@@ -2841,7 +2729,7 @@ function saveEstimate() {
 
 
 /* =========================
-   LOAD ESTIMATE
+   LOAD
 ========================= */
 
 function loadEstimate(index) {
@@ -2887,10 +2775,96 @@ function loadEstimate(index) {
     calculateEstimate();
 
 
+    document.getElementById(
+        "proposal"
+    ).style.display =
+        "none";
+
+
     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
+
+}
+
+
+/* =========================
+   DUPLICATE
+========================= */
+
+function duplicateEstimate(index) {
+
+
+    const estimates =
+        JSON.parse(
+            localStorage.getItem(
+                "roofbidder_estimates"
+            ) || "[]"
+        );
+
+
+    const original =
+        estimates[index];
+
+
+    if (!original) {
+        return;
+    }
+
+
+    const copy =
+        JSON.parse(
+            JSON.stringify(
+                original
+            )
+        );
+
+
+    copy.estimateNumber =
+        "RB-" +
+        new Date()
+            .toISOString()
+            .slice(0,10)
+            .replace(/-/g,"") +
+        "-" +
+        Math.floor(
+            1000 +
+            Math.random() *
+            9000
+        );
+
+
+    copy.jobStatus =
+        "Estimated";
+
+
+    copy.savedAt =
+        new Date()
+            .toLocaleString();
+
+
+    estimates.push(
+        copy
+    );
+
+
+    localStorage.setItem(
+        "roofbidder_estimates",
+        JSON.stringify(
+            estimates
+        )
+    );
+
+
+    renderEstimates();
+
+    updateDashboard();
+
+
+    alert(
+        "Estimate duplicated!"
+    );
 
 }
 
@@ -2935,22 +2909,77 @@ function deleteEstimate(index) {
     );
 
 
-    renderSavedEstimates();
+    renderEstimates();
+
+    updateDashboard();
 
 }
 
 
 /* =========================
-   SAVED LIST
+   STATUS
 ========================= */
 
-function renderSavedEstimates() {
+function updateStatus(
+    index,
+    status
+) {
+
+
+    let estimates =
+        JSON.parse(
+            localStorage.getItem(
+                "roofbidder_estimates"
+            ) || "[]"
+        );
+
+
+    if (!estimates[index]) {
+        return;
+    }
+
+
+    estimates[index].jobStatus =
+        status;
+
+
+    localStorage.setItem(
+        "roofbidder_estimates",
+        JSON.stringify(
+            estimates
+        )
+    );
+
+
+    renderEstimates();
+
+    updateDashboard();
+
+}
+
+
+/* =========================
+   SEARCH
+========================= */
+
+function renderEstimates() {
 
 
     const container =
         document.getElementById(
-            "savedEstimates"
+            "estimateList"
         );
+
+
+    const search =
+        (
+            document.getElementById(
+                "searchEstimates"
+            ).value ||
+            ""
+        )
+        .toLowerCase()
+        .trim();
 
 
     const estimates =
@@ -2961,106 +2990,721 @@ function renderSavedEstimates() {
         );
 
 
+    const filtered =
+        estimates
+        .map(
+            (
+                estimate,
+                index
+            ) => ({
+                estimate,
+                index
+            })
+        )
+        .filter(
+            item => {
+
+                const e =
+                    item.estimate;
+
+
+                const text =
+                    (
+                        (e.customer || "") +
+                        " " +
+                        (e.address || "") +
+                        " " +
+                        (e.estimateNumber || "")
+                    )
+                    .toLowerCase();
+
+
+                return text.includes(
+                    search
+                );
+
+            }
+        )
+        .reverse();
+
+
     if (
-        estimates.length === 0
+        filtered.length === 0
     ) {
 
         container.innerHTML =
-            "No saved estimates yet.";
+            "No estimates found.";
 
         return;
 
     }
 
 
-    container.innerHTML = "";
+    container.innerHTML =
+        "";
 
 
-    estimates
-        .slice()
-        .reverse()
-        .forEach(
-            (estimate, reversedIndex) => {
+    filtered.forEach(
+        item => {
 
 
-                const actualIndex =
-                    estimates.length -
-                    1 -
-                    reversedIndex;
+            const e =
+                item.estimate;
 
 
-                const item =
-                    document.createElement(
-                        "div"
-                    );
+            const index =
+                item.index;
 
 
-                item.className =
-                    "saved-item";
+            const div =
+                document.createElement(
+                    "div"
+                );
 
 
-                item.innerHTML = `
+            div.className =
+                "estimate-item";
 
-                    <div>
+
+            const statusClass =
+                (
+                    e.jobStatus ||
+                    "Estimated"
+                )
+                .toLowerCase();
+
+
+            div.innerHTML = `
+
+                <div class="estimate-main">
+
+                    <div class="estimate-info">
 
                         <strong>
                             ${escapeHtml(
-                                estimate.customer ||
+                                e.customer ||
                                 "Unnamed Customer"
                             )}
                         </strong>
 
-                        <br>
-
                         <small>
-
                             ${escapeHtml(
-                                estimate.address ||
+                                e.address ||
                                 "No address"
                             )}
+                        </small>
 
-                            <br>
-
+                        <small>
+                            Estimate #:
                             ${escapeHtml(
-                                estimate.savedAt ||
-                                ""
+                                e.estimateNumber ||
+                                "—"
                             )}
+                        </small>
 
+                        <span
+                            class="status-badge status-${statusClass}">
+                            ${escapeHtml(
+                                e.jobStatus ||
+                                "Estimated"
+                            )}
+                        </span>
+
+                    </div>
+
+
+                    <div class="estimate-money">
+
+                        <strong>
+                            ${money(
+                                e.sellingPrice || 0
+                            )}
+                        </strong>
+
+                        <small>
+                            Profit:
+                            ${money(
+                                e.grossProfit || 0
+                            )}
                         </small>
 
                     </div>
 
-
-                    <div class="saved-actions">
-
-                        <button
-                            class="primary"
-                            onclick="loadEstimate(${actualIndex})">
-
-                            Load
-
-                        </button>
+                </div>
 
 
-                        <button
-                            class="danger"
-                            onclick="deleteEstimate(${actualIndex})">
-
-                            Delete
-
-                        </button>
-
-                    </div>
-
-                `;
+                <div class="estimate-actions">
 
 
-                container.appendChild(
-                    item
+                    <select
+                        class="status-select"
+                        onchange="updateStatus(${index}, this.value)">
+
+                        <option
+                            value="Lead"
+                            ${e.jobStatus === "Lead" ? "selected" : ""}>
+                            Lead
+                        </option>
+
+                        <option
+                            value="Estimated"
+                            ${e.jobStatus === "Estimated" ? "selected" : ""}>
+                            Estimated
+                        </option>
+
+                        <option
+                            value="Sold"
+                            ${e.jobStatus === "Sold" ? "selected" : ""}>
+                            Sold
+                        </option>
+
+                        <option
+                            value="Completed"
+                            ${e.jobStatus === "Completed" ? "selected" : ""}>
+                            Completed
+                        </option>
+
+                        <option
+                            value="Lost"
+                            ${e.jobStatus === "Lost" ? "selected" : ""}>
+                            Lost
+                        </option>
+
+                    </select>
+
+
+                    <button
+                        class="primary"
+                        onclick="loadEstimate(${index})">
+
+                        Load
+
+                    </button>
+
+
+                    <button
+                        class="purple"
+                        onclick="loadAndProposal(${index})">
+
+                        Proposal
+
+                    </button>
+
+
+                    <button
+                        class="gray"
+                        onclick="duplicateEstimate(${index})">
+
+                        Duplicate
+
+                    </button>
+
+
+                    <button
+                        class="danger"
+                        onclick="deleteEstimate(${index})">
+
+                        Delete
+
+                    </button>
+
+
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                div
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================
+   LOAD + PROPOSAL
+========================= */
+
+function loadAndProposal(index) {
+
+    loadEstimate(index);
+
+    setTimeout(
+        function() {
+
+            generateProposal();
+
+        },
+        250
+    );
+
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function updateDashboard() {
+
+
+    const estimates =
+        JSON.parse(
+            localStorage.getItem(
+                "roofbidder_estimates"
+            ) || "[]"
+        );
+
+
+    let revenue = 0;
+    let profit = 0;
+    let soldRevenue = 0;
+
+
+    let lead = 0;
+    let estimated = 0;
+    let sold = 0;
+    let completed = 0;
+    let lost = 0;
+
+
+    estimates.forEach(
+        e => {
+
+
+            const price =
+                Number(
+                    e.sellingPrice
+                ) || 0;
+
+
+            const grossProfit =
+                Number(
+                    e.grossProfit
+                ) || 0;
+
+
+            revenue +=
+                price;
+
+
+            profit +=
+                grossProfit;
+
+
+            const status =
+                e.jobStatus ||
+                "Estimated";
+
+
+            if (status === "Lead") {
+
+                lead++;
+
+            }
+
+
+            if (status === "Estimated") {
+
+                estimated++;
+
+            }
+
+
+            if (status === "Sold") {
+
+                sold++;
+
+                soldRevenue +=
+                    price;
+
+            }
+
+
+            if (status === "Completed") {
+
+                completed++;
+
+                soldRevenue +=
+                    price;
+
+            }
+
+
+            if (status === "Lost") {
+
+                lost++;
+
+            }
+
+        }
+    );
+
+
+    document.getElementById(
+        "dashEstimates"
+    ).textContent =
+        estimates.length;
+
+
+    document.getElementById(
+        "dashRevenue"
+    ).textContent =
+        money(revenue);
+
+
+    document.getElementById(
+        "dashProfit"
+    ).textContent =
+        money(profit);
+
+
+    document.getElementById(
+        "dashSold"
+    ).textContent =
+        money(soldRevenue);
+
+
+    document.getElementById(
+        "countLead"
+    ).textContent =
+        lead;
+
+
+    document.getElementById(
+        "countEstimated"
+    ).textContent =
+        estimated;
+
+
+    document.getElementById(
+        "countSold"
+    ).textContent =
+        sold;
+
+
+    document.getElementById(
+        "countCompleted"
+    ).textContent =
+        completed;
+
+
+    document.getElementById(
+        "countLost"
+    ).textContent =
+        lost;
+
+}
+
+
+/* =========================
+   PROPOSAL
+========================= */
+
+function generateProposal() {
+
+
+    const calculation =
+        calculateEstimate();
+
+
+    if (!calculation) {
+        return;
+    }
+
+
+    const company =
+        document.getElementById(
+            "company"
+        ).value.trim();
+
+
+    const companyPhone =
+        document.getElementById(
+            "companyPhone"
+        ).value.trim();
+
+
+    const companyEmail =
+        document.getElementById(
+            "companyEmail"
+        ).value.trim();
+
+
+    const customer =
+        document.getElementById(
+            "customer"
+        ).value.trim();
+
+
+    const customerPhone =
+        document.getElementById(
+            "phone"
+        ).value.trim();
+
+
+    const address =
+        document.getElementById(
+            "address"
+        ).value.trim();
+
+
+    const estimateNumber =
+        document.getElementById(
+            "estimateNumber"
+        ).value;
+
+
+    const validDays =
+        parseInt(
+            document.getElementById(
+                "validDays"
+            ).value
+        ) || 30;
+
+
+    const scope =
+        document.getElementById(
+            "scope"
+        ).value;
+
+
+    const today =
+        new Date();
+
+
+    const validDate =
+        new Date();
+
+
+    validDate.setDate(
+        today.getDate() +
+        validDays
+    );
+
+
+    const dateString =
+        today.toLocaleDateString(
+            "en-US"
+        );
+
+
+    const validDateString =
+        validDate.toLocaleDateString(
+            "en-US"
+        );
+
+
+    document.getElementById(
+        "proposalCompany"
+    ).textContent =
+        company ||
+        "ROOFBIDDER";
+
+
+    let contact = "";
+
+
+    if (companyPhone) {
+
+        contact +=
+            companyPhone;
+
+    }
+
+
+    if (
+        companyPhone &&
+        companyEmail
+    ) {
+
+        contact +=
+            " • ";
+
+    }
+
+
+    if (companyEmail) {
+
+        contact +=
+            companyEmail;
+
+    }
+
+
+    document.getElementById(
+        "proposalCompanyContact"
+    ).textContent =
+        contact;
+
+
+    document.getElementById(
+        "proposalNumber"
+    ).textContent =
+        estimateNumber ||
+        "—";
+
+
+    document.getElementById(
+        "proposalDate"
+    ).textContent =
+        dateString;
+
+
+    document.getElementById(
+        "proposalValid"
+    ).textContent =
+        validDateString;
+
+
+    document.getElementById(
+        "proposalValidText"
+    ).textContent =
+        validDateString;
+
+
+    document.getElementById(
+        "proposalCustomer"
+    ).textContent =
+        customer ||
+        "Customer";
+
+
+    document.getElementById(
+        "proposalPhone"
+    ).textContent =
+        customerPhone;
+
+
+    document.getElementById(
+        "proposalAddress"
+    ).textContent =
+        address ||
+        "Property address not provided";
+
+
+    document.getElementById(
+        "proposalSquares"
+    ).textContent =
+        calculation.squares.toFixed(1) +
+        " squares";
+
+
+    document.getElementById(
+        "proposalPitch"
+    ).textContent =
+        getPitchName();
+
+
+    document.getElementById(
+        "proposalLayers"
+    ).textContent =
+        calculation.layers +
+        (
+            calculation.layers === 1
+            ? " layer"
+            : " layers"
+        );
+
+
+    document.getElementById(
+        "proposalPrice"
+    ).textContent =
+        money(
+            calculation.sellingPrice
+        );
+
+
+    const scopeList =
+        document.getElementById(
+            "proposalScope"
+        );
+
+
+    scopeList.innerHTML =
+        "";
+
+
+    scope
+        .split("\n")
+        .map(
+            line =>
+                line.trim()
+        )
+        .filter(
+            line =>
+                line.length > 0
+        )
+        .forEach(
+            line => {
+
+                const li =
+                    document.createElement(
+                        "li"
+                    );
+
+
+                li.textContent =
+                    line;
+
+
+                scopeList.appendChild(
+                    li
                 );
 
             }
         );
+
+
+    document.getElementById(
+        "proposal"
+    ).style.display =
+        "block";
+
+
+    document.getElementById(
+        "proposal"
+    ).scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =========================
+   PRINT
+========================= */
+
+function printProposal() {
+
+
+    const proposal =
+        document.getElementById(
+            "proposal"
+        );
+
+
+    if (
+        proposal.style.display !==
+        "block"
+    ) {
+
+        generateProposal();
+
+    }
+
+
+    setTimeout(
+        function() {
+
+            window.print();
+
+        },
+        300
+    );
 
 }
 
@@ -3192,6 +3836,12 @@ function newEstimate() {
 
 
     document.getElementById(
+        "jobStatus"
+    ).value =
+        "Estimated";
+
+
+    document.getElementById(
         "scope"
     ).value =
 `Remove existing roofing materials and dispose of jobsite debris.
@@ -3267,12 +3917,14 @@ function generateEstimateNumber() {
 
 
 /* =========================
-   INITIALIZE
+   START
 ========================= */
 
 generateEstimateNumber();
 
-renderSavedEstimates();
+renderEstimates();
+
+updateDashboard();
 
 
 </script>
