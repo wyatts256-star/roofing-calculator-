@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RoofBidder | Roofing Estimate Calculator</title>
+
+<title>RoofBidder | Roofing Estimate & Proposal</title>
 
 <style>
+
 * {
     box-sizing: border-box;
 }
@@ -75,19 +77,28 @@ header {
 }
 
 input,
-select {
+select,
+textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid #cbd5e1;
     border-radius: 8px;
     font-size: 15px;
     background: white;
+    font-family: inherit;
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
 }
 
 input:focus,
-select:focus {
+select:focus,
+textarea:focus {
     outline: none;
     border-color: #2563eb;
+    box-shadow: 0 0 0 2px rgba(37,99,235,.10);
 }
 
 .full {
@@ -116,6 +127,10 @@ button {
     font-size: 14px;
 }
 
+button:hover {
+    opacity: .9;
+}
+
 .primary {
     background: #2563eb;
     color: white;
@@ -141,14 +156,29 @@ button {
     color: white;
 }
 
-button:hover {
-    opacity: .9;
+.orange {
+    background: #ea580c;
+    color: white;
 }
 
-/* RESULTS */
+
+/* =========================
+   PRIVATE RESULTS
+========================= */
 
 .results {
     display: none;
+}
+
+.private-banner {
+    background: #fef3c7;
+    border: 1px solid #f59e0b;
+    color: #92400e;
+    border-radius: 9px;
+    padding: 12px;
+    margin-bottom: 18px;
+    font-size: 13px;
+    font-weight: bold;
 }
 
 .summary-grid {
@@ -176,6 +206,10 @@ button:hover {
     font-size: 21px;
 }
 
+.profit {
+    color: #16a34a;
+}
+
 .total-box {
     background: #111827;
     color: white;
@@ -196,10 +230,6 @@ button:hover {
     margin-top: 5px;
 }
 
-.profit {
-    color: #16a34a;
-}
-
 .material-table {
     width: 100%;
     border-collapse: collapse;
@@ -217,16 +247,10 @@ button:hover {
     color: #64748b;
 }
 
-.estimate-header {
-    border-bottom: 2px solid #111827;
-    padding-bottom: 15px;
-    margin-bottom: 20px;
-}
 
-.estimate-number {
-    color: #64748b;
-    font-size: 13px;
-}
+/* =========================
+   SAVED ESTIMATES
+========================= */
 
 .saved-list {
     margin-top: 15px;
@@ -257,7 +281,138 @@ button:hover {
     font-size: 12px;
 }
 
+
+/* =========================
+   PROPOSAL
+========================= */
+
+.proposal {
+    display: none;
+    background: white;
+    max-width: 900px;
+    margin: 25px auto;
+    padding: 50px;
+    box-shadow: 0 3px 18px rgba(0,0,0,.10);
+    border-radius: 4px;
+}
+
+.proposal-top {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    border-bottom: 3px solid #111827;
+    padding-bottom: 20px;
+    margin-bottom: 25px;
+}
+
+.proposal-brand {
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: 2px;
+}
+
+.proposal-subtitle {
+    color: #64748b;
+    margin-top: 5px;
+}
+
+.proposal-meta {
+    text-align: right;
+    font-size: 13px;
+    color: #475569;
+}
+
+.proposal-meta strong {
+    color: #111827;
+}
+
+.proposal-section {
+    margin-top: 25px;
+}
+
+.proposal-section h3 {
+    font-size: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1px solid #d1d5db;
+    padding-bottom: 8px;
+}
+
+.customer-box {
+    background: #f8fafc;
+    padding: 18px;
+    border-radius: 8px;
+}
+
+.customer-box strong {
+    font-size: 18px;
+}
+
+.scope-list {
+    padding-left: 20px;
+    line-height: 1.8;
+}
+
+.proposal-price {
+    background: #111827;
+    color: white;
+    padding: 25px;
+    text-align: center;
+    border-radius: 10px;
+    margin: 30px 0;
+}
+
+.proposal-price-label {
+    font-size: 13px;
+    color: #cbd5e1;
+}
+
+.proposal-price-value {
+    font-size: 40px;
+    font-weight: 900;
+    margin-top: 5px;
+}
+
+.proposal-note {
+    color: #64748b;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.signature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 50px;
+}
+
+.signature-line {
+    border-bottom: 1px solid #111827;
+    height: 35px;
+}
+
+.signature-label {
+    font-size: 12px;
+    color: #64748b;
+    margin-top: 7px;
+}
+
+.proposal-footer {
+    border-top: 1px solid #d1d5db;
+    margin-top: 45px;
+    padding-top: 15px;
+    text-align: center;
+    color: #64748b;
+    font-size: 12px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
 @media (max-width: 700px) {
+
     .grid,
     .summary-grid {
         grid-template-columns: 1fr;
@@ -275,304 +430,786 @@ button:hover {
         flex-direction: column;
         align-items: flex-start;
     }
+
+    .proposal {
+        padding: 25px 18px;
+        margin: 10px;
+    }
+
+    .proposal-top {
+        flex-direction: column;
+    }
+
+    .proposal-meta {
+        text-align: left;
+    }
+
+    .signature-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
 }
 
+
+/* =========================
+   PRINT PROPOSAL
+========================= */
+
 @media print {
+
     body {
         background: white;
     }
 
-    header {
-        background: white;
-        color: black;
-        border-bottom: 2px solid black;
-    }
-
-    .tagline {
-        color: #333;
-    }
-
-    .no-print,
+    header,
     form,
-    .saved-card {
+    .results,
+    .saved-card,
+    .no-print {
         display: none !important;
     }
 
-    .results {
+    .proposal {
         display: block !important;
+        box-shadow: none;
+        margin: 0;
+        max-width: none;
+        padding: 20px;
     }
 
-    .card {
-        box-shadow: none;
-        border: none;
-    }
 }
+
 </style>
 </head>
 
+
 <body>
 
-<header>
-    <div class="logo">ROOFBIDDER</div>
-    <div class="tagline">Roofing estimates. Built for profit.</div>
+
+<header class="no-print">
+
+    <div class="logo">
+        ROOFBIDDER
+    </div>
+
+    <div class="tagline">
+        Roofing estimates. Built for profit.
+    </div>
+
 </header>
+
 
 <div class="container">
 
+
 <form id="estimateForm">
 
-<!-- CUSTOMER -->
+
+<!-- =========================
+     CUSTOMER
+========================= -->
 
 <div class="card">
+
     <h2>1. Customer & Contractor</h2>
 
     <div class="grid">
 
-        <div class="field">
-            <label>Company Name</label>
-            <input id="company" placeholder="Your company">
-        </div>
 
         <div class="field">
-            <label>Estimator</label>
-            <input id="estimator" placeholder="Your name">
+
+            <label>
+                Company Name
+            </label>
+
+            <input
+                id="company"
+                placeholder="Your company name">
+
         </div>
 
-        <div class="field">
-            <label>Customer Name</label>
-            <input id="customer" placeholder="Customer name">
-        </div>
 
         <div class="field">
-            <label>Customer Phone</label>
-            <input id="phone" placeholder="Phone number">
+
+            <label>
+                Estimator
+            </label>
+
+            <input
+                id="estimator"
+                placeholder="Your name">
+
         </div>
+
+
+        <div class="field">
+
+            <label>
+                Company Phone
+            </label>
+
+            <input
+                id="companyPhone"
+                placeholder="Your phone">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Company Email
+            </label>
+
+            <input
+                id="companyEmail"
+                placeholder="Your email">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Customer Name
+            </label>
+
+            <input
+                id="customer"
+                placeholder="Customer name">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Customer Phone
+            </label>
+
+            <input
+                id="phone"
+                placeholder="Customer phone">
+
+        </div>
+
 
         <div class="field full">
-            <label>Property Address</label>
-            <input id="address" placeholder="123 Main Street, City, State">
+
+            <label>
+                Property Address
+            </label>
+
+            <input
+                id="address"
+                placeholder="123 Main Street, City, State">
+
         </div>
+
 
         <div class="field">
-            <label>Estimate #</label>
-            <input id="estimateNumber">
+
+            <label>
+                Estimate #
+            </label>
+
+            <input
+                id="estimateNumber">
+
         </div>
 
-    </div>
+
+        <div class="field">
+
+            <label>
+                Estimate Valid For
+            </label>
+
+            <select id="validDays">
+
+                <option value="15">
+                    15 Days
+                </option>
+
+                <option value="30" selected>
+                    30 Days
+                </option>
+
+                <option value="60">
+                    60 Days
+                </option>
+
+            </select>
+
+        </div>
+
+
+</div>
 </div>
 
 
-<!-- ROOF -->
+<!-- =========================
+     ROOF
+========================= -->
 
 <div class="card">
+
     <h2>2. Roof Measurements</h2>
 
     <p class="note">
-        Enter the actual roof squares. Waste, pitch and tear-off layers will be calculated automatically.
+        Enter the actual roof squares. Waste, pitch and tear-off layers affect the estimate.
     </p>
+
 
     <div class="grid">
 
-        <div class="field">
-            <label>Roof Squares</label>
-            <input type="number" id="squares" value="20" min="0" step="0.1">
-        </div>
 
         <div class="field">
-            <label>Roof Pitch</label>
+
+            <label>
+                Roof Squares
+            </label>
+
+            <input
+                type="number"
+                id="squares"
+                value="20"
+                min="0"
+                step="0.1">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Roof Pitch
+            </label>
+
             <select id="pitch">
-                <option value="0">2/12 - 4/12</option>
-                <option value="0.03">5/12 - 6/12</option>
-                <option value="0.06">7/12 - 8/12</option>
-                <option value="0.10">9/12 - 10/12</option>
-                <option value="0.15">11/12+</option>
+
+                <option value="0">
+                    2/12 - 4/12
+                </option>
+
+                <option value="0.03">
+                    5/12 - 6/12
+                </option>
+
+                <option value="0.06">
+                    7/12 - 8/12
+                </option>
+
+                <option value="0.10">
+                    9/12 - 10/12
+                </option>
+
+                <option value="0.15">
+                    11/12+
+                </option>
+
             </select>
+
         </div>
 
+
         <div class="field">
-            <label>Tear-Off Layers</label>
+
+            <label>
+                Tear-Off Layers
+            </label>
+
             <select id="layers">
-                <option value="1">1 Layer</option>
-                <option value="2">2 Layers</option>
-                <option value="3">3 Layers</option>
+
+                <option value="1">
+                    1 Layer
+                </option>
+
+                <option value="2">
+                    2 Layers
+                </option>
+
+                <option value="3">
+                    3 Layers
+                </option>
+
             </select>
+
         </div>
 
+
         <div class="field">
-            <label>Waste %</label>
-            <input type="number" id="waste" value="10" min="0" max="50" step="1">
+
+            <label>
+                Waste %
+            </label>
+
+            <input
+                type="number"
+                id="waste"
+                value="10"
+                min="0"
+                max="50"
+                step="1">
+
         </div>
+
 
     </div>
+
 </div>
 
 
-<!-- MATERIALS -->
+<!-- =========================
+     MATERIALS
+========================= -->
 
 <div class="card">
+
     <h2>3. Material Costs</h2>
 
     <p class="note">
-        Enter your actual material costs. Prices are per square unless otherwise noted.
+        Enter your actual costs. Per-square items are multiplied by the material quantity including waste.
     </p>
 
+
     <div class="grid">
 
-        <div class="field">
-            <label>Shingles / Square</label>
-            <input type="number" id="shingle" value="110" min="0" step="0.01">
-        </div>
 
         <div class="field">
-            <label>Starter / Square</label>
-            <input type="number" id="starter" value="15" min="0" step="0.01">
+
+            <label>
+                Shingles / Square
+            </label>
+
+            <input
+                type="number"
+                id="shingle"
+                value="110"
+                min="0"
+                step="0.01">
+
         </div>
 
-        <div class="field">
-            <label>Ridge Cap / Square</label>
-            <input type="number" id="ridge" value="20" min="0" step="0.01">
-        </div>
 
         <div class="field">
-            <label>Underlayment</label>
-            <input type="number" id="underlayment" value="150" min="0" step="0.01">
+
+            <label>
+                Starter / Square
+            </label>
+
+            <input
+                type="number"
+                id="starter"
+                value="15"
+                min="0"
+                step="0.01">
+
         </div>
 
-        <div class="field">
-            <label>Ice & Water Shield</label>
-            <input type="number" id="ice" value="150" min="0" step="0.01">
-        </div>
 
         <div class="field">
-            <label>Drip Edge / Flashing</label>
-            <input type="number" id="drip" value="150" min="0" step="0.01">
+
+            <label>
+                Ridge Cap / Square
+            </label>
+
+            <input
+                type="number"
+                id="ridge"
+                value="20"
+                min="0"
+                step="0.01">
+
         </div>
 
-        <div class="field">
-            <label>Pipe Boots / Vents</label>
-            <input type="number" id="boots" value="100" min="0" step="0.01">
-        </div>
 
         <div class="field">
-            <label>Other Materials</label>
-            <input type="number" id="otherMaterials" value="0" min="0" step="0.01">
+
+            <label>
+                Underlayment
+            </label>
+
+            <input
+                type="number"
+                id="underlayment"
+                value="150"
+                min="0"
+                step="0.01">
+
         </div>
 
+
         <div class="field">
-            <label>Dumpster / Disposal</label>
-            <input type="number" id="dumpster" value="500" min="0" step="0.01">
+
+            <label>
+                Ice & Water Shield
+            </label>
+
+            <input
+                type="number"
+                id="ice"
+                value="150"
+                min="0"
+                step="0.01">
+
         </div>
+
+
+        <div class="field">
+
+            <label>
+                Drip Edge / Flashing
+            </label>
+
+            <input
+                type="number"
+                id="drip"
+                value="150"
+                min="0"
+                step="0.01">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Pipe Boots / Vents
+            </label>
+
+            <input
+                type="number"
+                id="boots"
+                value="100"
+                min="0"
+                step="0.01">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Other Materials
+            </label>
+
+            <input
+                type="number"
+                id="otherMaterials"
+                value="0"
+                min="0"
+                step="0.01">
+
+        </div>
+
+
+        <div class="field">
+
+            <label>
+                Dumpster / Disposal
+            </label>
+
+            <input
+                type="number"
+                id="dumpster"
+                value="500"
+                min="0"
+                step="0.01">
+
+        </div>
+
 
     </div>
+
 </div>
 
 
-<!-- LABOR -->
+<!-- =========================
+     LABOR
+========================= -->
 
 <div class="card">
+
     <h2>4. Production Costs</h2>
 
+
     <div class="grid">
 
-        <div class="field">
-            <label>Install Labor / Square</label>
-            <input type="number" id="labor" value="90" min="0" step="0.01">
-        </div>
 
         <div class="field">
-            <label>Tear-Off Labor / Square / Layer</label>
-            <input type="number" id="tearoff" value="35" min="0" step="0.01">
+
+            <label>
+                Install Labor / Square
+            </label>
+
+            <input
+                type="number"
+                id="labor"
+                value="90"
+                min="0"
+                step="0.01">
+
         </div>
 
+
         <div class="field">
-            <label>Other Labor</label>
-            <input type="number" id="otherLabor" value="0" min="0" step="0.01">
+
+            <label>
+                Tear-Off / Square / Layer
+            </label>
+
+            <input
+                type="number"
+                id="tearoff"
+                value="35"
+                min="0"
+                step="0.01">
+
         </div>
+
+
+        <div class="field">
+
+            <label>
+                Other Labor
+            </label>
+
+            <input
+                type="number"
+                id="otherLabor"
+                value="0"
+                min="0"
+                step="0.01">
+
+        </div>
+
 
     </div>
+
 </div>
 
 
-<!-- PROFIT -->
+<!-- =========================
+     PROFIT
+========================= -->
 
 <div class="card">
+
     <h2>5. Pricing & Profit</h2>
+
 
     <div class="grid">
 
-        <div class="field">
-            <label>Overhead %</label>
-            <input type="number" id="overhead" value="10" min="0" max="100" step="0.1">
-        </div>
 
         <div class="field">
-            <label>Desired Profit Margin %</label>
-            <input type="number" id="profitMargin" value="30" min="0" max="90" step="0.1">
+
+            <label>
+                Overhead %
+            </label>
+
+            <input
+                type="number"
+                id="overhead"
+                value="10"
+                min="0"
+                max="100"
+                step="0.1">
+
         </div>
 
+
         <div class="field">
-            <label>Sales Adjustment / Discount</label>
-            <input type="number" id="adjustment" value="0" step="0.01">
+
+            <label>
+                Desired Profit Margin %
+            </label>
+
+            <input
+                type="number"
+                id="profitMargin"
+                value="30"
+                min="0"
+                max="90"
+                step="0.1">
+
         </div>
+
+
+        <div class="field">
+
+            <label>
+                Sales Adjustment / Discount
+            </label>
+
+            <input
+                type="number"
+                id="adjustment"
+                value="0"
+                step="0.01">
+
+        </div>
+
 
     </div>
+
 </div>
 
+
+<!-- =========================
+     SCOPE
+========================= -->
+
+<div class="card">
+
+    <h2>6. Proposal Scope of Work</h2>
+
+    <p class="note">
+        This information appears on the homeowner proposal.
+    </p>
+
+
+    <div class="field">
+
+        <label>
+            Scope of Work
+        </label>
+
+        <textarea id="scope">Remove existing roofing materials and dispose of jobsite debris.
+Install new roofing system according to manufacturer specifications.
+Install underlayment and required ice & water protection.
+Install drip edge and specified flashing.
+Install required roofing ventilation components.
+Perform final cleanup and magnetic sweep of the work area.</textarea>
+
+    </div>
+
+</div>
+
+
+<!-- =========================
+     ACTIONS
+========================= -->
 
 <div class="card no-print">
 
     <div class="button-row">
 
-        <button type="button" class="primary" onclick="calculateEstimate()">
+        <button
+            type="button"
+            class="primary"
+            onclick="calculateEstimate()">
+
             Calculate Estimate
+
         </button>
 
-        <button type="button" class="success" onclick="saveEstimate()">
+
+        <button
+            type="button"
+            class="success"
+            onclick="saveEstimate()">
+
             Save Estimate
+
         </button>
 
-        <button type="button" class="dark" onclick="window.print()">
-            Print / Save PDF
+
+        <button
+            type="button"
+            class="orange"
+            onclick="generateProposal()">
+
+            Generate Proposal
+
         </button>
 
-        <button type="button" class="gray" onclick="newEstimate()">
+
+        <button
+            type="button"
+            class="dark"
+            onclick="printProposal()">
+
+            Print / Save Proposal PDF
+
+        </button>
+
+
+        <button
+            type="button"
+            class="gray"
+            onclick="newEstimate()">
+
             New Estimate
+
         </button>
 
     </div>
 
 </div>
 
+
 </form>
 
 
-<!-- RESULTS -->
+<!-- =========================
+     PRIVATE RESULTS
+========================= -->
 
-<div class="card results" id="results">
+<div
+    class="card results"
+    id="results">
+
+
+    <div class="private-banner">
+
+        🔒 CONTRACTOR ONLY —
+        Your cost, profit and margin are private and will NOT appear on the homeowner proposal.
+
+    </div>
+
 
     <div class="estimate-header">
 
-        <h2>RoofBidder Estimate</h2>
+        <h2>
+            Contractor Estimate
+        </h2>
 
         <div class="estimate-number">
-            Estimate #: <span id="outEstimateNumber">—</span>
+
+            Estimate #:
+            <span id="outEstimateNumber">
+                —
+            </span>
+
         </div>
 
         <div>
-            <strong id="outCustomer">—</strong>
+            <strong id="outCustomer">
+                —
+            </strong>
         </div>
 
-        <div id="outAddress">—</div>
+        <div id="outAddress">
+            —
+        </div>
 
     </div>
 
 
     <div class="total-box">
 
-        <div class="label">RECOMMENDED SELLING PRICE</div>
+        <div class="label">
+            RECOMMENDED SELLING PRICE
+        </div>
 
-        <div class="price" id="outPrice">
+        <div
+            class="price"
+            id="outPrice">
+
             $0.00
+
         </div>
 
     </div>
@@ -580,208 +1217,803 @@ button:hover {
 
     <div class="summary-grid">
 
-        <div class="summary-box">
-            <span>TOTAL COST</span>
-            <strong id="outCost">$0.00</strong>
-        </div>
 
         <div class="summary-box">
-            <span>GROSS PROFIT</span>
-            <strong class="profit" id="outProfit">$0.00</strong>
+
+            <span>
+                TOTAL COST
+            </span>
+
+            <strong id="outCost">
+                $0.00
+            </strong>
+
         </div>
 
-        <div class="summary-box">
-            <span>GROSS MARGIN</span>
-            <strong id="outMargin">0%</strong>
-        </div>
 
         <div class="summary-box">
-            <span>PRICE / SQUARE</span>
-            <strong id="outPerSquare">$0.00</strong>
+
+            <span>
+                GROSS PROFIT
+            </span>
+
+            <strong
+                class="profit"
+                id="outProfit">
+
+                $0.00
+
+            </strong>
+
         </div>
 
-        <div class="summary-box">
-            <span>MATERIAL COST</span>
-            <strong id="outMaterial">$0.00</strong>
-        </div>
 
         <div class="summary-box">
-            <span>LABOR COST</span>
-            <strong id="outLabor">$0.00</strong>
+
+            <span>
+                GROSS MARGIN
+            </span>
+
+            <strong id="outMargin">
+                0%
+            </strong>
+
         </div>
+
+
+        <div class="summary-box">
+
+            <span>
+                PRICE / SQUARE
+            </span>
+
+            <strong id="outPerSquare">
+                $0.00
+            </strong>
+
+        </div>
+
+
+        <div class="summary-box">
+
+            <span>
+                MATERIAL COST
+            </span>
+
+            <strong id="outMaterial">
+                $0.00
+            </strong>
+
+        </div>
+
+
+        <div class="summary-box">
+
+            <span>
+                LABOR COST
+            </span>
+
+            <strong id="outLabor">
+                $0.00
+            </strong>
+
+        </div>
+
 
     </div>
 
 
-    <h3>Material Quantities</h3>
+    <h3>
+        Material Quantities
+    </h3>
+
 
     <table class="material-table">
 
         <thead>
+
             <tr>
-                <th>Material</th>
-                <th>Quantity</th>
+
+                <th>
+                    Material
+                </th>
+
+                <th>
+                    Quantity
+                </th>
+
             </tr>
+
         </thead>
+
 
         <tbody>
 
-            <tr>
-                <td>Roofing Squares Including Waste</td>
-                <td id="qtySquares">0</td>
-            </tr>
 
             <tr>
-                <td>Shingle Bundles</td>
-                <td id="qtyShingles">0</td>
+
+                <td>
+                    Roof Squares Including Waste
+                </td>
+
+                <td id="qtySquares">
+                    0
+                </td>
+
             </tr>
 
-            <tr>
-                <td>Starter Bundles</td>
-                <td id="qtyStarter">0</td>
-            </tr>
 
             <tr>
-                <td>Ridge Cap Bundles</td>
-                <td id="qtyRidge">0</td>
+
+                <td>
+                    Shingle Bundles
+                </td>
+
+                <td id="qtyShingles">
+                    0
+                </td>
+
             </tr>
 
-            <tr>
-                <td>Underlayment Rolls</td>
-                <td id="qtyUnderlay">0</td>
-            </tr>
 
             <tr>
-                <td>Ice & Water Rolls</td>
-                <td id="qtyIce">0</td>
+
+                <td>
+                    Starter Bundles
+                </td>
+
+                <td id="qtyStarter">
+                    0
+                </td>
+
             </tr>
 
+
             <tr>
-                <td>Drip Edge Pieces</td>
-                <td id="qtyDrip">0</td>
+
+                <td>
+                    Ridge Cap Bundles
+                </td>
+
+                <td id="qtyRidge">
+                    0
+                </td>
+
             </tr>
+
+
+            <tr>
+
+                <td>
+                    Underlayment Rolls
+                </td>
+
+                <td id="qtyUnderlay">
+                    0
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    Ice & Water Rolls
+                </td>
+
+                <td id="qtyIce">
+                    0
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    Drip Edge Pieces
+                </td>
+
+                <td id="qtyDrip">
+                    0
+                </td>
+
+            </tr>
+
 
         </tbody>
 
     </table>
 
 
-    <h3 style="margin-top:25px;">Estimate Breakdown</h3>
+    <h3 style="margin-top:25px;">
+        Private Estimate Breakdown
+    </h3>
+
 
     <table class="material-table">
 
         <tbody>
 
-            <tr>
-                <td>Base Production Cost</td>
-                <td id="outBase">$0.00</td>
-            </tr>
 
             <tr>
-                <td>Overhead</td>
-                <td id="outOverhead">$0.00</td>
+
+                <td>
+                    Base Production Cost
+                </td>
+
+                <td id="outBase">
+                    $0.00
+                </td>
+
             </tr>
 
-            <tr>
-                <td>Target Gross Profit</td>
-                <td id="outTargetProfit">$0.00</td>
-            </tr>
 
             <tr>
-                <td>Sales Adjustment</td>
-                <td id="outAdjustment">$0.00</td>
+
+                <td>
+                    Overhead
+                </td>
+
+                <td id="outOverhead">
+                    $0.00
+                </td>
+
             </tr>
 
+
             <tr>
-                <td><strong>Recommended Selling Price</strong></td>
-                <td><strong id="outFinalPrice">$0.00</strong></td>
+
+                <td>
+                    Gross Profit
+                </td>
+
+                <td id="outTargetProfit">
+                    $0.00
+                </td>
+
             </tr>
+
+
+            <tr>
+
+                <td>
+                    Sales Adjustment
+                </td>
+
+                <td id="outAdjustment">
+                    $0.00
+                </td>
+
+            </tr>
+
+
+            <tr>
+
+                <td>
+                    <strong>
+                        Recommended Selling Price
+                    </strong>
+                </td>
+
+                <td>
+
+                    <strong id="outFinalPrice">
+                        $0.00
+                    </strong>
+
+                </td>
+
+            </tr>
+
 
         </tbody>
 
     </table>
 
+
 </div>
 
 
-<!-- SAVED ESTIMATES -->
+<!-- =========================
+     SAVED ESTIMATES
+========================= -->
 
 <div class="card saved-card no-print">
 
-    <h2>Saved Estimates</h2>
+    <h2>
+        Saved Estimates
+    </h2>
 
-    <div id="savedEstimates" class="saved-list">
+    <div
+        id="savedEstimates"
+        class="saved-list">
+
         No saved estimates yet.
+
     </div>
 
 </div>
+
+
+<!-- =========================
+     HOMEOWNER PROPOSAL
+========================= -->
+
+<div
+    id="proposal"
+    class="proposal">
+
+
+    <div class="proposal-top">
+
+
+        <div>
+
+            <div
+                id="proposalCompany"
+                class="proposal-brand">
+
+                ROOFBIDDER
+
+            </div>
+
+
+            <div class="proposal-subtitle">
+
+                Roofing Estimate & Proposal
+
+            </div>
+
+
+            <div
+                id="proposalCompanyContact"
+                class="proposal-subtitle">
+
+            </div>
+
+        </div>
+
+
+        <div class="proposal-meta">
+
+            <div>
+
+                <strong>
+                    Estimate #
+                </strong>
+
+            </div>
+
+            <div id="proposalNumber">
+                —
+            </div>
+
+
+            <div style="margin-top:8px;">
+
+                <strong>
+                    Date
+                </strong>
+
+            </div>
+
+            <div id="proposalDate">
+                —
+            </div>
+
+
+            <div style="margin-top:8px;">
+
+                <strong>
+                    Valid Until
+                </strong>
+
+            </div>
+
+            <div id="proposalValid">
+                —
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="proposal-section">
+
+
+        <h3>
+            Prepared For
+        </h3>
+
+
+        <div class="customer-box">
+
+            <strong id="proposalCustomer">
+                Customer
+            </strong>
+
+
+            <div
+                id="proposalPhone"
+                style="margin-top:5px;">
+
+            </div>
+
+
+            <div
+                id="proposalAddress"
+                style="margin-top:5px;">
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="proposal-section">
+
+
+        <h3>
+            Project Details
+        </h3>
+
+
+        <table class="material-table">
+
+            <tbody>
+
+
+                <tr>
+
+                    <td>
+                        Roofing Area
+                    </td>
+
+                    <td id="proposalSquares">
+                        —
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Roof Pitch
+                    </td>
+
+                    <td id="proposalPitch">
+                        —
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Existing Layers
+                    </td>
+
+                    <td id="proposalLayers">
+                        —
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Roofing System
+                    </td>
+
+                    <td>
+                        New Roof Installation
+                    </td>
+
+                </tr>
+
+
+            </tbody>
+
+        </table>
+
+
+    </div>
+
+
+    <div class="proposal-section">
+
+
+        <h3>
+            Scope of Work
+        </h3>
+
+
+        <ul
+            id="proposalScope"
+            class="scope-list">
+
+        </ul>
+
+
+    </div>
+
+
+    <div class="proposal-price">
+
+
+        <div class="proposal-price-label">
+
+            TOTAL PROJECT INVESTMENT
+
+        </div>
+
+
+        <div
+            id="proposalPrice"
+            class="proposal-price-value">
+
+            $0.00
+
+        </div>
+
+
+    </div>
+
+
+    <div class="proposal-section">
+
+
+        <h3>
+            Important Information
+        </h3>
+
+
+        <div class="proposal-note">
+
+            This proposal is based on the project information and scope described above.
+            Final project conditions may require additional work if concealed damage or
+            unforeseen conditions are discovered after work begins.
+
+
+            <br><br>
+
+
+            Pricing is valid until
+            <strong id="proposalValidText">
+                —
+            </strong>.
+
+
+            <br><br>
+
+
+            Any changes to the scope of work should be approved by the customer and
+            contractor before additional work is performed.
+
+        </div>
+
+
+    </div>
+
+
+    <div class="signature-grid">
+
+
+        <div>
+
+            <div class="signature-line"></div>
+
+            <div class="signature-label">
+
+                Customer Signature
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <div class="signature-line"></div>
+
+            <div class="signature-label">
+
+                Date
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <div class="signature-line"></div>
+
+            <div class="signature-label">
+
+                Contractor / Authorized Representative
+
+            </div>
+
+        </div>
+
+
+        <div>
+
+            <div class="signature-line"></div>
+
+            <div class="signature-label">
+
+                Date
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <div class="proposal-footer">
+
+        <strong>
+            Generated with RoofBidder
+        </strong>
+
+        <br>
+
+        Roofing estimates. Built for profit.
+
+    </div>
+
+
+</div>
+
 
 </div>
 
 
 <script>
 
+
+/* =========================
+   BASIC HELPERS
+========================= */
+
 function money(value) {
-    return "$" + Number(value).toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
+
+    return "$" + Number(value).toLocaleString(
+        "en-US",
+        {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }
+    );
+
 }
 
 
 function num(id) {
-    return parseFloat(document.getElementById(id).value) || 0;
+
+    return parseFloat(
+        document.getElementById(id).value
+    ) || 0;
+
 }
 
 
-function calculateEstimate() {
+/* =========================
+   PITCH NAME
+========================= */
 
-    const squares = num("squares");
+function getPitchName() {
 
-    if (squares <= 0) {
-        alert("Enter the number of roof squares first.");
-        return;
+    const value =
+        parseFloat(
+            document.getElementById("pitch").value
+        );
+
+
+    if (value === 0) {
+        return "2/12 - 4/12";
     }
 
-    const pitchAdjustment = parseFloat(document.getElementById("pitch").value) || 0;
+    if (value === 0.03) {
+        return "5/12 - 6/12";
+    }
 
-    const layers = parseInt(document.getElementById("layers").value) || 1;
+    if (value === 0.06) {
+        return "7/12 - 8/12";
+    }
 
-    const wastePercent = num("waste");
+    if (value === 0.10) {
+        return "9/12 - 10/12";
+    }
+
+    return "11/12+";
+
+}
+
+
+/* =========================
+   CALCULATE
+========================= */
+
+function calculateEstimate() {
+
+
+    const squares =
+        num("squares");
+
+
+    if (squares <= 0) {
+
+        alert(
+            "Enter the number of roof squares first."
+        );
+
+        return null;
+
+    }
+
+
+    const pitchAdjustment =
+        parseFloat(
+            document.getElementById("pitch").value
+        ) || 0;
+
+
+    const layers =
+        parseInt(
+            document.getElementById("layers").value
+        ) || 1;
+
+
+    const wastePercent =
+        num("waste");
+
 
     /*
-       Waste affects material quantities.
-       Example:
-       20 squares + 10% waste = 22 material squares.
+        Material quantity including waste.
     */
 
     const materialSquares =
-        squares * (1 + wastePercent / 100);
+        squares *
+        (1 + wastePercent / 100);
 
 
     /*
-       Pitch adjustment increases LABOR.
-       0% = low pitch
-       3% = 5/12-6/12
-       6% = 7/12-8/12
-       10% = 9/12-10/12
-       15% = 11/12+
+        Pitch increases labor.
     */
 
     const pitchLaborMultiplier =
         1 + pitchAdjustment;
 
 
-    /* MATERIAL COST */
+    /* MATERIALS */
 
     const shingleCost =
-        materialSquares * num("shingle");
+        materialSquares *
+        num("shingle");
+
 
     const starterCost =
-        materialSquares * num("starter");
+        materialSquares *
+        num("starter");
+
 
     const ridgeCost =
-        materialSquares * num("ridge");
+        materialSquares *
+        num("ridge");
+
 
     const materialFixed =
         num("underlayment") +
@@ -791,6 +2023,7 @@ function calculateEstimate() {
         num("otherMaterials") +
         num("dumpster");
 
+
     const materialCost =
         shingleCost +
         starterCost +
@@ -798,7 +2031,7 @@ function calculateEstimate() {
         materialFixed;
 
 
-    /* LABOR COST */
+    /* LABOR */
 
     const installationLabor =
         squares *
@@ -836,12 +2069,7 @@ function calculateEstimate() {
         overheadAmount;
 
 
-    /*
-       Profit margin formula:
-
-       Selling Price =
-       Cost / (1 - desired margin)
-    */
+    /* PROFIT */
 
     const desiredMargin =
         num("profitMargin") / 100;
@@ -849,12 +2077,18 @@ function calculateEstimate() {
 
     let sellingPrice;
 
+
     if (desiredMargin >= 1) {
-        sellingPrice = totalCost;
+
+        sellingPrice =
+            totalCost;
+
     } else {
+
         sellingPrice =
             totalCost /
             (1 - desiredMargin);
+
     }
 
 
@@ -862,7 +2096,8 @@ function calculateEstimate() {
         num("adjustment");
 
 
-    sellingPrice += adjustment;
+    sellingPrice +=
+        adjustment;
 
 
     const grossProfit =
@@ -872,7 +2107,7 @@ function calculateEstimate() {
 
     const actualMargin =
         sellingPrice > 0
-        ? grossProfit / sellingPrice * 100
+        ? (grossProfit / sellingPrice) * 100
         : 0;
 
 
@@ -882,204 +2117,691 @@ function calculateEstimate() {
 
     /* QUANTITIES */
 
-    /*
-       Standard roofing assumptions:
-       3 bundles per square.
-       Starter = 1 bundle per 100 linear feet approximation.
-       Ridge cap = 1 bundle per 33 linear feet approximation.
-       Underlayment = 2 squares per roll approximation.
-       Ice & water = 2 squares per roll approximation.
-       Drip edge = 10 ft per piece.
-    */
-
     const shingleBundles =
-        Math.ceil(materialSquares * 3);
+        Math.ceil(
+            materialSquares * 3
+        );
 
 
     const starterBundles =
-        Math.ceil(materialSquares / 1);
+        Math.ceil(
+            materialSquares
+        );
 
 
     const ridgeBundles =
-        Math.ceil(materialSquares / 1.5);
+        Math.ceil(
+            materialSquares / 1.5
+        );
 
 
     const underlayRolls =
-        Math.ceil(materialSquares / 2);
+        Math.ceil(
+            materialSquares / 2
+        );
 
 
     const iceRolls =
-        Math.ceil(materialSquares / 2);
+        Math.ceil(
+            materialSquares / 2
+        );
 
 
     const dripPieces =
-        Math.ceil((squares * 10) / 10);
+        Math.ceil(
+            (squares * 10) / 10
+        );
 
 
-    /* OUTPUT */
+    /* RESULTS */
 
-    document.getElementById("results").style.display = "block";
-
-    document.getElementById("outEstimateNumber").textContent =
-        document.getElementById("estimateNumber").value || "—";
-
-    document.getElementById("outCustomer").textContent =
-        document.getElementById("customer").value || "Customer";
-
-    document.getElementById("outAddress").textContent =
-        document.getElementById("address").value || "—";
+    document.getElementById(
+        "results"
+    ).style.display = "block";
 
 
-    document.getElementById("outPrice").textContent =
+    document.getElementById(
+        "outEstimateNumber"
+    ).textContent =
+        document.getElementById(
+            "estimateNumber"
+        ).value || "—";
+
+
+    document.getElementById(
+        "outCustomer"
+    ).textContent =
+        document.getElementById(
+            "customer"
+        ).value || "Customer";
+
+
+    document.getElementById(
+        "outAddress"
+    ).textContent =
+        document.getElementById(
+            "address"
+        ).value || "—";
+
+
+    document.getElementById(
+        "outPrice"
+    ).textContent =
         money(sellingPrice);
 
-    document.getElementById("outFinalPrice").textContent =
+
+    document.getElementById(
+        "outFinalPrice"
+    ).textContent =
         money(sellingPrice);
 
-    document.getElementById("outCost").textContent =
+
+    document.getElementById(
+        "outCost"
+    ).textContent =
         money(totalCost);
 
-    document.getElementById("outProfit").textContent =
+
+    document.getElementById(
+        "outProfit"
+    ).textContent =
         money(grossProfit);
 
-    document.getElementById("outMargin").textContent =
+
+    document.getElementById(
+        "outMargin"
+    ).textContent =
         actualMargin.toFixed(1) + "%";
 
-    document.getElementById("outPerSquare").textContent =
+
+    document.getElementById(
+        "outPerSquare"
+    ).textContent =
         money(pricePerSquare);
 
-    document.getElementById("outMaterial").textContent =
+
+    document.getElementById(
+        "outMaterial"
+    ).textContent =
         money(materialCost);
 
-    document.getElementById("outLabor").textContent =
+
+    document.getElementById(
+        "outLabor"
+    ).textContent =
         money(laborCost);
 
-    document.getElementById("outBase").textContent =
+
+    document.getElementById(
+        "outBase"
+    ).textContent =
         money(baseCost);
 
-    document.getElementById("outOverhead").textContent =
+
+    document.getElementById(
+        "outOverhead"
+    ).textContent =
         money(overheadAmount);
 
-    document.getElementById("outTargetProfit").textContent =
+
+    document.getElementById(
+        "outTargetProfit"
+    ).textContent =
         money(grossProfit);
 
-    document.getElementById("outAdjustment").textContent =
+
+    document.getElementById(
+        "outAdjustment"
+    ).textContent =
         money(adjustment);
 
 
-    document.getElementById("qtySquares").textContent =
+    document.getElementById(
+        "qtySquares"
+    ).textContent =
         materialSquares.toFixed(1);
 
-    document.getElementById("qtyShingles").textContent =
-        shingleBundles + " bundles";
 
-    document.getElementById("qtyStarter").textContent =
-        starterBundles + " bundles";
-
-    document.getElementById("qtyRidge").textContent =
-        ridgeBundles + " bundles";
-
-    document.getElementById("qtyUnderlay").textContent =
-        underlayRolls + " rolls";
-
-    document.getElementById("qtyIce").textContent =
-        iceRolls + " rolls";
-
-    document.getElementById("qtyDrip").textContent =
-        dripPieces + " pieces";
+    document.getElementById(
+        "qtyShingles"
+    ).textContent =
+        shingleBundles +
+        " bundles";
 
 
-    /* Scroll to result */
+    document.getElementById(
+        "qtyStarter"
+    ).textContent =
+        starterBundles +
+        " bundles";
 
-    document.getElementById("results")
-        .scrollIntoView({
-            behavior: "smooth"
-        });
+
+    document.getElementById(
+        "qtyRidge"
+    ).textContent =
+        ridgeBundles +
+        " bundles";
+
+
+    document.getElementById(
+        "qtyUnderlay"
+    ).textContent =
+        underlayRolls +
+        " rolls";
+
+
+    document.getElementById(
+        "qtyIce"
+    ).textContent =
+        iceRolls +
+        " rolls";
+
+
+    document.getElementById(
+        "qtyDrip"
+    ).textContent =
+        dripPieces +
+        " pieces";
+
+
+    return {
+
+        squares,
+        materialSquares,
+        layers,
+        materialCost,
+        laborCost,
+        baseCost,
+        overheadAmount,
+        totalCost,
+        sellingPrice,
+        grossProfit,
+        actualMargin,
+        pricePerSquare
+
+    };
+
 }
 
 
-/* SAVE ESTIMATE */
+/* =========================
+   GENERATE PROPOSAL
+========================= */
+
+function generateProposal() {
+
+
+    const calculation =
+        calculateEstimate();
+
+
+    if (!calculation) {
+        return;
+    }
+
+
+    const company =
+        document.getElementById(
+            "company"
+        ).value.trim();
+
+
+    const companyPhone =
+        document.getElementById(
+            "companyPhone"
+        ).value.trim();
+
+
+    const companyEmail =
+        document.getElementById(
+            "companyEmail"
+        ).value.trim();
+
+
+    const customer =
+        document.getElementById(
+            "customer"
+        ).value.trim();
+
+
+    const customerPhone =
+        document.getElementById(
+            "phone"
+        ).value.trim();
+
+
+    const address =
+        document.getElementById(
+            "address"
+        ).value.trim();
+
+
+    const estimateNumber =
+        document.getElementById(
+            "estimateNumber"
+        ).value;
+
+
+    const validDays =
+        parseInt(
+            document.getElementById(
+                "validDays"
+            ).value
+        ) || 30;
+
+
+    const scope =
+        document.getElementById(
+            "scope"
+        ).value;
+
+
+    /* DATE */
+
+    const today =
+        new Date();
+
+
+    const validDate =
+        new Date();
+
+
+    validDate.setDate(
+        today.getDate() +
+        validDays
+    );
+
+
+    const dateString =
+        today.toLocaleDateString(
+            "en-US"
+        );
+
+
+    const validDateString =
+        validDate.toLocaleDateString(
+            "en-US"
+        );
+
+
+    /* COMPANY */
+
+    document.getElementById(
+        "proposalCompany"
+    ).textContent =
+        company ||
+        "ROOFBIDDER";
+
+
+    let contactText = "";
+
+
+    if (companyPhone) {
+        contactText +=
+            companyPhone;
+    }
+
+
+    if (
+        companyPhone &&
+        companyEmail
+    ) {
+        contactText +=
+            " • ";
+    }
+
+
+    if (companyEmail) {
+        contactText +=
+            companyEmail;
+    }
+
+
+    document.getElementById(
+        "proposalCompanyContact"
+    ).textContent =
+        contactText;
+
+
+    /* META */
+
+    document.getElementById(
+        "proposalNumber"
+    ).textContent =
+        estimateNumber ||
+        "—";
+
+
+    document.getElementById(
+        "proposalDate"
+    ).textContent =
+        dateString;
+
+
+    document.getElementById(
+        "proposalValid"
+    ).textContent =
+        validDateString;
+
+
+    document.getElementById(
+        "proposalValidText"
+    ).textContent =
+        validDateString;
+
+
+    /* CUSTOMER */
+
+    document.getElementById(
+        "proposalCustomer"
+    ).textContent =
+        customer ||
+        "Customer";
+
+
+    document.getElementById(
+        "proposalPhone"
+    ).textContent =
+        customerPhone ||
+        "";
+
+
+    document.getElementById(
+        "proposalAddress"
+    ).textContent =
+        address ||
+        "Property address not provided";
+
+
+    /* PROJECT */
+
+    document.getElementById(
+        "proposalSquares"
+    ).textContent =
+        calculation.squares.toFixed(1) +
+        " squares";
+
+
+    document.getElementById(
+        "proposalPitch"
+    ).textContent =
+        getPitchName();
+
+
+    document.getElementById(
+        "proposalLayers"
+    ).textContent =
+        calculation.layers +
+        (
+            calculation.layers === 1
+            ? " layer"
+            : " layers"
+        );
+
+
+    /* PRICE */
+
+    document.getElementById(
+        "proposalPrice"
+    ).textContent =
+        money(
+            calculation.sellingPrice
+        );
+
+
+    /* SCOPE */
+
+    const scopeList =
+        document.getElementById(
+            "proposalScope"
+        );
+
+
+    scopeList.innerHTML = "";
+
+
+    const scopeLines =
+        scope
+        .split("\n")
+        .map(line => line.trim())
+        .filter(line => line.length > 0);
+
+
+    scopeLines.forEach(line => {
+
+        const li =
+            document.createElement(
+                "li"
+            );
+
+
+        li.textContent =
+            line;
+
+
+        scopeList.appendChild(
+            li
+        );
+
+    });
+
+
+    /* SHOW */
+
+    const proposal =
+        document.getElementById(
+            "proposal"
+        );
+
+
+    proposal.style.display =
+        "block";
+
+
+    proposal.scrollIntoView({
+        behavior: "smooth"
+    });
+
+}
+
+
+/* =========================
+   PRINT PROPOSAL
+========================= */
+
+function printProposal() {
+
+
+    const proposal =
+        document.getElementById(
+            "proposal"
+        );
+
+
+    if (
+        proposal.style.display !==
+        "block"
+    ) {
+
+        generateProposal();
+
+    }
+
+
+    setTimeout(
+        function() {
+
+            window.print();
+
+        },
+        300
+    );
+
+}
+
+
+/* =========================
+   SAVE ESTIMATE
+========================= */
 
 function saveEstimate() {
 
-    calculateEstimate();
+
+    const calculation =
+        calculateEstimate();
+
+
+    if (!calculation) {
+        return;
+    }
+
 
     const data = {
 
         company:
-            document.getElementById("company").value,
+            document.getElementById(
+                "company"
+            ).value,
 
         estimator:
-            document.getElementById("estimator").value,
+            document.getElementById(
+                "estimator"
+            ).value,
+
+        companyPhone:
+            document.getElementById(
+                "companyPhone"
+            ).value,
+
+        companyEmail:
+            document.getElementById(
+                "companyEmail"
+            ).value,
 
         customer:
-            document.getElementById("customer").value,
+            document.getElementById(
+                "customer"
+            ).value,
 
         phone:
-            document.getElementById("phone").value,
+            document.getElementById(
+                "phone"
+            ).value,
 
         address:
-            document.getElementById("address").value,
+            document.getElementById(
+                "address"
+            ).value,
 
         estimateNumber:
-            document.getElementById("estimateNumber").value,
+            document.getElementById(
+                "estimateNumber"
+            ).value,
+
+        validDays:
+            document.getElementById(
+                "validDays"
+            ).value,
 
         squares:
-            document.getElementById("squares").value,
+            document.getElementById(
+                "squares"
+            ).value,
 
         pitch:
-            document.getElementById("pitch").value,
+            document.getElementById(
+                "pitch"
+            ).value,
 
         layers:
-            document.getElementById("layers").value,
+            document.getElementById(
+                "layers"
+            ).value,
 
         waste:
-            document.getElementById("waste").value,
+            document.getElementById(
+                "waste"
+            ).value,
 
         shingle:
-            document.getElementById("shingle").value,
+            document.getElementById(
+                "shingle"
+            ).value,
 
         starter:
-            document.getElementById("starter").value,
+            document.getElementById(
+                "starter"
+            ).value,
 
         ridge:
-            document.getElementById("ridge").value,
+            document.getElementById(
+                "ridge"
+            ).value,
 
         underlayment:
-            document.getElementById("underlayment").value,
+            document.getElementById(
+                "underlayment"
+            ).value,
 
         ice:
-            document.getElementById("ice").value,
+            document.getElementById(
+                "ice"
+            ).value,
 
         drip:
-            document.getElementById("drip").value,
+            document.getElementById(
+                "drip"
+            ).value,
 
         boots:
-            document.getElementById("boots").value,
+            document.getElementById(
+                "boots"
+            ).value,
 
         otherMaterials:
-            document.getElementById("otherMaterials").value,
+            document.getElementById(
+                "otherMaterials"
+            ).value,
 
         dumpster:
-            document.getElementById("dumpster").value,
+            document.getElementById(
+                "dumpster"
+            ).value,
 
         labor:
-            document.getElementById("labor").value,
+            document.getElementById(
+                "labor"
+            ).value,
 
         tearoff:
-            document.getElementById("tearoff").value,
+            document.getElementById(
+                "tearoff"
+            ).value,
 
         otherLabor:
-            document.getElementById("otherLabor").value,
+            document.getElementById(
+                "otherLabor"
+            ).value,
 
         overhead:
-            document.getElementById("overhead").value,
+            document.getElementById(
+                "overhead"
+            ).value,
 
         profitMargin:
-            document.getElementById("profitMargin").value,
+            document.getElementById(
+                "profitMargin"
+            ).value,
 
         adjustment:
-            document.getElementById("adjustment").value,
+            document.getElementById(
+                "adjustment"
+            ).value,
+
+        scope:
+            document.getElementById(
+                "scope"
+            ).value,
 
         savedAt:
             new Date().toLocaleString()
@@ -1089,231 +2811,469 @@ function saveEstimate() {
 
     let estimates =
         JSON.parse(
-            localStorage.getItem("roofbidder_estimates") || "[]"
+            localStorage.getItem(
+                "roofbidder_estimates"
+            ) || "[]"
         );
 
 
-    estimates.push(data);
+    estimates.push(
+        data
+    );
 
 
     localStorage.setItem(
         "roofbidder_estimates",
-        JSON.stringify(estimates)
+        JSON.stringify(
+            estimates
+        )
     );
 
 
     renderSavedEstimates();
 
-    alert("Estimate saved!");
+
+    alert(
+        "Estimate saved!"
+    );
+
 }
 
 
-/* LOAD ESTIMATE */
+/* =========================
+   LOAD ESTIMATE
+========================= */
 
 function loadEstimate(index) {
 
+
     const estimates =
         JSON.parse(
-            localStorage.getItem("roofbidder_estimates") || "[]"
+            localStorage.getItem(
+                "roofbidder_estimates"
+            ) || "[]"
         );
 
-    const data = estimates[index];
 
-    if (!data) return;
+    const data =
+        estimates[index];
 
 
-    Object.keys(data).forEach(key => {
+    if (!data) {
+        return;
+    }
 
-        const element =
-            document.getElementById(key);
 
-        if (element) {
-            element.value = data[key];
+    Object.keys(data).forEach(
+        key => {
+
+            const element =
+                document.getElementById(
+                    key
+                );
+
+
+            if (element) {
+
+                element.value =
+                    data[key];
+
+            }
+
         }
-
-    });
+    );
 
 
     calculateEstimate();
+
 
     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
+
 }
 
 
-/* DELETE ESTIMATE */
+/* =========================
+   DELETE
+========================= */
 
 function deleteEstimate(index) {
 
-    if (!confirm("Delete this estimate?")) {
+
+    if (
+        !confirm(
+            "Delete this estimate?"
+        )
+    ) {
+
         return;
+
     }
 
 
     let estimates =
         JSON.parse(
-            localStorage.getItem("roofbidder_estimates") || "[]"
+            localStorage.getItem(
+                "roofbidder_estimates"
+            ) || "[]"
         );
 
 
-    estimates.splice(index, 1);
+    estimates.splice(
+        index,
+        1
+    );
 
 
     localStorage.setItem(
         "roofbidder_estimates",
-        JSON.stringify(estimates)
+        JSON.stringify(
+            estimates
+        )
     );
 
 
     renderSavedEstimates();
+
 }
 
 
-/* DISPLAY SAVED ESTIMATES */
+/* =========================
+   SAVED LIST
+========================= */
 
 function renderSavedEstimates() {
 
+
     const container =
-        document.getElementById("savedEstimates");
+        document.getElementById(
+            "savedEstimates"
+        );
 
 
     const estimates =
         JSON.parse(
-            localStorage.getItem("roofbidder_estimates") || "[]"
+            localStorage.getItem(
+                "roofbidder_estimates"
+            ) || "[]"
         );
 
 
-    if (estimates.length === 0) {
+    if (
+        estimates.length === 0
+    ) {
 
         container.innerHTML =
             "No saved estimates yet.";
 
         return;
+
     }
 
 
     container.innerHTML = "";
 
 
-    estimates.forEach((estimate, index) => {
-
-        const item =
-            document.createElement("div");
-
-        item.className =
-            "saved-item";
+    estimates
+        .slice()
+        .reverse()
+        .forEach(
+            (estimate, reversedIndex) => {
 
 
-        item.innerHTML = `
-
-            <div>
-
-                <strong>
-                    ${estimate.customer || "Unnamed Customer"}
-                </strong>
-
-                <br>
-
-                <small>
-                    ${estimate.address || "No address"}
-                    <br>
-                    ${estimate.savedAt}
-                </small>
-
-            </div>
-
-            <div class="saved-actions">
-
-                <button
-                    class="primary"
-                    onclick="loadEstimate(${index})">
-                    Load
-                </button>
-
-                <button
-                    class="danger"
-                    onclick="deleteEstimate(${index})">
-                    Delete
-                </button>
-
-            </div>
-
-        `;
+                const actualIndex =
+                    estimates.length -
+                    1 -
+                    reversedIndex;
 
 
-        container.appendChild(item);
+                const item =
+                    document.createElement(
+                        "div"
+                    );
 
-    });
+
+                item.className =
+                    "saved-item";
+
+
+                item.innerHTML = `
+
+                    <div>
+
+                        <strong>
+                            ${escapeHtml(
+                                estimate.customer ||
+                                "Unnamed Customer"
+                            )}
+                        </strong>
+
+                        <br>
+
+                        <small>
+
+                            ${escapeHtml(
+                                estimate.address ||
+                                "No address"
+                            )}
+
+                            <br>
+
+                            ${escapeHtml(
+                                estimate.savedAt ||
+                                ""
+                            )}
+
+                        </small>
+
+                    </div>
+
+
+                    <div class="saved-actions">
+
+                        <button
+                            class="primary"
+                            onclick="loadEstimate(${actualIndex})">
+
+                            Load
+
+                        </button>
+
+
+                        <button
+                            class="danger"
+                            onclick="deleteEstimate(${actualIndex})">
+
+                            Delete
+
+                        </button>
+
+                    </div>
+
+                `;
+
+
+                container.appendChild(
+                    item
+                );
+
+            }
+        );
 
 }
 
 
-/* NEW ESTIMATE */
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHtml(value) {
+
+    return String(value)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+
+/* =========================
+   NEW ESTIMATE
+========================= */
 
 function newEstimate() {
 
-    if (!confirm("Start a new estimate? Unsaved information will be cleared.")) {
+
+    if (
+        !confirm(
+            "Start a new estimate? Unsaved information will be cleared."
+        )
+    ) {
+
         return;
+
     }
 
 
-    document.getElementById("estimateForm").reset();
+    document
+        .getElementById(
+            "estimateForm"
+        )
+        .reset();
 
 
-    document.getElementById("squares").value = 20;
-    document.getElementById("waste").value = 10;
-    document.getElementById("shingle").value = 110;
-    document.getElementById("starter").value = 15;
-    document.getElementById("ridge").value = 20;
-    document.getElementById("underlayment").value = 150;
-    document.getElementById("ice").value = 150;
-    document.getElementById("drip").value = 150;
-    document.getElementById("boots").value = 100;
-    document.getElementById("dumpster").value = 500;
-    document.getElementById("labor").value = 90;
-    document.getElementById("tearoff").value = 35;
-    document.getElementById("overhead").value = 10;
-    document.getElementById("profitMargin").value = 30;
+    document.getElementById(
+        "squares"
+    ).value = 20;
 
 
-    document.getElementById("results").style.display =
+    document.getElementById(
+        "waste"
+    ).value = 10;
+
+
+    document.getElementById(
+        "shingle"
+    ).value = 110;
+
+
+    document.getElementById(
+        "starter"
+    ).value = 15;
+
+
+    document.getElementById(
+        "ridge"
+    ).value = 20;
+
+
+    document.getElementById(
+        "underlayment"
+    ).value = 150;
+
+
+    document.getElementById(
+        "ice"
+    ).value = 150;
+
+
+    document.getElementById(
+        "drip"
+    ).value = 150;
+
+
+    document.getElementById(
+        "boots"
+    ).value = 100;
+
+
+    document.getElementById(
+        "dumpster"
+    ).value = 500;
+
+
+    document.getElementById(
+        "labor"
+    ).value = 90;
+
+
+    document.getElementById(
+        "tearoff"
+    ).value = 35;
+
+
+    document.getElementById(
+        "overhead"
+    ).value = 10;
+
+
+    document.getElementById(
+        "profitMargin"
+    ).value = 30;
+
+
+    document.getElementById(
+        "scope"
+    ).value =
+`Remove existing roofing materials and dispose of jobsite debris.
+Install new roofing system according to manufacturer specifications.
+Install underlayment and required ice & water protection.
+Install drip edge and specified flashing.
+Install required roofing ventilation components.
+Perform final cleanup and magnetic sweep of the work area.`;
+
+
+    document.getElementById(
+        "results"
+    ).style.display =
         "none";
+
+
+    document.getElementById(
+        "proposal"
+    ).style.display =
+        "none";
+
+
+    generateEstimateNumber();
 
 
     window.scrollTo({
         top: 0,
         behavior: "smooth"
     });
+
 }
 
 
-/* AUTO GENERATE ESTIMATE NUMBER */
+/* =========================
+   ESTIMATE NUMBER
+========================= */
 
 function generateEstimateNumber() {
 
-    const now = new Date();
+
+    const now =
+        new Date();
+
 
     const number =
         "RB-" +
         now.getFullYear() +
-        String(now.getMonth() + 1).padStart(2, "0") +
-        String(now.getDate()).padStart(2, "0") +
+        String(
+            now.getMonth() + 1
+        ).padStart(
+            2,
+            "0"
+        ) +
+        String(
+            now.getDate()
+        ).padStart(
+            2,
+            "0"
+        ) +
         "-" +
-        Math.floor(1000 + Math.random() * 9000);
+        Math.floor(
+            1000 +
+            Math.random() * 9000
+        );
 
 
-    document.getElementById("estimateNumber").value =
+    document.getElementById(
+        "estimateNumber"
+    ).value =
         number;
+
 }
 
 
-/* INITIALIZE */
+/* =========================
+   INITIALIZE
+========================= */
 
 generateEstimateNumber();
 
 renderSavedEstimates();
+
 
 </script>
 
