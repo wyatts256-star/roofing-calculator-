@@ -3,21 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>RoofBidder V8.2.1</title>
+<title>RoofBidder</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 :root{
   --bg:#f4f6f9;
-  --card:#fff;
+  --card:#ffffff;
   --text:#172033;
   --muted:#6b7280;
   --border:#e1e5eb;
   --blue:#1769ff;
   --green:#15945b;
   --red:#d92d20;
-  --shadow:0 8px 25px rgba(0,0,0,.07);
+  --yellow:#b77900;
+  --shadow:0 6px 20px rgba(0,0,0,.06);
 }
 
 body.dark{
@@ -26,10 +27,12 @@ body.dark{
   --text:#f3f4f6;
   --muted:#9ca3af;
   --border:#29313d;
-  --shadow:0 8px 25px rgba(0,0,0,.25);
+  --shadow:0 6px 20px rgba(0,0,0,.25);
 }
 
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
@@ -38,7 +41,10 @@ body{
   color:var(--text);
 }
 
-button,input,select,textarea{
+button,
+input,
+select,
+textarea{
   font:inherit;
 }
 
@@ -49,6 +55,8 @@ button{
 .hidden{
   display:none!important;
 }
+
+/* ================= HEADER ================= */
 
 .appbar{
   height:64px;
@@ -87,6 +95,8 @@ button{
   color:var(--text);
   font-size:20px;
 }
+
+/* ================= MENU ================= */
 
 .drawer{
   position:fixed;
@@ -131,6 +141,8 @@ button{
   background:#1769ff15;
   color:var(--blue);
 }
+
+/* ================= GENERAL ================= */
 
 main{
   max-width:1250px;
@@ -184,7 +196,7 @@ input,
 select,
 textarea{
   width:100%;
-  padding:10px;
+  padding:11px;
   border:1px solid var(--border);
   border-radius:9px;
   background:var(--card);
@@ -221,21 +233,6 @@ textarea{
   flex-wrap:wrap;
 }
 
-.search{
-  display:flex;
-  gap:8px;
-}
-
-.search input{
-  flex:1;
-}
-
-.stat .number{
-  font-size:25px;
-  font-weight:900;
-  margin-top:5px;
-}
-
 .muted{
   color:var(--muted);
 }
@@ -244,8 +241,25 @@ textarea{
   font-size:12px;
 }
 
+.search-box{
+  position:relative;
+}
+
+.search-box input{
+  padding-left:40px;
+  font-size:15px;
+  min-height:46px;
+}
+
+.search-icon{
+  position:absolute;
+  left:13px;
+  top:13px;
+  z-index:2;
+}
+
 .table-wrap{
-  overflow:auto;
+  overflow-x:auto;
 }
 
 .table{
@@ -282,39 +296,43 @@ textarea{
   color:var(--red);
 }
 
-.chips{
+.badge.yellow{
+  background:#b7790018;
+  color:var(--yellow);
+}
+
+/* ================= FILTERS ================= */
+
+.filter-row{
   display:flex;
   gap:7px;
   flex-wrap:wrap;
+  margin-top:12px;
 }
 
-.chip{
+.filter-btn{
   border:1px solid var(--border);
   background:var(--card);
   color:var(--text);
   border-radius:999px;
-  padding:8px 11px;
+  padding:8px 12px;
   font-size:12px;
   font-weight:800;
 }
 
-.chip.active{
+.filter-btn.active{
   background:var(--blue);
   color:#fff;
   border-color:var(--blue);
 }
 
-.toggle{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:13px 0;
-  border-bottom:1px solid var(--border);
+.result-count{
+  margin-top:10px;
+  font-size:12px;
+  color:var(--muted);
 }
 
-.toggle input{
-  width:auto;
-}
+/* ================= AUTH ================= */
 
 .auth{
   min-height:100vh;
@@ -353,7 +371,32 @@ textarea{
   color:#fff;
 }
 
+/* ================= TOGGLES ================= */
+
+.toggle{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:13px 0;
+  border-bottom:1px solid var(--border);
+}
+
+.toggle input{
+  width:auto;
+}
+
+/* ================= STATS ================= */
+
+.stat .number{
+  font-size:25px;
+  font-weight:900;
+  margin-top:5px;
+}
+
+/* ================= MOBILE ================= */
+
 @media(max-width:800px){
+
   .g2,
   .g3,
   .g4{
@@ -371,13 +414,20 @@ textarea{
   .user-email{
     display:none;
   }
+
+  .table th,
+  .table td{
+    font-size:12px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= AUTH ================= -->
+<!-- =====================================================
+AUTH
+===================================================== -->
 
 <div id="authScreen" class="auth">
 
@@ -463,7 +513,9 @@ textarea{
 </div>
 
 
-<!-- ================= APP ================= -->
+<!-- =====================================================
+APP
+===================================================== -->
 
 <div id="app" class="hidden">
 
@@ -490,7 +542,6 @@ textarea{
     class="user-email small muted">
   </div>
 
-  <!-- ONLY GEAR IN HEADER. NO LIGHT/DARK SWITCH -->
   <button
     class="icon-btn"
     onclick="go('settings')">
@@ -573,7 +624,9 @@ textarea{
 
 <main>
 
-<!-- ================= DASHBOARD ================= -->
+<!-- =====================================================
+DASHBOARD
+===================================================== -->
 
 <section
   id="dashboard"
@@ -581,67 +634,129 @@ textarea{
 
   <div class="card">
 
-    <div class="search">
+    <h2 style="margin-top:0">
+      Jobs
+    </h2>
+
+    <!-- FIXED SEARCH -->
+    <div class="search-box">
+
+      <span class="search-icon">
+        🔎
+      </span>
 
       <input
         id="jobSearch"
-        placeholder="🔎 Search jobs — customer, address, estimate #, phone or email"
-        oninput="renderDashboard()">
-
-      <button
-        class="btn secondary"
-        onclick="clearJobSearch()">
-        Clear
-      </button>
+        type="search"
+        autocomplete="off"
+        placeholder="Search customer, estimate #, address, phone or email..."
+        oninput="handleJobSearch()">
 
     </div>
 
-    <div
-      class="chips"
-      style="margin-top:10px">
+
+    <!-- FIXED FILTERS -->
+
+    <div class="filter-row">
 
       <button
-        class="chip active"
-        data-filter="All"
+        class="filter-btn active"
+        data-job-filter="All"
         onclick="setJobFilter('All')">
-        All
+        All Jobs
       </button>
 
       <button
-        class="chip"
-        data-filter="Lead"
+        class="filter-btn"
+        data-job-filter="Lead"
         onclick="setJobFilter('Lead')">
         Leads
       </button>
 
       <button
-        class="chip"
-        data-filter="Estimated"
+        class="filter-btn"
+        data-job-filter="Estimated"
         onclick="setJobFilter('Estimated')">
         Estimates
       </button>
 
       <button
-        class="chip"
-        data-filter="Sold"
+        class="filter-btn"
+        data-job-filter="Sold"
         onclick="setJobFilter('Sold')">
         Sold
       </button>
 
       <button
-        class="chip"
-        data-filter="Completed"
+        class="filter-btn"
+        data-job-filter="Completed"
         onclick="setJobFilter('Completed')">
         Completed
       </button>
 
       <button
-        class="chip"
-        data-filter="Lost"
+        class="filter-btn"
+        data-job-filter="Lost"
         onclick="setJobFilter('Lost')">
         Lost
       </button>
 
+    </div>
+
+
+    <div class="grid g2" style="margin-top:12px">
+
+      <div>
+
+        <label>
+          Sort Jobs
+        </label>
+
+        <select
+          id="jobSort"
+          onchange="handleJobSearch()">
+
+          <option value="newest">
+            Newest
+          </option>
+
+          <option value="oldest">
+            Oldest
+          </option>
+
+          <option value="highest">
+            Highest Value
+          </option>
+
+          <option value="lowest">
+            Lowest Value
+          </option>
+
+          <option value="followup">
+            Follow-Up Due
+          </option>
+
+        </select>
+
+      </div>
+
+      <div style="display:flex;align-items:end">
+
+        <button
+          class="btn secondary"
+          style="width:100%"
+          onclick="clearJobFilters()">
+          Clear Search & Filters
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div
+      id="jobResultCount"
+      class="result-count">
     </div>
 
   </div>
@@ -655,10 +770,6 @@ textarea{
 
   <div class="card">
 
-    <h3>
-      Jobs
-    </h3>
-
     <div id="dashboardJobs">
     </div>
 
@@ -667,7 +778,9 @@ textarea{
 </section>
 
 
-<!-- ================= CALCULATOR ================= -->
+<!-- =====================================================
+CALCULATOR
+===================================================== -->
 
 <section
   id="calculator"
@@ -697,8 +810,13 @@ textarea{
       </div>
 
       <div style="grid-column:1/-1">
-        <label>Project Address</label>
+
+        <label>
+          Project Address
+        </label>
+
         <input id="cAddress">
+
       </div>
 
       <div>
@@ -836,7 +954,6 @@ textarea{
 
   </div>
 
-
   <div
     id="calculatorResult"
     class="card">
@@ -845,7 +962,9 @@ textarea{
 </section>
 
 
-<!-- ================= ESTIMATES ================= -->
+<!-- =====================================================
+ESTIMATES
+===================================================== -->
 
 <section
   id="estimates"
@@ -853,25 +972,90 @@ textarea{
 
   <div class="card">
 
-    <div class="search">
+    <div class="search-box">
+
+      <span class="search-icon">
+        🔎
+      </span>
 
       <input
         id="estimateSearch"
-        placeholder="🔎 Search estimates..."
+        type="search"
+        autocomplete="off"
+        placeholder="Search estimates..."
         oninput="renderEstimates()">
 
-      <select
-        id="estimateStatus"
-        onchange="renderEstimates()">
+    </div>
 
-        <option>All</option>
-        <option>Lead</option>
-        <option>Estimated</option>
-        <option>Sold</option>
-        <option>Completed</option>
-        <option>Lost</option>
+    <div class="grid g2" style="margin-top:12px">
 
-      </select>
+      <div>
+
+        <label>
+          Status
+        </label>
+
+        <select
+          id="estimateStatus"
+          onchange="renderEstimates()">
+
+          <option value="All">
+            All
+          </option>
+
+          <option value="Lead">
+            Lead
+          </option>
+
+          <option value="Estimated">
+            Estimated
+          </option>
+
+          <option value="Sold">
+            Sold
+          </option>
+
+          <option value="Completed">
+            Completed
+          </option>
+
+          <option value="Lost">
+            Lost
+          </option>
+
+        </select>
+
+      </div>
+
+      <div>
+
+        <label>
+          Sort
+        </label>
+
+        <select
+          id="estimateSort"
+          onchange="renderEstimates()">
+
+          <option value="newest">
+            Newest
+          </option>
+
+          <option value="oldest">
+            Oldest
+          </option>
+
+          <option value="highest">
+            Highest Value
+          </option>
+
+          <option value="lowest">
+            Lowest Value
+          </option>
+
+        </select>
+
+      </div>
 
     </div>
 
@@ -889,7 +1073,9 @@ textarea{
 </section>
 
 
-<!-- ================= PIPELINE ================= -->
+<!-- =====================================================
+PIPELINE
+===================================================== -->
 
 <section
   id="pipeline"
@@ -911,7 +1097,9 @@ textarea{
 </section>
 
 
-<!-- ================= PURCHASE ORDERS ================= -->
+<!-- =====================================================
+PURCHASE ORDERS
+===================================================== -->
 
 <section
   id="purchaseorders"
@@ -934,24 +1122,50 @@ textarea{
     </div>
 
     <div
-      class="search"
+      class="grid g2"
       style="margin-top:12px">
 
-      <input
-        id="poSearch"
-        placeholder="🔎 Search PO #, job, vendor or customer..."
-        oninput="renderPOs()">
+      <div class="search-box">
+
+        <span class="search-icon">
+          🔎
+        </span>
+
+        <input
+          id="poSearch"
+          type="search"
+          placeholder="Search PO #, job, vendor or customer..."
+          oninput="renderPOs()">
+
+      </div>
 
       <select
         id="poStatus"
         onchange="renderPOs()">
 
-        <option>All</option>
-        <option>Draft</option>
-        <option>Ordered</option>
-        <option>Partially Received</option>
-        <option>Received</option>
-        <option>Cancelled</option>
+        <option value="All">
+          All
+        </option>
+
+        <option value="Draft">
+          Draft
+        </option>
+
+        <option value="Ordered">
+          Ordered
+        </option>
+
+        <option value="Partially Received">
+          Partially Received
+        </option>
+
+        <option value="Received">
+          Received
+        </option>
+
+        <option value="Cancelled">
+          Cancelled
+        </option>
 
       </select>
 
@@ -971,7 +1185,9 @@ textarea{
 </section>
 
 
-<!-- ================= SETTINGS ================= -->
+<!-- =====================================================
+SETTINGS
+===================================================== -->
 
 <section
   id="settings"
@@ -1006,8 +1222,13 @@ textarea{
       </div>
 
       <div style="grid-column:1/-1">
-        <label>Address</label>
+
+        <label>
+          Address
+        </label>
+
         <input id="sAddress">
+
       </div>
 
     </div>
@@ -1024,42 +1245,65 @@ textarea{
     <div class="grid g2">
 
       <div>
-        <label>Default Valid Days</label>
+
+        <label>
+          Default Valid Days
+        </label>
+
         <input
           id="sValidDays"
           type="number">
+
       </div>
 
       <div>
-        <label>Default Scope of Work</label>
+
+        <label>
+          Default Scope
+        </label>
+
         <textarea id="sScope"></textarea>
+
       </div>
 
       <div>
-        <label>Default Important Information</label>
+
+        <label>
+          Default Important Information
+        </label>
+
         <textarea id="sImportant"></textarea>
+
       </div>
 
     </div>
 
     <div class="toggle">
       <span>Show phone</span>
-      <input id="sShowPhone" type="checkbox">
+      <input
+        id="sShowPhone"
+        type="checkbox">
     </div>
 
     <div class="toggle">
       <span>Show email</span>
-      <input id="sShowEmail" type="checkbox">
+      <input
+        id="sShowEmail"
+        type="checkbox">
     </div>
 
     <div class="toggle">
       <span>Show address</span>
-      <input id="sShowAddress" type="checkbox">
+      <input
+        id="sShowAddress"
+        type="checkbox">
     </div>
 
     <div class="toggle">
       <span>Show website</span>
-      <input id="sShowWebsite" type="checkbox">
+      <input
+        id="sShowWebsite"
+        type="checkbox">
     </div>
 
   </div>
@@ -1134,8 +1378,7 @@ textarea{
       Dashboard Widgets
     </h2>
 
-    <div id="widgetSettings">
-    </div>
+    <div id="widgetSettings"></div>
 
   </div>
 
@@ -1145,11 +1388,6 @@ textarea{
     <h2>
       Appearance
     </h2>
-
-    <p class="muted">
-      Light/Dark mode is now ONLY controlled here.
-      It has been removed from the top bar.
-    </p>
 
     <select
       id="themeSelect"
@@ -1207,7 +1445,9 @@ textarea{
 </section>
 
 
-<!-- ================= HOMEOWNER ================= -->
+<!-- =====================================================
+HOMEOWNER
+===================================================== -->
 
 <section
   id="homeowner"
@@ -1220,26 +1460,24 @@ textarea{
     </h2>
 
     <p class="muted">
-      Your roofing proposals will appear here.
+      Your connected proposals will appear here.
     </p>
 
-    <div id="homeownerProposals">
-    </div>
+    <div id="homeownerProposals"></div>
 
   </div>
 
 </section>
 
 </main>
-
 </div>
 
 
 <script>
 
-/* =========================================================
-   SUPABASE
-========================================================= */
+/* =====================================================
+SUPABASE
+===================================================== */
 
 const SUPABASE_URL =
 "https://ovuirmlmdpbqumriakcm.supabase.co";
@@ -1254,14 +1492,16 @@ window.supabase.createClient(
 );
 
 
-/* =========================================================
-   STATE
-========================================================= */
+/* =====================================================
+STATE
+===================================================== */
 
 let currentUser = null;
+
 let isHomeowner = false;
 
 let estimates = [];
+
 let purchaseOrders = [];
 
 let jobFilter = "All";
@@ -1271,24 +1511,37 @@ let lastCalculation = null;
 let settings = {
 
   default_valid_days:30,
+
   default_waste:10,
+
   default_profit_margin:30,
+
   default_overhead:10,
+
   default_layers:1,
+
   default_pitch:1.15,
 
   default_shingle_cost:110,
+
   default_starter_cost:35,
+
   default_ridge_cost:35,
+
   default_labor_cost:90,
+
   default_tear_off_cost:35,
 
   default_scope:"",
+
   default_important_info:"",
 
   show_phone:true,
+
   show_email:true,
+
   show_address:true,
+
   show_website:true,
 
   theme:"light",
@@ -1308,16 +1561,19 @@ let settings = {
 };
 
 
-/* =========================================================
-   HELPERS
-========================================================= */
+/* =====================================================
+HELPERS
+===================================================== */
 
-const $ = id => document.getElementById(id);
+function $(id){
+  return document.getElementById(id);
+}
+
 
 function escapeHTML(value){
 
   return String(value ?? "")
-    .replace(/[&<>"']/g, char => ({
+    .replace(/[&<>"']/g,char => ({
       "&":"&amp;",
       "<":"&lt;",
       ">":"&gt;",
@@ -1326,6 +1582,7 @@ function escapeHTML(value){
     }[char]));
 
 }
+
 
 function money(value){
 
@@ -1340,20 +1597,23 @@ function money(value){
 
 }
 
+
 function showAuthMessage(message){
 
-  $("authMessage").textContent = message;
+  $("authMessage").textContent =
+    message || "";
 
 }
 
 
-/* =========================================================
-   AUTH MODE
-========================================================= */
+/* =====================================================
+AUTH MODE
+===================================================== */
 
 function setAuthMode(mode){
 
-  $("authScreen").dataset.mode = mode;
+  $("authScreen").dataset.mode =
+    mode;
 
   $("contractorMode")
     .classList.toggle(
@@ -1381,17 +1641,20 @@ function setAuthMode(mode){
 }
 
 
-/* =========================================================
-   LOGIN
-========================================================= */
+/* =====================================================
+LOGIN
+===================================================== */
 
 async function loginUser(){
 
   const email =
-    $("authEmail").value.trim();
+    $("authEmail")
+      .value
+      .trim();
 
   const password =
-    $("authPassword").value;
+    $("authPassword")
+      .value;
 
   if(!email || !password){
 
@@ -1412,12 +1675,15 @@ async function loginUser(){
 
   if(error){
 
-    showAuthMessage(error.message);
+    showAuthMessage(
+      error.message
+    );
 
     return;
   }
 
-  currentUser = data.user;
+  currentUser =
+    data.user;
 
   isHomeowner =
     currentUser.user_metadata?.role ===
@@ -1428,24 +1694,29 @@ async function loginUser(){
 }
 
 
-/* =========================================================
-   CREATE ACCOUNT
-========================================================= */
+/* =====================================================
+SIGNUP
+===================================================== */
 
 async function signupUser(){
 
   const email =
-    $("authEmail").value.trim();
+    $("authEmail")
+      .value
+      .trim();
 
   const password =
-    $("authPassword").value;
+    $("authPassword")
+      .value;
+
+  const name =
+    $("authName")
+      .value
+      .trim();
 
   const mode =
     $("authScreen").dataset.mode ||
     "contractor";
-
-  const name =
-    $("authName").value.trim();
 
   if(!email || !password){
 
@@ -1470,42 +1741,51 @@ async function signupUser(){
       ? "homeowner"
       : "contractor";
 
+
   const {data,error} =
     await supabaseClient.auth.signUp({
 
       email,
+
       password,
 
       options:{
         data:{
-          role:role
+          role
         }
       }
 
     });
 
+
   if(error){
 
-    showAuthMessage(error.message);
-
-    return;
-  }
-
-  if(data.user && !data.session){
-
     showAuthMessage(
-      "Account created. Check your email, confirm it, then use Login."
+      error.message
     );
 
     return;
   }
 
+
+  if(data.user && !data.session){
+
+    showAuthMessage(
+      "Account created. Check your email to confirm your account, then log in."
+    );
+
+    return;
+  }
+
+
   if(data.session){
 
-    currentUser = data.user;
+    currentUser =
+      data.user;
 
     isHomeowner =
       role === "homeowner";
+
 
     if(isHomeowner){
 
@@ -1513,14 +1793,18 @@ async function signupUser(){
         .from("homeowner_profiles")
         .upsert({
 
-          user_id:currentUser.id,
-          full_name:name
+          user_id:
+            currentUser.id,
+
+          full_name:
+            name
 
         },{
           onConflict:"user_id"
         });
 
     }
+
 
     await startApplication();
 
@@ -1529,9 +1813,9 @@ async function signupUser(){
 }
 
 
-/* =========================================================
-   START APP
-========================================================= */
+/* =====================================================
+START APP
+===================================================== */
 
 async function startApplication(){
 
@@ -1544,30 +1828,31 @@ async function startApplication(){
   $("userEmail").textContent =
     currentUser.email || "";
 
+
   if(isHomeowner){
 
     go("homeowner");
 
     await loadHomeownerProposals();
 
-  }else{
-
-    await loadSettings();
-
-    await loadEstimates();
-
-    await loadPurchaseOrders();
-
-    go("dashboard");
-
+    return;
   }
+
+
+  await loadSettings();
+
+  await loadEstimates();
+
+  await loadPurchaseOrders();
+
+  go("dashboard");
 
 }
 
 
-/* =========================================================
-   MENU
-========================================================= */
+/* =====================================================
+MENU
+===================================================== */
 
 function toggleMenu(){
 
@@ -1575,9 +1860,12 @@ function toggleMenu(){
     .classList.toggle("open");
 
   $("backdrop")
-    .classList.toggle("hidden");
+    .classList.toggle(
+      "hidden"
+    );
 
 }
+
 
 function closeMenu(){
 
@@ -1585,40 +1873,52 @@ function closeMenu(){
     .classList.remove("open");
 
   $("backdrop")
-    .classList.add("hidden");
+    .classList.add(
+      "hidden"
+    );
 
 }
 
 
-/* =========================================================
-   PAGE NAVIGATION
-   IMPORTANT FIX:
-   Clicking Dashboard repeatedly NEVER hides it.
-========================================================= */
+/* =====================================================
+NAVIGATION
+===================================================== */
 
 function go(page){
 
   const target =
     $(page);
 
-  if(!target){
-
+  if(!target)
     return;
-  }
+
+
+  /*
+    IMPORTANT:
+    This removes active from EVERY page first.
+    It NEVER toggles the requested page.
+  */
 
   document
     .querySelectorAll(".page")
     .forEach(section => {
 
-      section.classList.remove("active");
+      section.classList.remove(
+        "active"
+      );
 
     });
 
-  target.classList.add("active");
+
+  target.classList.add(
+    "active"
+  );
 
 
   document
-    .querySelectorAll(".nav-btn[data-page]")
+    .querySelectorAll(
+      ".nav-btn[data-page]"
+    )
     .forEach(button => {
 
       button.classList.toggle(
@@ -1632,157 +1932,417 @@ function go(page){
   const titles = {
 
     dashboard:"Dashboard",
+
     calculator:"Calculator",
+
     estimates:"Estimates",
+
     pipeline:"Pipeline",
+
     purchaseorders:"Purchase Orders",
+
     settings:"Settings",
+
     homeowner:"Homeowner Portal"
 
   };
 
+
   $("pageTitle").textContent =
-    titles[page] || "RoofBidder";
+    titles[page] ||
+    "RoofBidder";
+
 
   closeMenu();
 
 
-  if(page === "dashboard")
+  if(page === "dashboard"){
+
     renderDashboard();
 
-  if(page === "estimates")
+  }
+
+
+  if(page === "estimates"){
+
     renderEstimates();
 
-  if(page === "pipeline")
+  }
+
+
+  if(page === "pipeline"){
+
     renderPipeline();
 
-  if(page === "purchaseorders")
+  }
+
+
+  if(page === "purchaseorders"){
+
     renderPOs();
 
-  if(page === "settings")
+  }
+
+
+  if(page === "settings"){
+
     renderSettings();
 
-  if(page === "homeowner")
+  }
+
+
+  if(page === "homeowner"){
+
     loadHomeownerProposals();
+
+  }
 
 }
 
 
-/* =========================================================
-   LOAD ESTIMATES
-========================================================= */
+/* =====================================================
+LOAD ESTIMATES
+===================================================== */
 
 async function loadEstimates(){
+
+  if(!currentUser)
+    return;
+
 
   const {data,error} =
     await supabaseClient
       .from("estimates")
       .select("*")
+      .eq(
+        "user_id",
+        currentUser.id
+      )
       .order(
         "updated_at",
-        {ascending:false}
+        {
+          ascending:false
+        }
       );
+
 
   if(error){
 
-    console.error(error);
+    console.error(
+      "Estimate loading error:",
+      error
+    );
 
     estimates = [];
 
     return;
   }
 
+
   estimates =
-    data || [];
+    Array.isArray(data)
+      ? data
+      : [];
 
 }
 
 
-/* =========================================================
-   SEARCH
-========================================================= */
+/* =====================================================
+SEARCH TEXT
+===================================================== */
 
-function matchesSearch(estimate,query){
+function estimateSearchText(e){
 
-  if(!query)
-    return true;
+  return [
 
-  const text = [
+    e.customer_name,
 
-    estimate.customer_name,
-    estimate.project_address,
-    estimate.estimate_number,
-    estimate.customer_phone,
-    estimate.customer_email
+    e.customer_phone,
+
+    e.customer_email,
+
+    e.project_address,
+
+    e.estimate_number,
+
+    e.status
 
   ]
-    .join(" ")
-    .toLowerCase();
 
-  return text.includes(
-    query.toLowerCase()
-  );
+    .map(value =>
+      String(value ?? "")
+        .toLowerCase()
+        .trim()
+    )
+
+    .join(" ");
 
 }
 
 
-/* =========================================================
-   DASHBOARD FILTER
-========================================================= */
+/* =====================================================
+DOES ESTIMATE MATCH SEARCH?
+===================================================== */
 
-function setJobFilter(filter){
+function estimateMatchesSearch(
+  estimate,
+  search
+){
 
-  jobFilter = filter;
+  const q =
+    String(search || "")
+      .toLowerCase()
+      .trim();
 
-  document
-    .querySelectorAll(".chip")
-    .forEach(button => {
 
-      button.classList.toggle(
-        "active",
-        button.dataset.filter === filter
+  if(!q)
+    return true;
+
+
+  return estimateSearchText(
+    estimate
+  ).includes(q);
+
+}
+
+
+/* =====================================================
+FILTER ESTIMATES
+===================================================== */
+
+function getFilteredJobs(){
+
+  const searchInput =
+    $("jobSearch");
+
+
+  const search =
+    searchInput
+      ? searchInput.value
+      : "";
+
+
+  let list =
+    estimates.filter(
+      estimate => {
+
+        const matchesSearch =
+          estimateMatchesSearch(
+            estimate,
+            search
+          );
+
+
+        const matchesStatus =
+          jobFilter === "All" ||
+          String(
+            estimate.status || "Lead"
+          ) === jobFilter;
+
+
+        return (
+          matchesSearch &&
+          matchesStatus
+        );
+
+      }
+    );
+
+
+  const sort =
+    $("jobSort")
+      ? $("jobSort").value
+      : "newest";
+
+
+  list.sort(
+    (a,b) => {
+
+      if(sort === "highest"){
+
+        return Number(
+          b.selling_price || 0
+        ) -
+        Number(
+          a.selling_price || 0
+        );
+
+      }
+
+
+      if(sort === "lowest"){
+
+        return Number(
+          a.selling_price || 0
+        ) -
+        Number(
+          b.selling_price || 0
+        );
+
+      }
+
+
+      if(sort === "oldest"){
+
+        return new Date(
+          a.updated_at ||
+          a.saved_at ||
+          0
+        ) -
+        new Date(
+          b.updated_at ||
+          b.saved_at ||
+          0
+        );
+
+      }
+
+
+      if(sort === "followup"){
+
+        const ad =
+          a.follow_up_date ||
+          "9999-12-31";
+
+        const bd =
+          b.follow_up_date ||
+          "9999-12-31";
+
+        return (
+          new Date(ad) -
+          new Date(bd)
+        );
+
+      }
+
+
+      return new Date(
+        b.updated_at ||
+        b.saved_at ||
+        0
+      ) -
+      new Date(
+        a.updated_at ||
+        a.saved_at ||
+        0
       );
 
-    });
+    }
+  );
+
+
+  return list;
+
+}
+
+
+/* =====================================================
+SEARCH HANDLER
+===================================================== */
+
+function handleJobSearch(){
+
+  /*
+    This explicitly re-runs the entire search/filter
+    pipeline every time the user types or changes sort.
+  */
 
   renderDashboard();
 
 }
 
 
-/* =========================================================
-   DASHBOARD
-========================================================= */
+/* =====================================================
+SET FILTER
+===================================================== */
 
-function renderDashboard(){
+function setJobFilter(filter){
 
-  const search =
-    $("jobSearch")?.value
-      ?.trim()
-      .toLowerCase() || "";
+  /*
+    Store filter in JS state.
+    Then rebuild results directly from estimates.
+  */
 
-  const filtered =
-    estimates.filter(estimate => {
+  jobFilter =
+    filter;
 
-      const statusMatch =
-        jobFilter === "All" ||
-        estimate.status === jobFilter;
 
-      return (
-        statusMatch &&
-        matchesSearch(
-          estimate,
-          search
-        )
+  document
+    .querySelectorAll(
+      "[data-job-filter]"
+    )
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.jobFilter ===
+        filter
       );
 
     });
 
 
+  renderDashboard();
+
+}
+
+
+/* =====================================================
+CLEAR FILTERS
+===================================================== */
+
+function clearJobFilters(){
+
+  if($("jobSearch"))
+    $("jobSearch").value = "";
+
+
+  jobFilter =
+    "All";
+
+
+  if($("jobSort"))
+    $("jobSort").value =
+      "newest";
+
+
+  document
+    .querySelectorAll(
+      "[data-job-filter]"
+    )
+    .forEach(button => {
+
+      button.classList.toggle(
+        "active",
+        button.dataset.jobFilter ===
+        "All"
+      );
+
+    });
+
+
+  renderDashboard();
+
+}
+
+
+/* =====================================================
+DASHBOARD
+===================================================== */
+
+function renderDashboard(){
+
+  const filtered =
+    getFilteredJobs();
+
+
   const totalRevenue =
     estimates.reduce(
       (sum,e) =>
-        sum + Number(e.selling_price || 0),
+        sum +
+        Number(
+          e.selling_price || 0
+        ),
       0
     );
 
@@ -1790,7 +2350,10 @@ function renderDashboard(){
   const totalProfit =
     estimates.reduce(
       (sum,e) =>
-        sum + Number(e.gross_profit || 0),
+        sum +
+        Number(
+          e.gross_profit || 0
+        ),
       0
     );
 
@@ -1813,7 +2376,10 @@ function renderDashboard(){
   const soldRevenue =
     sold.reduce(
       (sum,e) =>
-        sum + Number(e.selling_price || 0),
+        sum +
+        Number(
+          e.selling_price || 0
+        ),
       0
     );
 
@@ -1821,7 +2387,10 @@ function renderDashboard(){
   const lostRevenue =
     lost.reduce(
       (sum,e) =>
-        sum + Number(e.selling_price || 0),
+        sum +
+        Number(
+          e.selling_price || 0
+        ),
       0
     );
 
@@ -1833,75 +2402,121 @@ function renderDashboard(){
 
   const closeRate =
     decided
-      ? sold.length / decided * 100
+      ? sold.length /
+        decided *
+        100
       : 0;
 
 
   $("dashboardStats").innerHTML = `
 
     <div class="card stat">
+
       <div class="small muted">
         Total Jobs
       </div>
+
       <div class="number">
         ${estimates.length}
       </div>
+
     </div>
 
+
     <div class="card stat">
+
       <div class="small muted">
         Projected Revenue
       </div>
+
       <div class="number">
         ${money(totalRevenue)}
       </div>
+
     </div>
 
+
     <div class="card stat">
+
       <div class="small muted">
         Projected Profit
       </div>
+
       <div class="number">
         ${money(totalProfit)}
       </div>
+
     </div>
 
+
     <div class="card stat">
+
       <div class="small muted">
         Sold Revenue
       </div>
+
       <div class="number">
         ${money(soldRevenue)}
       </div>
+
     </div>
 
+
     <div class="card stat">
+
       <div class="small muted">
         Lost Revenue
       </div>
+
       <div class="number">
         ${money(lostRevenue)}
       </div>
+
     </div>
 
+
     <div class="card stat">
+
       <div class="small muted">
         Close Rate
       </div>
+
       <div class="number">
         ${closeRate.toFixed(1)}%
       </div>
+
     </div>
 
   `;
 
 
+  $("jobResultCount").textContent =
+    `Showing ${filtered.length} of ${estimates.length} jobs`;
+
+
   if(!filtered.length){
 
-    $("dashboardJobs").innerHTML =
-      `<p class="muted">
-        No jobs found.
-      </p>`;
+    $("dashboardJobs").innerHTML = `
+
+      <div style="padding:20px 0">
+
+        <h3>
+          No jobs found
+        </h3>
+
+        <p class="muted">
+          Try a different search or filter.
+        </p>
+
+        <button
+          class="btn secondary"
+          onclick="clearJobFilters()">
+          Clear Search & Filters
+        </button>
+
+      </div>
+
+    `;
 
     return;
   }
@@ -1913,50 +2528,109 @@ function renderDashboard(){
 
       <table class="table">
 
-        <tr>
-          <th>Estimate</th>
-          <th>Customer</th>
-          <th>Address</th>
-          <th>Status</th>
-          <th>Price</th>
-          <th></th>
-        </tr>
-
-        ${filtered.map(e => `
+        <thead>
 
           <tr>
 
-            <td>
-              ${escapeHTML(e.estimate_number)}
-            </td>
+            <th>
+              Estimate
+            </th>
 
-            <td>
-              ${escapeHTML(e.customer_name)}
-            </td>
+            <th>
+              Customer
+            </th>
 
-            <td>
-              ${escapeHTML(e.project_address)}
-            </td>
+            <th>
+              Address
+            </th>
 
-            <td>
-              ${statusBadge(e.status)}
-            </td>
+            <th>
+              Phone
+            </th>
 
-            <td>
-              ${money(e.selling_price)}
-            </td>
+            <th>
+              Status
+            </th>
 
-            <td>
-              <button
-                class="btn secondary"
-                onclick="openEstimate('${e.id}')">
-                Open
-              </button>
-            </td>
+            <th>
+              Price
+            </th>
+
+            <th>
+              Updated
+            </th>
+
+            <th>
+            </th>
 
           </tr>
 
-        `).join("")}
+        </thead>
+
+        <tbody>
+
+          ${filtered.map(e => `
+
+            <tr>
+
+              <td>
+                ${escapeHTML(
+                  e.estimate_number
+                )}
+              </td>
+
+              <td>
+                ${escapeHTML(
+                  e.customer_name
+                )}
+              </td>
+
+              <td>
+                ${escapeHTML(
+                  e.project_address
+                )}
+              </td>
+
+              <td>
+                ${escapeHTML(
+                  e.customer_phone
+                )}
+              </td>
+
+              <td>
+                ${statusBadge(
+                  e.status
+                )}
+              </td>
+
+              <td>
+                ${money(
+                  e.selling_price
+                )}
+              </td>
+
+              <td>
+                ${formatDate(
+                  e.updated_at ||
+                  e.saved_at
+                )}
+              </td>
+
+              <td>
+
+                <button
+                  class="btn secondary"
+                  onclick="openEstimate('${e.id}')">
+                  Open
+                </button>
+
+              </td>
+
+            </tr>
+
+          `).join("")}
+
+        </tbody>
 
       </table>
 
@@ -1967,36 +2641,37 @@ function renderDashboard(){
 }
 
 
-function clearJobSearch(){
+/* =====================================================
+DATE
+===================================================== */
 
-  $("jobSearch").value = "";
+function formatDate(value){
 
-  jobFilter = "All";
+  if(!value)
+    return "";
 
-  document
-    .querySelectorAll(".chip")
-    .forEach(button => {
+  const date =
+    new Date(value);
 
-      button.classList.toggle(
-        "active",
-        button.dataset.filter === "All"
-      );
+  if(Number.isNaN(
+    date.getTime()
+  ))
+    return "";
 
-    });
-
-  renderDashboard();
+  return date.toLocaleDateString();
 
 }
 
 
-/* =========================================================
-   STATUS BADGE
-========================================================= */
+/* =====================================================
+STATUS BADGE
+===================================================== */
 
 function statusBadge(status){
 
   const s =
-    status || "Lead";
+    status ||
+    "Lead";
 
   let cls = "";
 
@@ -2004,25 +2679,43 @@ function statusBadge(status){
     s === "Sold" ||
     s === "Completed"
   ){
-    cls = "green";
+
+    cls =
+      "green";
+
   }
+
 
   if(s === "Lost"){
-    cls = "red";
+
+    cls =
+      "red";
+
   }
 
+
+  if(s === "Estimated"){
+
+    cls =
+      "yellow";
+
+  }
+
+
   return `
+
     <span class="badge ${cls}">
       ${escapeHTML(s)}
     </span>
+
   `;
 
 }
 
 
-/* =========================================================
-   CALCULATOR
-========================================================= */
+/* =====================================================
+CALCULATOR
+===================================================== */
 
 function calculateEstimate(){
 
@@ -2036,7 +2729,8 @@ function calculateEstimate(){
     n("cSquares");
 
   const waste =
-    n("cWaste") / 100;
+    n("cWaste") /
+    100;
 
   const pitch =
     n("cPitch");
@@ -2057,6 +2751,7 @@ function calculateEstimate(){
       n("cStarter") +
       n("cRidge")
     ) +
+
     n("cOtherMaterial");
 
 
@@ -2078,7 +2773,8 @@ function calculateEstimate(){
 
 
   const baseCost =
-    material + labor;
+    material +
+    labor;
 
 
   const overhead =
@@ -2097,12 +2793,21 @@ function calculateEstimate(){
     100;
 
 
-  const sellingPrice =
+  let sellingPrice =
+    totalCost;
+
+
+  if(
+    margin >= 0 &&
     margin < 1
-      ? totalCost /
-        (1 - margin) +
-        n("cAdjustment")
-      : totalCost;
+  ){
+
+    sellingPrice =
+      totalCost /
+      (1 - margin) +
+      n("cAdjustment");
+
+  }
 
 
   const grossProfit =
@@ -2120,7 +2825,8 @@ function calculateEstimate(){
 
   const pricePerSquare =
     squares
-      ? sellingPrice / squares
+      ? sellingPrice /
+        squares
       : 0;
 
 
@@ -2139,9 +2845,13 @@ function calculateEstimate(){
       $("cAddress").value,
 
     squares,
+
     pitch,
+
     layers,
-    waste:n("cWaste"),
+
+    waste:
+      n("cWaste"),
 
     shingle_cost:
       n("cShingle"),
@@ -2251,7 +2961,7 @@ function calculateEstimate(){
 
       <div class="card stat">
         <div class="small muted">
-          Margin
+          Gross Margin
         </div>
         <div class="number">
           ${grossMargin.toFixed(1)}%
@@ -2287,9 +2997,9 @@ function calculateEstimate(){
 }
 
 
-/* =========================================================
-   SAVE ESTIMATE
-========================================================= */
+/* =====================================================
+SAVE ESTIMATE
+===================================================== */
 
 async function saveEstimate(){
 
@@ -2299,6 +3009,14 @@ async function saveEstimate(){
 
   }
 
+
+  const estimateNumber =
+    "RB-" +
+    Date.now()
+      .toString()
+      .slice(-8);
+
+
   const payload = {
 
     ...lastCalculation,
@@ -2307,10 +3025,7 @@ async function saveEstimate(){
       currentUser.id,
 
     estimate_number:
-      "RB-" +
-      Date.now()
-        .toString()
-        .slice(-8),
+      estimateNumber,
 
     valid_days:
       settings.default_valid_days,
@@ -2321,7 +3036,11 @@ async function saveEstimate(){
     important_info:
       settings.default_important_info,
 
-    status:"Lead",
+    status:
+      "Lead",
+
+    saved_at:
+      new Date().toISOString(),
 
     updated_at:
       new Date().toISOString()
@@ -2337,69 +3056,158 @@ async function saveEstimate(){
 
   if(error){
 
-    alert(error.message);
+    alert(
+      error.message
+    );
 
     return;
+
   }
 
 
   await loadEstimates();
 
+
   alert(
-    "Estimate saved."
+    `Estimate ${estimateNumber} saved.`
   );
+
 
   go("estimates");
 
 }
 
 
-/* =========================================================
-   ESTIMATES
-========================================================= */
+/* =====================================================
+ESTIMATE SEARCH
+===================================================== */
 
 function renderEstimates(){
 
+  const input =
+    $("estimateSearch");
+
   const query =
-    $("estimateSearch")
-      .value
-      .trim()
-      .toLowerCase();
+    input
+      ? input.value
+      : "";
+
 
   const status =
-    $("estimateStatus").value;
+    $("estimateStatus")
+      ? $("estimateStatus").value
+      : "All";
 
 
-  const list =
+  let list =
     estimates.filter(e => {
 
-      return (
-
-        (
-          status === "All" ||
-          e.status === status
-        )
-
-        &&
-
-        matchesSearch(
+      const matchesSearch =
+        estimateMatchesSearch(
           e,
           query
-        )
+        );
 
+
+      const matchesStatus =
+        status === "All" ||
+        String(
+          e.status || "Lead"
+        ) === status;
+
+
+      return (
+        matchesSearch &&
+        matchesStatus
       );
 
     });
 
 
+  const sort =
+    $("estimateSort")
+      ? $("estimateSort").value
+      : "newest";
+
+
+  list.sort(
+    (a,b) => {
+
+      if(sort === "highest"){
+
+        return Number(
+          b.selling_price || 0
+        ) -
+        Number(
+          a.selling_price || 0
+        );
+
+      }
+
+
+      if(sort === "lowest"){
+
+        return Number(
+          a.selling_price || 0
+        ) -
+        Number(
+          b.selling_price || 0
+        );
+
+      }
+
+
+      if(sort === "oldest"){
+
+        return new Date(
+          a.updated_at ||
+          a.saved_at ||
+          0
+        ) -
+        new Date(
+          b.updated_at ||
+          b.saved_at ||
+          0
+        );
+
+      }
+
+
+      return new Date(
+        b.updated_at ||
+        b.saved_at ||
+        0
+      ) -
+      new Date(
+        a.updated_at ||
+        a.saved_at ||
+        0
+      );
+
+    }
+  );
+
+
   if(!list.length){
 
-    $("estimateTable").innerHTML =
-      `<p class="muted">
-        No estimates found.
-      </p>`;
+    $("estimateTable").innerHTML = `
+
+      <div style="padding:20px 0">
+
+        <h3>
+          No estimates found
+        </h3>
+
+        <p class="muted">
+          Try another search or status.
+        </p>
+
+      </div>
+
+    `;
 
     return;
+
   }
 
 
@@ -2407,60 +3215,99 @@ function renderEstimates(){
 
     <table class="table">
 
-      <tr>
-        <th>Estimate</th>
-        <th>Customer</th>
-        <th>Address</th>
-        <th>Status</th>
-        <th>Price</th>
-        <th>Updated</th>
-        <th></th>
-      </tr>
-
-      ${list.map(e => `
+      <thead>
 
         <tr>
 
-          <td>
-            ${escapeHTML(e.estimate_number)}
-          </td>
+          <th>
+            Estimate
+          </th>
 
-          <td>
-            ${escapeHTML(e.customer_name)}
-          </td>
+          <th>
+            Customer
+          </th>
 
-          <td>
-            ${escapeHTML(e.project_address)}
-          </td>
+          <th>
+            Address
+          </th>
 
-          <td>
-            ${statusBadge(e.status)}
-          </td>
+          <th>
+            Status
+          </th>
 
-          <td>
-            ${money(e.selling_price)}
-          </td>
+          <th>
+            Price
+          </th>
 
-          <td>
-            ${new Date(
-              e.updated_at ||
-              e.saved_at
-            ).toLocaleDateString()}
-          </td>
+          <th>
+            Updated
+          </th>
 
-          <td>
-
-            <button
-              class="btn secondary"
-              onclick="openEstimate('${e.id}')">
-              Open
-            </button>
-
-          </td>
+          <th>
+          </th>
 
         </tr>
 
-      `).join("")}
+      </thead>
+
+      <tbody>
+
+        ${list.map(e => `
+
+          <tr>
+
+            <td>
+              ${escapeHTML(
+                e.estimate_number
+              )}
+            </td>
+
+            <td>
+              ${escapeHTML(
+                e.customer_name
+              )}
+            </td>
+
+            <td>
+              ${escapeHTML(
+                e.project_address
+              )}
+            </td>
+
+            <td>
+              ${statusBadge(
+                e.status
+              )}
+            </td>
+
+            <td>
+              ${money(
+                e.selling_price
+              )}
+            </td>
+
+            <td>
+              ${formatDate(
+                e.updated_at ||
+                e.saved_at
+              )}
+            </td>
+
+            <td>
+
+              <button
+                class="btn secondary"
+                onclick="openEstimate('${e.id}')">
+                Open
+              </button>
+
+            </td>
+
+          </tr>
+
+        `).join("")}
+
+      </tbody>
 
     </table>
 
@@ -2469,45 +3316,77 @@ function renderEstimates(){
 }
 
 
-/* =========================================================
-   OPEN ESTIMATE
-========================================================= */
+/* =====================================================
+OPEN ESTIMATE
+===================================================== */
 
 function openEstimate(id){
 
-  const e =
+  const estimate =
     estimates.find(
-      x => x.id === id
+      e => e.id === id
     );
 
-  if(!e)
+
+  if(!estimate)
     return;
 
 
   const fields = {
 
-    cCustomer:e.customer_name,
-    cPhone:e.customer_phone,
-    cEmail:e.customer_email,
-    cAddress:e.project_address,
+    cCustomer:
+      estimate.customer_name,
 
-    cSquares:e.squares,
-    cPitch:e.pitch,
-    cLayers:e.layers,
-    cWaste:e.waste,
+    cPhone:
+      estimate.customer_phone,
 
-    cShingle:e.shingle_cost,
-    cStarter:e.starter_cost,
-    cRidge:e.ridge_cost,
-    cLabor:e.labor_cost,
-    cTear:e.tear_off_cost,
+    cEmail:
+      estimate.customer_email,
 
-    cOtherMaterial:e.other_material,
-    cOtherLabor:e.other_labor,
+    cAddress:
+      estimate.project_address,
 
-    cOverhead:e.overhead,
-    cMargin:e.profit_margin,
-    cAdjustment:e.price_adjustment
+    cSquares:
+      estimate.squares,
+
+    cPitch:
+      estimate.pitch,
+
+    cLayers:
+      estimate.layers,
+
+    cWaste:
+      estimate.waste,
+
+    cShingle:
+      estimate.shingle_cost,
+
+    cStarter:
+      estimate.starter_cost,
+
+    cRidge:
+      estimate.ridge_cost,
+
+    cLabor:
+      estimate.labor_cost,
+
+    cTear:
+      estimate.tear_off_cost,
+
+    cOtherMaterial:
+      estimate.other_material,
+
+    cOtherLabor:
+      estimate.other_labor,
+
+    cOverhead:
+      estimate.overhead,
+
+    cMargin:
+      estimate.profit_margin,
+
+    cAdjustment:
+      estimate.price_adjustment
 
   };
 
@@ -2515,9 +3394,12 @@ function openEstimate(id){
   Object.entries(fields)
     .forEach(([id,value]) => {
 
-      if($(id))
+      if($(id)){
+
         $(id).value =
           value ?? 0;
+
+      }
 
     });
 
@@ -2529,9 +3411,9 @@ function openEstimate(id){
 }
 
 
-/* =========================================================
-   PIPELINE
-========================================================= */
+/* =====================================================
+PIPELINE
+===================================================== */
 
 function renderPipeline(){
 
@@ -2545,27 +3427,33 @@ function renderPipeline(){
 
 
   $("pipelineGrid").innerHTML =
-    statuses.map(status => {
+    statuses
+      .map(status => {
 
-      const jobs =
-        estimates.filter(
-          e => e.status === status
-        );
+        const jobs =
+          estimates.filter(
+            e =>
+              (
+                e.status ||
+                "Lead"
+              ) === status
+          );
 
 
-      return `
+        return `
 
-        <div class="card">
+          <div class="card">
 
-          <h3>
-            ${status}
-            <span class="badge">
-              ${jobs.length}
-            </span>
-          </h3>
+            <h3>
+              ${status}
 
-          ${
-            jobs.length
+              <span class="badge">
+                ${jobs.length}
+              </span>
+            </h3>
+
+            ${
+              jobs.length
 
               ?
 
@@ -2585,13 +3473,17 @@ function renderPipeline(){
                   </b>
 
                   <div class="small muted">
+
                     ${escapeHTML(
                       e.estimate_number
                     )}
+
                     ·
+
                     ${money(
                       e.selling_price
                     )}
+
                   </div>
 
                 </div>
@@ -2600,28 +3492,31 @@ function renderPipeline(){
 
               :
 
-              `<p class="muted">
-                Empty
-              </p>`
+              `
+                <p class="muted">
+                  Empty
+                </p>
+              `
 
-          }
+            }
 
-        </div>
+          </div>
 
-      `;
+        `;
 
-    }).join("");
+      })
+      .join("");
 
 }
 
 
-/* =========================================================
-   SETTINGS LOAD
-========================================================= */
+/* =====================================================
+SETTINGS
+===================================================== */
 
 async function loadSettings(){
 
-  const settingsResult =
+  const result =
     await supabaseClient
       .from("user_settings")
       .select("*")
@@ -2632,19 +3527,20 @@ async function loadSettings(){
       .maybeSingle();
 
 
-  if(settingsResult.data){
+  if(result.data){
 
     settings = {
 
       ...settings,
-      ...settingsResult.data
+
+      ...result.data
 
     };
 
   }
 
 
-  const companyResult =
+  const company =
     await supabaseClient
       .from("company_profiles")
       .select("*")
@@ -2656,7 +3552,7 @@ async function loadSettings(){
 
 
   settings.company =
-    companyResult.data ||
+    company.data ||
     {};
 
 
@@ -2667,10 +3563,6 @@ async function loadSettings(){
 
 }
 
-
-/* =========================================================
-   SETTINGS RENDER
-========================================================= */
 
 function renderSettings(){
 
@@ -2743,9 +3635,12 @@ function renderSettings(){
   Object.entries(values)
     .forEach(([id,value]) => {
 
-      if($(id))
+      if($(id)){
+
         $(id).value =
           value ?? "";
+
+      }
 
     });
 
@@ -2774,13 +3669,26 @@ function renderSettings(){
 
   const widgets = {
 
-    revenue:"Projected Revenue",
-    profit:"Projected Profit",
-    soldLost:"Sold / Lost",
-    closeRate:"Close Rate",
-    followups:"Follow-Ups",
-    recent:"Recent Estimates",
-    pipeline:"Pipeline"
+    revenue:
+      "Projected Revenue",
+
+    profit:
+      "Projected Profit",
+
+    soldLost:
+      "Sold / Lost",
+
+    closeRate:
+      "Close Rate",
+
+    followups:
+      "Follow-Ups",
+
+    recent:
+      "Recent Estimates",
+
+    pipeline:
+      "Pipeline"
 
   };
 
@@ -2800,8 +3708,8 @@ function renderSettings(){
             data-widget="${key}"
             ${
               settings.dashboard_widgets?.[key] !== false
-                ? "checked"
-                : ""
+              ? "checked"
+              : ""
             }>
 
         </div>
@@ -2811,10 +3719,6 @@ function renderSettings(){
 
 }
 
-
-/* =========================================================
-   SAVE SETTINGS
-========================================================= */
 
 async function saveSettings(){
 
@@ -2859,6 +3763,7 @@ async function saveSettings(){
     );
 
     return;
+
   }
 
 
@@ -2984,13 +3889,16 @@ async function saveSettings(){
     );
 
     return;
+
   }
 
 
   settings = {
 
     ...settings,
+
     ...newSettings,
+
     company
 
   };
@@ -3008,9 +3916,9 @@ async function saveSettings(){
 }
 
 
-/* =========================================================
-   THEME
-========================================================= */
+/* =====================================================
+THEME
+===================================================== */
 
 function changeTheme(theme){
 
@@ -3033,9 +3941,9 @@ function applyTheme(theme){
 }
 
 
-/* =========================================================
-   PASSWORD
-========================================================= */
+/* =====================================================
+PASSWORD
+===================================================== */
 
 async function changePassword(){
 
@@ -3044,8 +3952,10 @@ async function changePassword(){
       "Enter your new password:"
     );
 
+
   if(!password)
     return;
+
 
   if(password.length < 6){
 
@@ -3054,15 +3964,16 @@ async function changePassword(){
     );
 
     return;
+
   }
 
 
   const {error} =
-    await supabaseClient.auth.updateUser({
-
-      password
-
-    });
+    await supabaseClient
+      .auth
+      .updateUser({
+        password
+      });
 
 
   alert(
@@ -3074,11 +3985,15 @@ async function changePassword(){
 }
 
 
-/* =========================================================
-   PURCHASE ORDERS
-========================================================= */
+/* =====================================================
+PURCHASE ORDERS
+===================================================== */
 
 async function loadPurchaseOrders(){
+
+  if(!currentUser)
+    return;
+
 
   const {data,error} =
     await supabaseClient
@@ -3090,7 +4005,9 @@ async function loadPurchaseOrders(){
       )
       .order(
         "created_at",
-        {ascending:false}
+        {
+          ascending:false
+        }
       );
 
 
@@ -3105,6 +4022,7 @@ async function loadPurchaseOrders(){
     renderPOs();
 
     return;
+
   }
 
 
@@ -3123,15 +4041,19 @@ function renderPOs(){
     return;
 
 
-  const query =
+  const search =
     $("poSearch")
-      .value
-      .trim()
-      .toLowerCase();
+      ? $("poSearch")
+          .value
+          .toLowerCase()
+          .trim()
+      : "";
 
 
   const status =
-    $("poStatus").value;
+    $("poStatus")
+      ? $("poStatus").value
+      : "All";
 
 
   const list =
@@ -3140,23 +4062,34 @@ function renderPOs(){
       const text = [
 
         po.po_number,
+
         po.vendor,
+
         po.customer_name,
-        po.estimate_number
+
+        po.estimate_number,
+
+        po.materials_ordered,
+
+        po.notes
 
       ]
+
         .join(" ")
+
         .toLowerCase();
 
 
       return (
 
-        (status === "All" ||
-          po.status === status)
+        text.includes(search)
 
         &&
 
-        text.includes(query)
+        (
+          status === "All" ||
+          po.status === status
+        )
 
       );
 
@@ -3165,12 +4098,16 @@ function renderPOs(){
 
   if(!list.length){
 
-    $("poTable").innerHTML =
-      `<p class="muted">
-        No purchase orders yet.
-      </p>`;
+    $("poTable").innerHTML = `
+
+      <p class="muted">
+        No purchase orders found.
+      </p>
+
+    `;
 
     return;
+
   }
 
 
@@ -3178,53 +4115,88 @@ function renderPOs(){
 
     <table class="table">
 
-      <tr>
-        <th>PO #</th>
-        <th>Job</th>
-        <th>Vendor</th>
-        <th>Total</th>
-        <th>Status</th>
-        <th>Delivery</th>
-      </tr>
-
-      ${list.map(po => `
+      <thead>
 
         <tr>
 
-          <td>
-            ${escapeHTML(po.po_number)}
-          </td>
+          <th>
+            PO #
+          </th>
 
-          <td>
-            ${escapeHTML(
-              po.customer_name ||
-              po.estimate_number ||
-              ""
-            )}
-          </td>
+          <th>
+            Job
+          </th>
 
-          <td>
-            ${escapeHTML(po.vendor)}
-          </td>
+          <th>
+            Vendor
+          </th>
 
-          <td>
-            ${money(po.total)}
-          </td>
+          <th>
+            Total
+          </th>
 
-          <td>
-            ${statusBadge(po.status)}
-          </td>
+          <th>
+            Status
+          </th>
 
-          <td>
-            ${escapeHTML(
-              po.expected_delivery ||
-              ""
-            )}
-          </td>
+          <th>
+            Delivery
+          </th>
 
         </tr>
 
-      `).join("")}
+      </thead>
+
+      <tbody>
+
+        ${list.map(po => `
+
+          <tr>
+
+            <td>
+              ${escapeHTML(
+                po.po_number
+              )}
+            </td>
+
+            <td>
+              ${escapeHTML(
+                po.customer_name ||
+                po.estimate_number ||
+                ""
+              )}
+            </td>
+
+            <td>
+              ${escapeHTML(
+                po.vendor
+              )}
+            </td>
+
+            <td>
+              ${money(
+                po.total
+              )}
+            </td>
+
+            <td>
+              ${statusBadge(
+                po.status
+              )}
+            </td>
+
+            <td>
+              ${escapeHTML(
+                po.expected_delivery ||
+                ""
+              )}
+            </td>
+
+          </tr>
+
+        `).join("")}
+
+      </tbody>
 
     </table>
 
@@ -3239,6 +4211,7 @@ async function createPO(){
     prompt(
       "Vendor / supplier:"
     );
+
 
   if(!vendor)
     return;
@@ -3275,7 +4248,8 @@ async function createPO(){
     total:
       Number(total || 0),
 
-    status:"Draft",
+    status:
+      "Draft",
 
     created_at:
       new Date().toISOString()
@@ -3292,10 +4266,11 @@ async function createPO(){
   if(error){
 
     alert(
-      "Purchase Orders need the SQL table installed. Run the SQL code below."
+      "Purchase Orders table is not installed yet. Run the PO SQL from the previous message."
     );
 
     return;
+
   }
 
 
@@ -3304,9 +4279,9 @@ async function createPO(){
 }
 
 
-/* =========================================================
-   HOMEOWNER PORTAL
-========================================================= */
+/* =====================================================
+HOMEOWNER
+===================================================== */
 
 async function loadHomeownerProposals(){
 
@@ -3324,7 +4299,9 @@ async function loadHomeownerProposals(){
       )
       .order(
         "created_at",
-        {ascending:false}
+        {
+          ascending:false
+        }
       );
 
 
@@ -3332,10 +4309,13 @@ async function loadHomeownerProposals(){
 
     $("homeownerProposals").innerHTML =
       `<p class="muted">
-        ${escapeHTML(error.message)}
+        ${escapeHTML(
+          error.message
+        )}
       </p>`;
 
     return;
+
   }
 
 
@@ -3347,6 +4327,7 @@ async function loadHomeownerProposals(){
       </p>`;
 
     return;
+
   }
 
 
@@ -3379,7 +4360,9 @@ async function loadHomeownerProposals(){
           )}
         </h2>
 
-        ${statusBadge(p.status)}
+        ${statusBadge(
+          p.status
+        )}
 
       </div>
 
@@ -3388,9 +4371,9 @@ async function loadHomeownerProposals(){
 }
 
 
-/* =========================================================
-   LOGOUT
-========================================================= */
+/* =====================================================
+LOGOUT
+===================================================== */
 
 async function logout(){
 
@@ -3403,9 +4386,9 @@ async function logout(){
 }
 
 
-/* =========================================================
-   INITIAL SESSION
-========================================================= */
+/* =====================================================
+STARTUP
+===================================================== */
 
 (async function(){
 
@@ -3421,10 +4404,8 @@ async function logout(){
       data.session.user;
 
     isHomeowner =
-      currentUser
-        .user_metadata
-        ?.role === "homeowner";
-
+      currentUser.user_metadata?.role ===
+      "homeowner";
 
     await startApplication();
 
